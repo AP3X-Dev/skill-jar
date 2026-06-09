@@ -25,15 +25,16 @@ Then invoke it by name (`/<skill-name>`) or just describe your task — a capabl
 | Skill | What it does |
 |-------|--------------|
 | [**loop-engineering**](loop-engineering/SKILL.md) | Scaffolds a self-running **agent loop** into a repo — automation discovers work, a maker agent executes, a *separate* checker verifies, state is recorded, and the loop decides what runs next. Lays down state files, maker≠checker subagents (Claude Code **and** Codex), trigger + per-cycle driver prompts, runnable verification gates, `AGENTS.md` safety rules, worktree isolation, and install-ready triage / code-review / release role-skills. Agent-agnostic; starts at triage-only and earns autonomy one level at a time. |
+| [**bug-pipeline**](bug-pipeline/SKILL.md) | A specialized loop for any codebase: a three-agent **Hunter → Fixer → Validator** repair pipeline over a shared `BUG_TRACKER.md`. The hunter files evidence-backed defects (`file:line` + repro, no style nits), the fixer repairs one bug per cycle with the smallest diff that passes the repo gate, and an independent validator — ideally a different model — promotes to `verified` or reopens. Ships the tracker schema, all three agent templates, and the per-cycle driver outline. |
 | [**building-optimization-loops**](building-optimization-loops/SKILL.md) | A specialized loop (one that `loop-engineering` can scaffold as its execution stage): generates a self-sustaining optimization-loop prompt for an existing codebase. Audits first, builds a concrete file-level backlog, then drives repeated **audit → fix → measure → track** cycles — with a re-measured metric vector, a no-regression ratchet, a restartable progress log, and guardrails for unattended runs. Built for hardening / quality passes after feature work. |
 
-*Two skills and counting — the jar fills up over time.*
+*Three skills and counting — the jar fills up over time.*
 
-## Self-hosted loops
+## Self-hosted loop
 
-The jar takes its own medicine: [loop-engineering](loop-engineering/SKILL.md) scaffolded two loops into this very repo (shared state spine in `agent-state/`, role agents in `.claude/agents/`, drivers in `docs/prompts/`):
+The jar takes its own medicine. [loop-engineering](loop-engineering/SKILL.md) scaffolded a loop system into this very repo (state spine in `agent-state/`, role agents in `.claude/agents/`, drivers in `docs/prompts/`):
 
 - **jar-audit** — keeps the jar publish-ready. Discovery is a deterministic gate, `python scripts/audit-jar.py`: frontmatter parses, descriptions carry triggers, names match directories, every relative link resolves, scripts compile, the scaffolder stays idempotent. Red check → one fix per cycle, verified by a separate agent.
-- **bug-pipeline** — Hunter → Fixer → Validator over `agent-state/BUG_TRACKER.md`. The hunter files evidence-backed defects, the fixer repairs one per cycle, and an independent validator (different model) promotes to `verified` or reopens.
+- The repo also dogfoods the [**bug-pipeline**](bug-pipeline/SKILL.md) skill on itself — its instance lives in `.claude/agents/` + `docs/prompts/bug-pipeline-driver.md`, tracking to `agent-state/BUG_TRACKER.md`.
 
 Run a cycle by handing your agent the matching driver in `docs/prompts/`. Both loops run at autonomy Level 2: they commit locally; a human reviews and pushes.

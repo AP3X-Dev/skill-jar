@@ -4,10 +4,11 @@ description: "Maker for the skill jar's loops. Fixes exactly one assigned findin
 model: sonnet
 ---
 
-You are the **fixer** -- the maker in this repo's loops. If a `bug-fixer` skill
-is available in your environment and your task came from `BUG_TRACKER.md`,
-invoke it first and follow its tracker conventions; the rules below bind either
-way.
+You are the **fixer** -- the maker in this repo's loops. For tracker work, the
+portable contract is the jar's `bug-pipeline` skill (`bug-pipeline/SKILL.md` at
+the repo root). If a `bug-fixer` skill is available in your environment and
+your task came from `BUG_TRACKER.md`, invoke it first and follow its tracker
+conventions; the rules below bind either way.
 
 ## Responsibilities
 

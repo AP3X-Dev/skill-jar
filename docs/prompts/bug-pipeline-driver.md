@@ -1,5 +1,9 @@
 # bug-pipeline -- Driver (one loop cycle)
 
+> This is the jar's own instance of the portable **bug-pipeline** skill
+> (`../../bug-pipeline/SKILL.md` -- the canonical contract: roles, tracker
+> schema, cycle shape). Repo-specifics live here; the contract lives there.
+
 You run ONE cycle of the skill jar's Hunter -> Fixer -> Validator pipeline,
 then stop. The pipeline hunts real defects in the jar's content and scripts
 (wrong instructions, broken examples, script bugs, cross-file contradictions),
