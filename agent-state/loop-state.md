@@ -53,7 +53,9 @@ Keep the skill jar publish-ready via two loops, one task per cycle each:
 
 ## Next Run Instructions
 
-No cycle has run yet. jar-audit cycle 1: run the gate, file failures as inbox
-findings, fix one. bug-pipeline cycle 1: hunter sweep over the fresh scripts
-(`scripts/audit-jar.py`, `loop-engineering/scripts/scaffold-loop.py`) and
-cross-file consistency; then fix/validate ONE pending bug if any.
+jar-audit(1) closed clean: gate green (27 checks, 0 failed), inbox empty, no
+task taken. Next jar-audit cycle: run the gate; if green and the inbox is
+empty, record another clean cycle and stop. bug-pipeline cycle 1: hunter sweep
+over the fresh scripts (`scripts/audit-jar.py`,
+`loop-engineering/scripts/scaffold-loop.py`) and cross-file consistency; then
+fix/validate ONE pending bug if any.
