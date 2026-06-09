@@ -1,0 +1,96 @@
+{
+  "version": 2,
+  "description": "Closed tag vocabulary for extract-inventory.py and enrich-inventory.py. Unknown tags are rejected by the extractor — extend this file deliberately rather than coining new tags ad hoc. Version 2 adds content-shape tags (prompt-template, regex, threshold, config-const) and a visibility enumeration used by the v2 extractor's nested-symbol pass.",
+  "tier1": {
+    "_doc": "Deterministic tags derived from AST. Assigned by extract-inventory.py at zero LLM cost. kind is mutually exclusive; modifier/shape are multi-select; location is mutually exclusive; visibility is mutually exclusive.",
+    "kind": [
+      "function",
+      "method",
+      "class",
+      "interface",
+      "type-alias",
+      "enum",
+      "struct",
+      "constant",
+      "variable",
+      "module"
+    ],
+    "modifier": [
+      "exported",
+      "async",
+      "generator",
+      "abstract",
+      "static",
+      "readonly",
+      "deprecated",
+      "throws"
+    ],
+    "shape": [
+      "error-type",
+      "entrypoint",
+      "data-class",
+      "decorator",
+      "prompt-template",
+      "regex",
+      "threshold",
+      "config-const"
+    ],
+    "location": [
+      "source",
+      "test",
+      "fixture",
+      "migration",
+      "benchmark",
+      "example"
+    ],
+    "visibility": [
+      "public",
+      "private",
+      "nested"
+    ]
+  },
+  "tier2": {
+    "_doc": "Semantic tags assigned by an LLM enrichment pass (enrich-inventory.py). All values must come from these lists — the enricher prompt and extractor reject unknown values. Empty arrays allowed per symbol.",
+    "role": [
+      "validator",
+      "serializer",
+      "parser",
+      "formatter",
+      "mapper",
+      "factory",
+      "builder",
+      "middleware",
+      "handler",
+      "adapter",
+      "repository",
+      "controller",
+      "rate-limiter",
+      "retry-wrapper",
+      "auth-check"
+    ],
+    "concern": [
+      "auth",
+      "persistence",
+      "network-io",
+      "filesystem-io",
+      "concurrency",
+      "observability",
+      "configuration",
+      "i18n",
+      "security",
+      "caching",
+      "serialization",
+      "validation",
+      "crypto",
+      "scheduling"
+    ],
+    "risk": [
+      "hot-path",
+      "security-sensitive",
+      "god-module",
+      "legacy",
+      "duplicated-logic",
+      "dead-code-suspect"
+    ]
+  }
+}

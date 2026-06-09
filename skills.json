@@ -2,6 +2,11 @@
   "_generated": "by scripts/gen-index.py -- do not edit by hand; the audit gate fails if this file is stale",
   "skills": [
     {
+      "name": "autonomous-advisor",
+      "description": "Full autonomous execution mode. Given a PRP (Product Requirements Plan), runs the entire pipeline — design, planning, implementation, optimization — with zero human input. An advisor sub-agent replaces the human at direction decisions; a separate verifier sub-agent gates work products (maker≠checker). Use when the user provides a PRP for hands-off execution, says 'run this autonomously', or another skill (e.g. clean-room) hands off a PRP for implementation. NOT for projects without a PRP (use brainstorming first, with the human).",
+      "path": "autonomous-advisor/SKILL.md"
+    },
+    {
       "name": "bug-pipeline",
       "description": "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use building-optimization-loops). Composes with loop-engineering, which scaffolds the loop infrastructure this pipeline runs on.",
       "path": "bug-pipeline/SKILL.md"
@@ -10,6 +15,11 @@
       "name": "building-optimization-loops",
       "description": "Use when the user wants an optimization loop, hardening pass, or optimizer prompt that runs repeated audit→fix→track cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Generates a portable optimizer prompt + progress log (not a direct code fix). NOT for a single one-off bug (use bugfix/bug-fixer) or a brand-new codebase (use brainstorming/writing-plans).",
       "path": "building-optimization-loops/SKILL.md"
+    },
+    {
+      "name": "clean-room",
+      "description": "Use when reimplementing, porting, or cloning an existing codebase/repo — produces an exhaustive design doc via multi-pass analysis, proposes improvements over the original, then hands off to autonomous implementation (the autonomous-advisor skill). Supports three modes: full clean-room (firewalled, IP-safe), Parity Mode (close gaps against an original), and Transparent Mode (no firewall, for code you own). Triggers include 'clean room rewrite', 'port this repo', 'reimplement X in Y', 'clone without copying code', 'rewrite from scratch based on the original', 'transparent rewrite', 'rewrite without firewall'.",
+      "path": "clean-room/SKILL.md"
     },
     {
       "name": "loop-engineering",
