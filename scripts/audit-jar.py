@@ -16,8 +16,8 @@ agent-state/loop-state.md) and that CI runs on every push. Checks, in order:
   5. Scripts       -- every tracked .py compiles, and scaffold-loop.py stays
                       idempotent (second run into a temp dir creates 0 paths).
   6. Index         -- skills.json is in sync with the layout (gen-index.py --check).
-  7. Plugins       -- the marketplace + bundle + per-category plugin manifests
-                      are in sync with the category layout (gen-plugins.py --check).
+  7. Plugins       -- the marketplace + per-category plugin manifests are in
+                      sync with the category layout (gen-plugins.py --check).
 
 Skills live at `<category>/<skill>/SKILL.md`. Stdlib only (PyYAML used when
 present); discovery is shared via jarlib so the generators and this gate agree.
@@ -177,7 +177,7 @@ def check_scripts():
 
     delegate("index", "gen-index.py", "skills.json in sync with the layout")
     delegate("plugins", "gen-plugins.py",
-             "marketplace + bundle + category manifests in sync")
+             "marketplace + category manifests in sync")
 
     scaffold = ROOT / "development" / "loop-engineer" / "scripts" / "scaffold-loop.py"
     if not scaffold.exists():

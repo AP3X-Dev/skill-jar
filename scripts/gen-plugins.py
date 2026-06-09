@@ -3,18 +3,21 @@
 
 The jar ships as a Claude Code plugin marketplace. Selective install works by
 category: each category folder (`development/`, `marketing/`, ...) becomes its
-own installable plugin (`skill-jar-development`, ...), plus a `skill-jar`
-bundle that installs everything. A user runs:
+own installable plugin (`skill-jar-development`, ...). A user runs:
 
     /plugin marketplace add AP3X-Dev/skill-jar
-    /plugin install skill-jar-development@skill-jar   # just one category
-    /plugin install skill-jar@skill-jar                # everything
+    /plugin install skill-jar-development@skill-jar   # one category
+    /plugin install skill-jar-marketing@skill-jar     # another
 
-This script is the single source of truth for three sets of files, ALL derived
-from where skills physically live (the folder a skill sits in is its category):
+Install the categories you want -- there is intentionally NO all-in-one bundle
+plugin. A repo-root bundle would copy the entire repo (agent-state, .github,
+scripts, fixtures) into every user's cache, and the only no-symlink way to
+build one is exactly that. Categories install independently instead.
 
-    .claude-plugin/marketplace.json     -- lists the bundle + every non-empty category
-    .claude-plugin/plugin.json          -- the bundle plugin (source "./"); skills as ./<cat>/<skill>
+This script is the single source of truth for the manifests, ALL derived from
+where skills physically live (the folder a skill sits in is its category):
+
+    .claude-plugin/marketplace.json        -- lists one plugin per non-empty category
     <category>/.claude-plugin/plugin.json  -- one per non-empty category (source "./<cat>"); skills as ./<skill>
 
 No symlinks (Windows-hostile): each skill lives inside exactly one category
@@ -62,15 +65,9 @@ def render(obj):
 def build_manifests():
     """Return {relative_path: rendered_json} for every manifest file."""
     groups = grouped_skills()
-    total = sum(len(v) for v in groups.values())
 
-    # marketplace.json -- bundle first, then one entry per non-empty category.
-    plugins = [{
-        "name": MARKETPLACE_NAME,
-        "source": "./",
-        "description": "All %d jar skills across %d categor%s."
-                       % (total, len(groups), "y" if len(groups) == 1 else "ies"),
-    }]
+    # marketplace.json -- one plugin entry per non-empty category (no bundle).
+    plugins = []
     for category, names in groups.items():
         plugins.append({
             "name": plugin_name(category),
@@ -80,24 +77,12 @@ def build_manifests():
     marketplace = {
         "name": MARKETPLACE_NAME,
         "owner": OWNER,
-        "description": "A growing collection of Agent Skills -- install the whole "
-                       "jar or a single category.",
+        "description": "A growing collection of Agent Skills -- "
+                       "install one or more categories.",
         "plugins": plugins,
     }
 
     files = {".claude-plugin/marketplace.json": render(marketplace)}
-
-    # Bundle plugin.json (source "./"): every skill, path includes its category.
-    bundle_skills = []
-    for category, names in groups.items():
-        bundle_skills += ["./%s/%s" % (category, n) for n in names]
-    files[".claude-plugin/plugin.json"] = render({
-        "name": MARKETPLACE_NAME,
-        "description": "Every skill in the jar, all categories.",
-        "version": VERSION,
-        "author": OWNER,
-        "skills": sorted(bundle_skills),
-    })
 
     # One plugin.json per non-empty category (source "./<category>").
     for category, names in groups.items():
@@ -127,11 +112,14 @@ def main(argv=None):
             path = ROOT / rel
             if not path.exists() or path.read_text(encoding="utf-8") != expected:
                 stale.append(rel)
-        # Also flag a category plugin.json that exists but should NOT (emptied category).
-        for pj in ROOT.glob("*/.claude-plugin/plugin.json"):
+        # Flag any plugin.json on disk the generator no longer produces
+        # (a removed bundle at the root, or an emptied category).
+        on_disk = list(ROOT.glob(".claude-plugin/plugin.json")) \
+            + list(ROOT.glob("*/.claude-plugin/plugin.json"))
+        for pj in on_disk:
             rel = pj.relative_to(ROOT).as_posix()
             if rel not in files:
-                stale.append("%s (stale -- category has no skills)" % rel)
+                stale.append("%s (stale -- not generated)" % rel)
         if stale:
             print("FAIL: plugin manifests stale -- run scripts/gen-plugins.py: "
                   + ", ".join(sorted(stale)))

@@ -3,13 +3,8 @@
   "owner": {
     "name": "AP3X"
   },
-  "description": "A growing collection of Agent Skills -- install the whole jar or a single category.",
+  "description": "A growing collection of Agent Skills -- install one or more categories.",
   "plugins": [
-    {
-      "name": "skill-jar",
-      "source": "./",
-      "description": "All 5 jar skills across 1 category."
-    },
     {
       "name": "skill-jar-development",
       "source": "./development",

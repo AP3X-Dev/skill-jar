@@ -14,17 +14,17 @@ Each skill is a self-contained `SKILL.md` (plus any bundled resources) with fron
 
 ## Using a skill
 
-Skills are grouped into **categories**, and each category installs as its own Claude Code plugin — so you can grab a whole category, or the entire jar.
+Skills are grouped into **categories**, and each category installs as its own Claude Code plugin — so you pull in just the categories you want.
 
-**Claude Code — install a category, or everything:**
+**Claude Code — install the categories you want:**
 
 ```
 /plugin marketplace add AP3X-Dev/skill-jar
-/plugin install skill-jar-development@skill-jar   # just the development category
-/plugin install skill-jar@skill-jar                # the whole jar (all categories)
+/plugin install skill-jar-development@skill-jar    # the development category
+# /plugin install skill-jar-marketing@skill-jar    # (coming soon)
 ```
 
-Skills then load on demand (`/skill-jar-development:bug-pipeline`, etc.) and update with the repo.
+Skills then load on demand (`/skill-jar-development:bug-pipeline`, etc.) and update with the repo. There's no all-in-one bundle plugin — install each category you want; it keeps your plugin list clean and avoids copying the whole repo into your cache.
 
 **Any agent — copy the folder** into its skills directory, e.g. in Claude Code:
 
