@@ -4,21 +4,21 @@
 
 # skill-jar
 
-A growing collection of [Claude Code](https://claude.com/claude-code) agent skills — drop-in capabilities that teach the agent how to do a specific job well. Reach into the jar when you need one.
+A growing collection of **Agent Skills** — drop-in capabilities that teach an AI agent how to do a specific job well. Reach into the jar when you need one.
 
-## What's a skill?
+## What's an Agent Skill?
 
-Each skill is a self-contained `SKILL.md` (plus any bundled resources) with frontmatter describing **when** to use it and instructions for **how**. Skills load on demand — the agent only reads one when the task actually matches, so the jar can grow without bloating context.
+Each skill is a self-contained `SKILL.md` (plus any bundled resources) with frontmatter describing **when** to use it and instructions for **how**. Skills load on demand — the agent only reads one when the task actually matches, so the jar can grow without bloating context. The format is portable across any agent that supports skills.
 
 ## Using a skill
 
-Copy the skill's folder into your skills directory:
+Copy the skill's folder into your agent's skills directory — for example, in Claude Code:
 
 ```
 ~/.claude/skills/<skill-name>/
 ```
 
-Then invoke it by name (`/<skill-name>`) or just describe your task — the agent picks the matching skill automatically.
+Then invoke it by name (`/<skill-name>`) or just describe your task — a capable agent picks the matching skill automatically.
 
 ## Skills in the jar
 
