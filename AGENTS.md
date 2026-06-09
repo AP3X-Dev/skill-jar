@@ -3,7 +3,7 @@
 > Host-neutral safety rules every agent in this repo's loops (jar-audit and
 > bug-pipeline) obeys, every cycle. These are the floor; per-loop additions go
 > in agent-state/loop-state.md (Current Rules). Full annotated version +
-> per-host gate wiring: loop-engineer/references/safety-and-gates.md.
+> per-host gate wiring: development/loop-engineer/references/safety-and-gates.md.
 
 ## General
 - Do exactly one narrow task per cycle. No scope creep beyond the planned task.

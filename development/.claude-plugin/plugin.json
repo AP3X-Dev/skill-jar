@@ -1,0 +1,15 @@
+{
+  "name": "skill-jar-development",
+  "description": "The jar's development-category skills.",
+  "version": "1.0.0",
+  "author": {
+    "name": "AP3X"
+  },
+  "skills": [
+    "./autonomous-advisor",
+    "./bug-pipeline",
+    "./clean-room",
+    "./loop-engineer",
+    "./optimization-loop"
+  ]
+}

@@ -1,15 +1,15 @@
 {
   "name": "skill-jar",
-  "description": "Agent Skills from the skill jar: scaffold self-running agent loops (loop-engineer), run a Hunter -> Fixer -> Validator repair pipeline (bug-pipeline), run a PRP hands-off (autonomous-advisor), do firewalled rewrites (clean-room), and generate codebase optimization loops (optimization-loop).",
+  "description": "Every skill in the jar, all categories.",
   "version": "1.0.0",
   "author": {
     "name": "AP3X"
   },
   "skills": [
-    "./autonomous-advisor",
-    "./bug-pipeline",
-    "./optimization-loop",
-    "./clean-room",
-    "./loop-engineer"
+    "./development/autonomous-advisor",
+    "./development/bug-pipeline",
+    "./development/clean-room",
+    "./development/loop-engineer",
+    "./development/optimization-loop"
   ]
 }
