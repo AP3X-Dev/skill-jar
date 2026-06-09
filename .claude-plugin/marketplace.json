@@ -8,7 +8,7 @@
     {
       "name": "skill-jar",
       "source": "./",
-      "description": "All jar skills: loop-engineering, bug-pipeline, building-optimization-loops."
+      "description": "All jar skills: loop-engineer, bug-pipeline, building-optimization-loops, autonomous-advisor, clean-room."
     }
   ]
 }

@@ -65,6 +65,6 @@ task taken. Next jar-audit cycle: run the gate; if green and the inbox is
 empty, record another clean cycle and stop. bug-pipeline(1) closed clean:
 hunter swept the fresh scripts + cross-file consistency (30+ probes), filed 0
 findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
-`loop-engineering/references/` content -- verify the reference templates'
+`loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any.

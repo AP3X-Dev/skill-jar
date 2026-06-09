@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Scaffold the skeleton of a loop-engineering loop into a target repo.
+"""Scaffold the skeleton of an agent loop into a target repo (loop-engineer skill).
 
 Layer 1 tool. You (the human scaffolding the loop now) run this once to lay
 down the loop's spine: the REQUIRED file-based state (``agent-state/``), the
 host agent directories, ``AGENTS.md`` safety rules, and a placeholder driver
 prompt. The Layer-2 text the future loop-agent will run -- enriched state
 files, subagents, role-skills, the real driver prompt -- is authored AFTER
-this from the loop-engineering ``references/``; the starter files written here
+this from the loop-engineer skill's ``references/``; the starter files written here
 are deliberately MINIMAL (headers + empty table skeletons) so they cannot
 drift from those annotated references.
 
@@ -341,7 +341,7 @@ def print_summary(results, loop_name, host):
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="scaffold-loop.py",
-        description="Scaffold a loop-engineering loop skeleton into a repo "
+        description="Scaffold an agent-loop skeleton into a repo "
                     "(idempotent; never overwrites existing files).",
     )
     parser.add_argument(

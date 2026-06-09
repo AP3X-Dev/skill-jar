@@ -213,7 +213,7 @@ def check_scripts():
     else:
         record(False, "index", "scripts/gen-index.py not found")
 
-    scaffold = ROOT / "loop-engineering" / "scripts" / "scaffold-loop.py"
+    scaffold = ROOT / "loop-engineer" / "scripts" / "scaffold-loop.py"
     if not scaffold.exists():
         record(False, "idempotency", "scaffold-loop.py not found")
         return

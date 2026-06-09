@@ -8,7 +8,7 @@
     },
     {
       "name": "bug-pipeline",
-      "description": "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use building-optimization-loops). Composes with loop-engineering, which scaffolds the loop infrastructure this pipeline runs on.",
+      "description": "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use building-optimization-loops). Composes with loop-engineer, which scaffolds the loop infrastructure this pipeline runs on.",
       "path": "bug-pipeline/SKILL.md"
     },
     {
@@ -22,9 +22,9 @@
       "path": "clean-room/SKILL.md"
     },
     {
-      "name": "loop-engineering",
+      "name": "loop-engineer",
       "description": "Use when the user wants to BUILD an agent loop or loop system — a self-running pipeline where automation discovers work, an agent executes it, a separate verifier checks it, state is recorded, and the loop decides what runs next — instead of hand-prompting every step. Scaffolds the loop into a repo: state files, maker≠checker subagents, automation/trigger and driver prompts, verification gates, safety rules, and worktree isolation. Agent-agnostic (Claude Code, Codex, or generic). NOT for running a single one-off task, fixing one bug (use bugfix), or an audit→fix hardening pass on an existing codebase (use building-optimization-loops — a specialized loop this skill can scaffold).",
-      "path": "loop-engineering/SKILL.md"
+      "path": "loop-engineer/SKILL.md"
     }
   ]
 }

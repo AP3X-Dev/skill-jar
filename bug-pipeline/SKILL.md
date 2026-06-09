@@ -1,13 +1,13 @@
 ---
 name: bug-pipeline
-description: "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use building-optimization-loops). Composes with loop-engineering, which scaffolds the loop infrastructure this pipeline runs on."
+description: "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use building-optimization-loops). Composes with loop-engineer, which scaffolds the loop infrastructure this pipeline runs on."
 ---
 
 # Bug Pipeline (Hunter → Fixer → Validator)
 
 A three-agent repair loop over a shared markdown tracker. The **Hunter** (producer) discovers defects and files them with evidence; the **Fixer** (consumer) repairs exactly one per cycle; the **Validator** (quality gate) independently verifies or reopens. Maker≠checker is enforced by construction: the fixer never validates its own fix, and the validator runs on a different model/provider where possible — same model, same brain, same blind spots.
 
-**Output:** a running pipeline in the target repo — the tracker, three role agents, and a per-cycle driver — plus a verified first cycle. This is a *specialized loop*: use [loop-engineering](../loop-engineering/SKILL.md) to scaffold the state spine, safety rules, and triggers it runs on; this skill defines the pipeline's contract.
+**Output:** a running pipeline in the target repo — the tracker, three role agents, and a per-cycle driver — plus a verified first cycle. This is a *specialized loop*: use [loop-engineer](../loop-engineer/SKILL.md) to scaffold the state spine, safety rules, and triggers it runs on; this skill defines the pipeline's contract.
 
 ## When to Use
 
@@ -65,9 +65,9 @@ that files nothing is a valid success and still gets a note>
 
 ## Setting it up in a repo
 
-1. **Scaffold the loop infra** with [loop-engineering](../loop-engineering/SKILL.md) (`scaffold-loop.py` lays down `agent-state/`, `AGENTS.md`, a driver stub) — or go minimal: just the tracker and the three agents.
+1. **Scaffold the loop infra** with [loop-engineer](../loop-engineer/SKILL.md) (`scaffold-loop.py` lays down `agent-state/`, `AGENTS.md`, a driver stub) — or go minimal: just the tracker and the three agents.
 2. **Pin the gate**: the exact command(s) that exit 0/1 in THIS repo (tests, lint, an audit script). The Fixer and Validator both run it every cycle.
-3. **Drop the three agents** (templates below) into the host's agent dir (`.claude/agents/` for Claude Code; adapt to `.codex/agents/*.toml` via loop-engineering's subagent-templates for Codex).
+3. **Drop the three agents** (templates below) into the host's agent dir (`.claude/agents/` for Claude Code; adapt to `.codex/agents/*.toml` via loop-engineer's subagent-templates for Codex).
 4. **Dry-run one cycle** end-to-end before scheduling anything. Do not hand off a pipeline that has never closed a cycle.
 
 ## Agent templates
@@ -120,7 +120,7 @@ Return: verdict (pass|reject), evidence, issues, required fixes if rejected, tra
 
 ## The cycle (driver outline)
 
-One bug per cycle. Full driver-prompt patterns live in loop-engineering's automation-templates; the pipeline's shape:
+One bug per cycle. Full driver-prompt patterns live in loop-engineer's automation-templates; the pipeline's shape:
 
 1. **Preflight** — `git status` clean-or-recover; read the tracker and loop state.
 2. **Discovery** — skip if `pending` bugs remain (work the backlog first); else dispatch the Hunter for one bounded sweep.
@@ -131,7 +131,7 @@ One bug per cycle. Full driver-prompt patterns live in loop-engineering's automa
 
 **Stop conditions:** one bug per cycle; a sweep that files nothing is a successful cycle; escalate to a `blocked` status + human-decision list when a fix would change a public contract, span multiple cycles, or the "bug" might be deliberate design.
 
-**Autonomy:** start at Level 2 (loop-engineering's ladder) — the pipeline commits locally; a human reviews diffs and pushes. Earn higher levels with cycles where the Validator's verdicts match the human's review.
+**Autonomy:** start at Level 2 (loop-engineer's ladder) — the pipeline commits locally; a human reviews diffs and pushes. Earn higher levels with cycles where the Validator's verdicts match the human's review.
 
 ## Common Mistakes
 
