@@ -132,22 +132,31 @@ Each rung depends on the one below: you don't grant connector write-access to a 
 
 ---
 
-## 5. Primitive-to-platform map
+## 5. Scheduling & recurrence — loop "types" and which host fires which
 
-A loop is a pattern, not a product. Each primitive maps to whatever the host offers. Scaffold the matching column for the detected host; keep state files / `AGENTS.md` / the driver prompt host-neutral so a platform switch doesn't break the loop.
+The loop *engine* is host-neutral (state files + driver + gates). What differs per host is the **trigger** — how each cycle gets fired. There are three cadence types, and you must know which one you're building, because their lifetime and memory behave completely differently.
 
-| Primitive | Codex | Claude Code | Generic / CI |
-|---|---|---|---|
-| **In-session loops** (warm context) | `/goal` (opt-in: `codex features enable goals`; pause/resume/clear); thread Automations (heartbeat wake-ups that keep thread context) | `/loop <interval\|omit to self-pace>` (same session; fixed-interval loops expire after 7 days); `/goal <condition>` (an evaluator model checks the condition after every turn until it holds) | — (wrap the runner in a while-loop) |
-| **Scheduled / unattended** (cold start each run) | standalone Automations (minute/daily/weekly/cron cadence → findings land in the **Triage inbox**); cron + `codex exec` (no built-in CLI scheduler) | cloud **Routines** (cron ≥1 h, API or GitHub-event triggers — each run is a **fresh clone of the default branch**, so loop state must be committed AND pushed); **Desktop scheduled tasks** (local, ≥1 min, app must be open); cron + `claude -p` (incl. `claude -p "/goal <condition>"`, which runs one headless invocation to completion) | Cron / CI scheduler |
-| **Event triggers** | GitHub events via cloud tasks | Hooks (file changed, turn ended, tool calls) — events only, **never** time-based recurrence; GitHub events via Routines | CI triggers (push, PR, schedule) |
-| **Worktrees** (isolation) | Worktree mode per thread (opt-in); Automations on git repos get dedicated worktrees automatically; cloud tasks run in an isolated container | `git worktree` / `--worktree` | `git worktree` |
-| **Skills** (codify project knowledge) | `SKILL.md` (in `.agents/skills/`) | `SKILL.md` | `SKILL.md` / `AGENTS.md` |
-| **Plugins / connectors** (MCP + plugins) | MCP connectors | MCP servers | Any MCP / REST |
-| **Subagents** (ideate / implement / verify) | TOML agents in `.codex/agents/` (`name`, `description`, `developer_instructions`) | Agents in `.claude/agents/` | Any subagent framework |
-| **State** (track what's done) | `agent-state/` markdown files | `agent-state/` markdown files | Markdown state files |
+**The three cadence types:**
 
-**Session freshness — the rule that makes state files non-negotiable:** every *unattended* primitive above starts a **cold session** (Routines, Desktop tasks, standalone Automations, cron + headless CLI). Only the in-session loops (`/loop`, `/goal`, thread Automations) keep context warm — and those die with the session. A loop that must survive any of that has exactly one continuity mechanism: the `agent-state/` files. For cloud Routines specifically, the files only exist if they were **committed and pushed** — a cloud run clones the default branch and sees nothing local.
+1. **In-session repeat** — *warm, ephemeral.* Re-runs inside one open session; context carries between cycles; ends when the session closes. An attended burst, not "forever." → Claude `/loop`, `/goal`; Codex thread Automations; OpenClaw warm/named sessions.
+2. **Scheduled cold-start** — *recurring, fresh each run.* A scheduler fires the driver on a cadence, and **every run is a brand-new session that re-reads the state files.** The only real set-and-forget recurrence. → Claude cloud Routines & desktop tasks, Codex standalone Automations, Hermes cron, OpenClaw cron, generic cron + headless CLI.
+3. **Event-triggered** — *reactive, not clock-based.* Fires on an event, not a schedule. → GitHub PR/release events, webhooks/API, file-change hooks. Useful, but not recurrence.
+
+**The rule this forces:** cold-start and event triggers begin with **empty context**, so `agent-state/` is the loop's only memory. In-session keeps context warm but cannot outlive the session — and Claude's fixed-interval `/loop` hard-expires at **7 days**. No host primitive "watches continuously"; recurrence is always discrete fires over committed state.
+
+**Scheduling primitive by host** (capabilities verified June 2026; see each host's docs — cited below — for exact flags):
+
+| Host | In-session repeat | Scheduled cold-start | Runs where | The one thing to get right |
+|---|---|---|---|---|
+| **Claude Code** | `/loop <interval\|omit to self-pace>` (7-day cap; dies on session close); `/goal <condition>` (evaluator checks each turn; headless via `claude -p "/goal …"`) | `/schedule` → **cloud Routines** (cron, **1-hour floor**; also one-off, API `/fire`, GitHub triggers); **desktop scheduled tasks** (local, 1-min floor) | Routines: Anthropic cloud. Desktop tasks: your machine | A cloud Routine clones the **default branch** each run and by default may only push to `claude/*` — so the loop's state must reach the default branch (enable unrestricted pushes, or have the driver check out the state branch), or the next run starts blind |
+| **Codex** | thread Automations (heartbeat, keep thread context); `/goal` (opt-in: `codex features enable goals`) | standalone Automations (daily/weekly/cron → findings land in the **Triage inbox**); `codex exec` under external cron (no built-in scheduler) | local machine running the Codex app | Standalone runs are cold and report to the Triage inbox; the machine + Codex app must stay on. Git repos get an auto background worktree |
+| **Hermes Agent** (NousResearch) | — (cron-centric) | built-in **cron** — relative (`30m`), interval (`every 2h`), standard (`0 9 * * *`), ISO timestamp; a job can attach skills + a pre-run script whose stdout becomes context | self-hosted **gateway daemon** on your host (ticks ~60s) | The daemon must be running or nothing fires. Each job runs in an **isolated, cold** session — persist across runs via the job's outputs / your state files |
+| **OpenClaw** | named / current session (warm) | **cron** jobs (scheduled + interval) delivering to any channel | self-hosted **Gateway** on your machine/server | The Gateway must be running. Choose the session mode deliberately — a fresh isolated run (cold) vs a named/current session (warm, context-carrying) |
+| **Generic / CI** | wrap the runner in a `while` loop | system **cron** / CI `schedule:` invoking the headless agent CLI | wherever you host it | Every invocation is cold; the driver's preflight + committed state files are the only continuity |
+
+**Non-trigger primitives** map the same way across hosts: isolation → `git worktree` (or the host's per-thread / per-job sandbox); skills → `SKILL.md`; subagents → `.claude/agents/*.md` / `.codex/agents/*.toml` (`developer_instructions`) / the host's agent mechanism; connectors → MCP everywhere; state → `agent-state/` markdown files, everywhere. Keep all of these host-neutral so a platform switch doesn't break the loop.
+
+**Sources (verified June 2026):** Claude routines & scheduled tasks — `code.claude.com/docs`; Codex Automations & `codex exec` — `developers.openai.com/codex`; Hermes Agent cron — `hermes-agent.nousresearch.com/docs` + `github.com/NousResearch/hermes-agent`; OpenClaw cron — `docs.openclaw.ai` + `github.com/openclaw/openclaw`. Other agent hosts (Cursor, Devin, GitHub Copilot, AutoGPT) ship their own schedulers too — check the host's docs and slot it into the cadence taxonomy above before wiring a loop to it.
 
 ---
 
