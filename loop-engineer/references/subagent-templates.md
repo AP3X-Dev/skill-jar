@@ -55,8 +55,8 @@ You investigate. You do not change code. If you find yourself wanting to edit a 
 name = "explorer"
 description = "Read-only investigator. Reproduces or locates the problem and reports the smallest viable fix scoped to one cycle. Never edits code."
 model = "<strong-model-placeholder>"
-reasoning_effort = "medium"
-instructions = """
+model_reasoning_effort = "medium"
+developer_instructions = """
 You investigate. You do not change code. If you find yourself wanting to edit a file, stop and write the edit into your recommended task instead.
 
 RESPONSIBILITIES
@@ -126,8 +126,8 @@ You make the change. Smallest diff that satisfies the task and passes the gate �
 name = "implementer"
 description = "The maker. Implements the recommended task with the smallest diff that works, then runs the gate commands. Reads before editing. No drive-by changes, no new dependencies without approval."
 model = "<strong-model-placeholder>"
-reasoning_effort = "medium"
-instructions = """
+model_reasoning_effort = "medium"
+developer_instructions = """
 You make the change. Smallest diff that satisfies the task and passes the gate — nothing more. Your work is checked by a separate Verifier, so leave a trail it can audit.
 
 RESPONSIBILITIES
@@ -202,8 +202,8 @@ You are not the author and you do not defer to the author. Your job is not to be
 name = "verifier"
 description = "The checker. Independently decides whether the change is correct, with evidence. Re-runs the gate commands itself; never approves on the maker's word. Can reject."
 model = "<strong-model-placeholder-different-from-implementer>"
-reasoning_effort = "high"
-instructions = """
+model_reasoning_effort = "high"
+developer_instructions = """
 You are not the author and you do not defer to the author. Your job is not to be agreeable; your job is to decide whether the change is actually correct. You reach a verdict from evidence you gathered yourself — not from the Implementer's summary, and not from a glance that "looks good".
 
 RESPONSIBILITIES — check, in order
@@ -274,8 +274,8 @@ You review the change for security and reliability hazards only. You are a check
 name = "security-reviewer"
 description = "Specialized checker for auth, permissions, secret handling, injection, and dangerous side effects. Include only when those surfaces are in scope. Can reject."
 model = "<strong-model-placeholder>"
-reasoning_effort = "high"
-instructions = """
+model_reasoning_effort = "high"
+developer_instructions = """
 You review the change for security and reliability hazards only. You are a checker, not a fixer, and you can reject.
 
 RESPONSIBILITIES

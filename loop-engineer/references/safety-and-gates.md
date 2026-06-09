@@ -67,9 +67,9 @@ echo "ALL GATES GREEN"
 
 Where the host supports a goal/done-condition primitive, bind the loop's continuation to the gate so the loop **cannot advance on an unverified cycle**. Give the gate to the host in its own form:
 
-- **Claude Code** — express the done condition as a `/goal`-style success criterion the loop must satisfy each cycle:
-  > Goal is met only when, in this cycle: the verification script printed `ALL GATES GREEN`, `git diff --name-only` shows only files inside the declared task scope plus `agent-state/`, and `agent-state/loop-state.md` records the result. If any condition is unmet, the goal is NOT met — stop and report; do not commit.
-- **Codex** — set the equivalent stop/success predicate in the agent's run config so a non-green gate halts the run instead of advancing to the next cycle.
+- **Claude Code** — `/goal` is a real command: it sets a completion condition that a separate evaluator model checks after every turn, and Claude keeps working until it holds (`/goal clear` cancels; works headless via `claude -p "/goal <condition>"`):
+  > /goal the verification script printed `ALL GATES GREEN`, `git diff --cached --name-only` shows only files inside the declared task scope plus `agent-state/`, and `agent-state/loop-state.md` records the result — or stop after 20 turns
+- **Codex** — `/goal` exists behind a feature flag (`codex features enable goals`); phrase it the same way: "Complete <the cycle> without stopping until <the gate condition holds>". It supports `pause`/`resume`/`clear` and stops on success, budget limit, or an unresolvable blocker.
 - **Generic fallback** — when the host has no goal primitive, the runner wraps the cycle: it executes the gate script and only proceeds to commit/next-cycle on exit 0; any non-zero exit halts the loop and writes the failure to `agent-state/failed-attempts.md`.
 
 A failed gate is not a quiet retry — it is a logged stop. Record the failing command and its output in `agent-state/failed-attempts.md` so the next cycle (or the human) sees what blocked, not just that something did.

@@ -33,7 +33,7 @@ The **state files** (`agent-state/`) are the REQUIRED restart mechanism; the loo
 
 ## Agent-agnostic by default
 
-A loop is a pattern, not a product. Every artifact this skill scaffolds is provided in portable form. Subagents ship as **both** Claude Code (`.claude/agents/*.md`) and Codex (`.codex/agents/*.toml`); triggers map to whatever the host offers (cron, scheduled tasks, `/loop`, `/goal`, hooks, GitHub Actions). Detect the host, scaffold the matching primitives, and keep the state files / `AGENTS.md` / driver prompt host-neutral so the loop survives a platform switch. See [references/loop-architecture.md](references/loop-architecture.md) for the primitive-to-platform map.
+A loop is a pattern, not a product. Every artifact this skill scaffolds is provided in portable form. Subagents ship as **both** Claude Code (`.claude/agents/*.md`) and Codex (`.codex/agents/*.toml`); triggers map to whatever the host offers — in-session loops (`/loop`, `/goal`), scheduled cold-start runs (Routines / Desktop scheduled tasks / Automations / cron + headless CLI), and event triggers (hooks, CI). Detect the host, scaffold the matching primitives, and keep the state files / `AGENTS.md` / driver prompt host-neutral so the loop survives a platform switch. See [references/loop-architecture.md](references/loop-architecture.md) for the primitive-to-platform map and the session-freshness rules that make the state files non-negotiable.
 
 ## When to Use
 

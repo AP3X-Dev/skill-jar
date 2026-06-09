@@ -218,11 +218,13 @@ Operate only inside agent-state/ and the code the chosen task names. Never widen
 
 The driver above is host-neutral; what fires it is host-specific. Below are the minimal forms per platform. For the full primitive-to-platform map (which automation primitive maps to which platform, and the autonomy-ladder gate at each level), see [loop-architecture.md](loop-architecture.md) — do not duplicate that table here. Pick the form your host supports and point it at the driver from §3.
 
-**cron (generic / any Unix host).** Run the driver once per schedule via the host's headless agent CLI:
+**cron (generic / any Unix host).** Run the driver once per schedule via the host's headless agent CLI. Each invocation is a **cold session** — the driver's preflight + state files are what give it continuity:
 
 ```cron
 # 07:00 daily — run one loop cycle, log output
-0 7 * * *  cd /path/to/repo && <agent-cli> run --prompt docs/prompts/<loop>-driver.md >> agent-state/loop.log 2>&1
+# Claude Code:  claude -p "$(cat docs/prompts/<loop>-driver.md)"
+# Codex:        codex exec "$(cat docs/prompts/<loop>-driver.md)"   (no built-in CLI scheduler)
+0 7 * * *  cd /path/to/repo && <headless-agent-command-above> >> agent-state/loop.log 2>&1
 ```
 
 **GitHub Actions (CI-only host).** A scheduled workflow that runs the driver headless:
@@ -244,21 +246,26 @@ jobs:
         # provide the agent's API key via secrets, e.g. env: { API_KEY: ${{ secrets.AGENT_API_KEY }} }
 ```
 
-**Claude Code (`/loop`).** Re-run the driver on an interval from inside a session:
+**Claude Code, in-session (`/loop`).** Re-run the driver on an interval inside the **same session** — full context persists between iterations (the state files still matter: they cover crashes, compaction, and every other trigger type):
 
 ```
-/loop 1h <driver-prompt-or-command>
+/loop 1h <driver-prompt-or-slash-command>
 ```
 
-The interval (`1h`) is the cycle cadence; the argument is the driver prompt from §3 or a slash command that invokes it. Omit the interval to let the agent self-pace between cycles.
+Interval units `s/m/h/d`; omit the interval and the model picks its own cadence (and may end the loop itself once the work is provably done). Constraints to plan around: the session must stay open (`/loop` cannot run headless), `Esc` stops it, and **fixed-interval loops auto-expire after 7 days** — a multi-week pass needs a scheduled primitive instead.
 
-**Codex (scheduled task / cron).** Codex has no `/loop`; schedule its headless runner instead — a cron line or scheduled task invoking `codex exec` (or the host's task scheduler) against `docs/prompts/<loop>-driver.md`, using the cron form above with `<agent-cli>` = the Codex CLI.
-
-**A `/goal`-style done condition (where the host supports goal-bounded runs).** Instead of a fixed interval, bound the run by a falsifiable completion check so the loop stops itself when the work is actually finished:
+**Claude Code, condition-bounded (`/goal`).** Set a completion condition and Claude keeps working turn after turn until a separate evaluator model confirms it holds:
 
 ```
-Continue until all tests in test/<area> pass, lint is clean, no unrelated files are
-modified, and agent-state/loop-state.md is updated. Then stop.
+/goal the verification script prints ALL GATES GREEN, agent-state/loop-state.md
+records this cycle's result, and no file outside the task scope changed —
+or stop after 20 turns
 ```
 
-Every clause is a runnable check, not a vibe — the same gate the driver's step 5 enforces, hoisted to the trigger so the host can decide when to halt.
+Write one measurable end state + the check that proves it + the constraints that must hold; bound it with a turn/time clause. `/goal clear` cancels. **Headless form:** `claude -p "/goal <condition>"` runs one invocation to completion — the cleanest "run until the gate is green" trigger for cron/CI.
+
+**Claude Code, scheduled (cold start each run).** Cloud **Routines** (cron ≥1 hour, API or GitHub-event triggers) run on Anthropic infrastructure against a **fresh clone of the default branch — commit and push the `agent-state/` files or the routine cannot see them.** **Desktop scheduled tasks** run locally (≥1 minute, app must be open) with file access. Both start a fresh session every run.
+
+**Codex.** In-session: `/goal` exists behind a feature flag (`codex features enable goals`; `pause`/`resume`/`clear` subcommands). Scheduled: the app's **Automations** — *standalone* (each run independent, findings land in the Triage inbox; minute/daily/weekly/cron cadence; git repos get a dedicated background worktree) or *thread* (heartbeat wake-ups that keep the thread's context). Headless: `codex exec` (no built-in scheduler — wrap in cron/CI), with `resume`/`--last` to continue a prior session.
+
+**The done condition is the gate, restated.** Whatever the host primitive, the condition you give it is the driver's step-5 gate hoisted to the trigger: every clause a runnable check ("tests in test/<area> pass", "lint clean", "no unrelated files modified", "loop-state.md updated"), never a vibe — so the host stops the loop exactly when the work is verifiably finished.

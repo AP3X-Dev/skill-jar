@@ -138,12 +138,16 @@ A loop is a pattern, not a product. Each primitive maps to whatever the host off
 
 | Primitive | Codex | Claude Code | Generic / CI |
 |---|---|---|---|
-| **Automations** (discovery / triage / scheduled) | Automations tab + `/goal` + Triage inbox | Scheduled tasks / cron + `/loop` + `/goal` + hooks + GitHub Actions | Cron / CI scheduler |
-| **Worktrees** (isolation) | Built-in worktree per thread | `git worktree` / `--worktree` | `git worktree` |
-| **Skills** (codify project knowledge) | `SKILL.md` | `SKILL.md` | `SKILL.md` / `AGENTS.md` |
+| **In-session loops** (warm context) | `/goal` (opt-in: `codex features enable goals`; pause/resume/clear); thread Automations (heartbeat wake-ups that keep thread context) | `/loop <interval\|omit to self-pace>` (same session; fixed-interval loops expire after 7 days); `/goal <condition>` (an evaluator model checks the condition after every turn until it holds) | — (wrap the runner in a while-loop) |
+| **Scheduled / unattended** (cold start each run) | standalone Automations (minute/daily/weekly/cron cadence → findings land in the **Triage inbox**); cron + `codex exec` (no built-in CLI scheduler) | cloud **Routines** (cron ≥1 h, API or GitHub-event triggers — each run is a **fresh clone of the default branch**, so loop state must be committed AND pushed); **Desktop scheduled tasks** (local, ≥1 min, app must be open); cron + `claude -p` (incl. `claude -p "/goal <condition>"`, which runs one headless invocation to completion) | Cron / CI scheduler |
+| **Event triggers** | GitHub events via cloud tasks | Hooks (file changed, turn ended, tool calls) — events only, **never** time-based recurrence; GitHub events via Routines | CI triggers (push, PR, schedule) |
+| **Worktrees** (isolation) | Worktree mode per thread (opt-in); Automations on git repos get dedicated worktrees automatically; cloud tasks run in an isolated container | `git worktree` / `--worktree` | `git worktree` |
+| **Skills** (codify project knowledge) | `SKILL.md` (in `.agents/skills/`) | `SKILL.md` | `SKILL.md` / `AGENTS.md` |
 | **Plugins / connectors** (MCP + plugins) | MCP connectors | MCP servers | Any MCP / REST |
-| **Subagents** (ideate / implement / verify) | TOML agents in `.codex/agents/` | Agents in `.claude/agents/` | Any subagent framework |
+| **Subagents** (ideate / implement / verify) | TOML agents in `.codex/agents/` (`name`, `description`, `developer_instructions`) | Agents in `.claude/agents/` | Any subagent framework |
 | **State** (track what's done) | `agent-state/` markdown files | `agent-state/` markdown files | Markdown state files |
+
+**Session freshness — the rule that makes state files non-negotiable:** every *unattended* primitive above starts a **cold session** (Routines, Desktop tasks, standalone Automations, cron + headless CLI). Only the in-session loops (`/loop`, `/goal`, thread Automations) keep context warm — and those die with the session. A loop that must survive any of that has exactly one continuity mechanism: the `agent-state/` files. For cloud Routines specifically, the files only exist if they were **committed and pushed** — a cloud run clones the default branch and sees nothing local.
 
 ---
 
