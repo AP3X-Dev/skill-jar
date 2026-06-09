@@ -24,6 +24,7 @@ Then invoke it by name (`/<skill-name>`) or just describe your task — a capabl
 
 | Skill | What it does |
 |-------|--------------|
-| [**building-optimization-loops**](building-optimization-loops/SKILL.md) | Generates a self-sustaining optimization-loop prompt for an existing codebase. Audits first, builds a concrete file-level backlog, then drives repeated **audit → fix → measure → track** cycles — with a re-measured metric vector, a no-regression ratchet, a restartable progress log, and guardrails for unattended runs. Built for hardening / quality passes after feature work. |
+| [**loop-engineering**](loop-engineering/SKILL.md) | Scaffolds a self-running **agent loop** into a repo — automation discovers work, a maker agent executes, a *separate* checker verifies, state is recorded, and the loop decides what runs next. Lays down state files, maker≠checker subagents (Claude Code **and** Codex), trigger + per-cycle driver prompts, runnable verification gates, `AGENTS.md` safety rules, worktree isolation, and install-ready triage / code-review / release role-skills. Agent-agnostic; starts at triage-only and earns autonomy one level at a time. |
+| [**building-optimization-loops**](building-optimization-loops/SKILL.md) | A specialized loop (one that `loop-engineering` can scaffold as its execution stage): generates a self-sustaining optimization-loop prompt for an existing codebase. Audits first, builds a concrete file-level backlog, then drives repeated **audit → fix → measure → track** cycles — with a re-measured metric vector, a no-regression ratchet, a restartable progress log, and guardrails for unattended runs. Built for hardening / quality passes after feature work. |
 
-*One skill today — the jar only fills up over time.*
+*Two skills and counting — the jar fills up over time.*
