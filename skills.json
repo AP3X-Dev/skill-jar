@@ -13,7 +13,7 @@
     },
     {
       "name": "building-optimization-loops",
-      "description": "Use when the user wants an optimization loop, hardening pass, or optimizer prompt that runs repeated audit→fix→track cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Generates a portable optimizer prompt + progress log (not a direct code fix). NOT for a single one-off bug (use bugfix/bug-fixer) or a brand-new codebase (use brainstorming/writing-plans).",
+      "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), or building a non-optimization loop (use loop-engineer directly).",
       "path": "building-optimization-loops/SKILL.md"
     },
     {

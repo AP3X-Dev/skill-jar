@@ -338,10 +338,10 @@ digraph autonomous {
     subgraph cluster_optimize {
         label="Phase 5: Optimization (building-optimization-loops)";
         "Audit codebase against PRP" [shape=box];
-        "Generate optimizer prompt + log" [shape=box];
+        "Scaffold loop: backlog + driver + verifier" [shape=box];
         "Verifier gates optimizer" [shape=box];
-        "Launch optimization loop\n(5 min interval)" [shape=box];
-        "Loop runs until backlog clear" [shape=box];
+        "Wire trigger + close cycle 1" [shape=box];
+        "Loop runs until CONVERGED" [shape=box];
     }
 
     "Store to MemBerry + save decision log" [shape=box];
@@ -371,11 +371,11 @@ digraph autonomous {
     "Verify tests" -> "Auto-select PR creation";
     "Auto-select PR creation" -> "Execute + cleanup";
     "Execute + cleanup" -> "Audit codebase against PRP";
-    "Audit codebase against PRP" -> "Generate optimizer prompt + log";
-    "Generate optimizer prompt + log" -> "Verifier gates optimizer";
-    "Verifier gates optimizer" -> "Launch optimization loop\n(5 min interval)";
-    "Launch optimization loop\n(5 min interval)" -> "Loop runs until backlog clear";
-    "Loop runs until backlog clear" -> "Store to MemBerry + save decision log";
+    "Audit codebase against PRP" -> "Scaffold loop: backlog + driver + verifier";
+    "Scaffold loop: backlog + driver + verifier" -> "Verifier gates optimizer";
+    "Verifier gates optimizer" -> "Wire trigger + close cycle 1";
+    "Wire trigger + close cycle 1" -> "Loop runs until CONVERGED";
+    "Loop runs until CONVERGED" -> "Store to MemBerry + save decision log";
     "Store to MemBerry + save decision log" -> "Done";
 }
 ```
@@ -428,31 +428,30 @@ The orchestrator:
    - **Phase 1 (Intent Discovery):** Uses the PRP + the design spec + the implementation plan as intent sources (no need to scan scattered docs — the autonomous pipeline already produced clean artifacts)
    - **Phase 2 (Codebase Audit):** Dispatches parallel audit agents against the freshly-built code
    - **Phase 3 (Gap Analysis):** Compares audit findings against PRP success criteria
-   - **Phase 4 (Generate Artifacts):** Produces the optimizer prompt, progress log, and intent summary
+   - **Phase 4 (Scaffold):** Builds the loop on loop-engineer conventions — backlog + metric floors in `agent-state/loop-state.md`, the dual-mode driver in `docs/prompts/`, a separate maker≠checker verifier
+   - **Phase 5 (Launch):** Wires the trigger and closes cycle 1 end-to-end — the skill hands back a RUNNING loop, not artifacts
 
-4. **Verifier gates the optimizer prompt** — dispatch the verifier with DESIGN_APPROVAL type (complete optimizer text, not a summary) to verify the generated optimizer aligns with PRP goals
+4. **Verifier gates the backlog + driver** — dispatch the verifier with DESIGN_APPROVAL type (the complete loop-state backlog and driver text, not a summary) at the skill's "user reviews" checkpoint, to verify the generated loop aligns with PRP goals
 
-### Launching the Loop
+### Confirming the Loop Is Running
 
-After the optimizer artifacts are generated and approved:
+building-optimization-loops wires the trigger and closes cycle 1 itself (its Phase 5). The orchestrator's job is to confirm and configure, not to launch:
 
-1. **Launch the optimization loop on a 5-minute interval** using the `/loop` skill:
-   ```
-   /loop 5m <optimizer-prompt-path>
-   ```
-   This runs the optimizer prompt every 5 minutes, each session picking up where the last left off via the progress log.
+1. **Set the cadence** — in autonomous mode the advisor picks the trigger interval (default `/loop 5m docs/prompts/<name>-optimizer-driver.md`; Codex/generic hosts use a scheduled run per the skill's host-wiring guidance), since there is no human to choose.
 
-2. **The loop is self-sustaining.** Each session:
-   - Reads the progress log
+2. **Confirm cycle 1 closed green** — backlog item #1 completed, verifier PASS, metrics recorded against the baseline, one commit carrying code + state. If the skill could not close cycle 1, that is a blocker to resolve (fix the driver/gate via the skill), never a reason to launch anyway.
+
+3. **The loop is self-sustaining.** Each cycle:
+   - Reads `agent-state/loop-state.md`
    - Executes the next backlog item (Mode A)
    - Discovers and fixes adjacent issues (Mode B)
-   - Updates the progress log
-   - The next session continues from where it stopped
+   - A separate verifier re-runs the gate + metric ratchet and can REJECT
+   - Updates the loop state; the next cycle continues from where it stopped
 
 3. **Loop termination.** The loop runs until:
-   - The original backlog is exhausted AND Mode B discovers no new issues for 2 consecutive sessions
+   - The skill's CONVERGED condition holds (no new High+ items over ~3 cycles, open High/Block empty, metrics flat) — or it reports STALLED/DIVERGING, which escalates to the human
    - OR a guardrail is hit (see Guardrails below)
-   - OR the loop has run for more than 50 sessions (safety cap — report to human)
+   - OR the loop has run for more than 50 cycles (safety cap — report to human)
 
 4. **After loop completion**, store final results to MemBerry:
    ```
@@ -551,7 +550,7 @@ Store the full summary to MemBerry as the final entry for this autonomous sessio
 6. **systematic-debugging** — triggered if bugs arise, advisor resolves escalations
 7. **receiving-code-review** — handles review feedback, advisor resolves conflicts
 8. **finishing-a-development-branch** — auto-selects PR creation
-9. **building-optimization-loops** — audit + generate optimizer + launch loop
+9. **building-optimization-loops** — audit + scaffold loop + close cycle 1 + run to termination
 
 **Skills wrapped (advisor replaces human at their checkpoints):**
 - brainstorming, writing-plans, executing-plans, subagent-driven-development
