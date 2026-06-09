@@ -18,6 +18,19 @@ Loop:    Automation discovers → Agent executes → Verifier checks → State u
 
 **Core principle:** earn autonomy. Start at the smallest loop that delivers value (triage-only), prove it, then add execution, isolation, and connectors one layer at a time. Never scaffold a "fully autonomous, improve-the-codebase" loop on day one.
 
+## What a loop is — and isn't
+
+A loop is a **restartable, stateful system** — files on disk (`agent-state/`) plus the discipline that reads and updates them — **not a process that runs on its own forever.** "Self-running" here means each *cycle* executes without you hand-prompting every step; it does **not** mean the loop watches anything continuously. Do not scaffold, describe, or expect a loop as an always-on monitor — that is not what any host primitive provides.
+
+A loop's cadence is one of two things, never a perpetual background watch:
+
+- **In-session** (`/loop`, `/goal`): warm context carries between cycles, but it is **ephemeral** — it ends when the session closes, and a fixed-interval `/loop` **auto-expires after 7 days**. Right for a focused, attended burst; never for "forever."
+- **Scheduled cold-start** (cloud Routines, Desktop scheduled tasks, cron + headless CLI): genuinely recurring, but **each run is a fresh session that re-reads the state files** to learn where it left off — not a live process that stayed running. Cloud Routines clone the default branch, so the state files must be **committed and pushed** or the run sees nothing.
+
+The durable thing is therefore the **state + gates + discipline in the files**, not a living process — which is exactly why the state files are non-negotiable: they are the only continuity that survives a closed session, the 7-day cap, or a scheduled cold start. (Full lifetime/freshness details: [references/loop-architecture.md](references/loop-architecture.md).)
+
+**Design implication:** for anything with real-world side effects — spend, deploys, data changes — human-paced or scheduled *reviewed* cycles with approval gates (the autonomy ladder) are the correct design, not a compromise. The value a loop adds over re-running a one-shot task by hand is **memory, measurement, and verification that compound across runs** — not uptime.
+
 ## Two layers — read this before you start
 
 Keep these straight, exactly as in [optimization-loop](../optimization-loop/SKILL.md):
