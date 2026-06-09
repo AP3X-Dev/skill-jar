@@ -15,6 +15,13 @@ agent-state/loop-state.md). Checks, in order:
                       code are stripped first; http/mailto/#anchor links skipped).
   5. Scripts       -- every tracked .py compiles, and scaffold-loop.py stays
                       idempotent (second run into a temp dir creates 0 paths).
+  6. Index         -- skills.json (the machine-readable jar index) is in sync
+                      with the skills' frontmatter (delegates to
+                      scripts/gen-index.py --check).
+  7. Plugin        -- .claude-plugin/marketplace.json and plugin.json parse,
+                      every plugin skill path exists and holds a SKILL.md, and
+                      the plugin's skill list matches the jar's top-level
+                      skills exactly (no silent drift when a skill is added).
 
 Stdlib only. Uses PyYAML when available; falls back to a minimal frontmatter
 check (including the unquoted "key: a: b" mapping footgun) when it is not.
@@ -25,6 +32,7 @@ Usage:
 """
 
 import argparse
+import json
 import py_compile
 import re
 import shutil
@@ -191,6 +199,20 @@ def check_scripts():
         except py_compile.PyCompileError as e:
             record(False, "compile", "%s: %s" % (rel, str(e).splitlines()[0]))
 
+    gen_index = ROOT / "scripts" / "gen-index.py"
+    if gen_index.exists():
+        r = subprocess.run([sys.executable, str(gen_index), "--check"],
+                           capture_output=True, text=True)
+        if r.returncode == 0:
+            record(True, "index", "skills.json in sync with frontmatter")
+        else:
+            record(False, "index",
+                   (r.stdout or r.stderr).strip().splitlines()[0]
+                   if (r.stdout or r.stderr).strip() else
+                   "gen-index.py --check exited %d" % r.returncode)
+    else:
+        record(False, "index", "scripts/gen-index.py not found")
+
     scaffold = ROOT / "loop-engineering" / "scripts" / "scaffold-loop.py"
     if not scaffold.exists():
         record(False, "idempotency", "scaffold-loop.py not found")
@@ -217,6 +239,70 @@ def check_scripts():
 
 
 # ---------------------------------------------------------------------------
+# Plugin manifests
+# ---------------------------------------------------------------------------
+
+def check_plugin_manifests():
+    """marketplace.json + plugin.json parse, paths resolve, no skill drift."""
+    mp_path = ROOT / ".claude-plugin" / "marketplace.json"
+    pj_path = ROOT / ".claude-plugin" / "plugin.json"
+
+    manifests = {}
+    for path in (mp_path, pj_path):
+        rel = path.relative_to(ROOT).as_posix()
+        if not path.exists():
+            record(False, "plugin", "%s missing" % rel)
+            continue
+        try:
+            manifests[path.name] = json.loads(path.read_text(encoding="utf-8"))
+            record(True, "plugin", "%s parses" % rel)
+        except json.JSONDecodeError as e:
+            record(False, "plugin", "%s: %s" % (rel, e))
+
+    mp = manifests.get("marketplace.json")
+    if mp is not None:
+        missing = [k for k in ("name", "owner", "plugins") if not mp.get(k)]
+        if missing:
+            record(False, "plugin",
+                   "marketplace.json missing field(s): %s" % ", ".join(missing))
+        else:
+            record(True, "plugin", "marketplace.json has name/owner/plugins")
+
+    pj = manifests.get("plugin.json")
+    if pj is None:
+        return
+    declared = pj.get("skills") or []
+    bad = []
+    for entry in declared:
+        if not entry.startswith("./"):
+            bad.append("%s (must start with ./)" % entry)
+            continue
+        if not (ROOT / entry / "SKILL.md").exists():
+            bad.append("%s (no SKILL.md)" % entry)
+    if bad:
+        record(False, "plugin", "plugin.json skill paths: %s" % ", ".join(bad))
+    else:
+        record(True, "plugin", "plugin.json skill paths all hold a SKILL.md")
+
+    # Drift gate: the plugin must expose exactly the jar's top-level skills.
+    declared_dirs = {e[2:].strip("/") for e in declared if e.startswith("./")}
+    actual_dirs = {f.parent.name for f in ROOT.glob("*/SKILL.md")
+                   if f.parent.name not in SKIP_DIR_NAMES}
+    if declared_dirs == actual_dirs:
+        record(True, "plugin", "plugin.json skill list matches the jar (%d)"
+               % len(actual_dirs))
+    else:
+        gone = declared_dirs - actual_dirs
+        new = actual_dirs - declared_dirs
+        parts = []
+        if new:
+            parts.append("missing from plugin.json: %s" % ", ".join(sorted(new)))
+        if gone:
+            parts.append("declared but absent: %s" % ", ".join(sorted(gone)))
+        record(False, "plugin", "skill list drift -- %s" % "; ".join(parts))
+
+
+# ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
 
@@ -231,6 +317,7 @@ def main(argv=None):
     for f in md_files_for_link_audit():
         check_links(f)
     check_scripts()
+    check_plugin_manifests()
 
     fails = [r for r in results if not r[0]]
     for ok, label, detail in results:

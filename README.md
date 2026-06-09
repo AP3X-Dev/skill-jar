@@ -4,6 +4,8 @@
 
 # skill-jar
 
+[![audit](https://github.com/AP3X-Dev/skill-jar/actions/workflows/audit.yml/badge.svg)](https://github.com/AP3X-Dev/skill-jar/actions/workflows/audit.yml)
+
 A growing collection of **Agent Skills** — drop-in capabilities that teach an AI agent how to do a specific job well. Reach into the jar when you need one.
 
 ## What's an Agent Skill?
@@ -12,7 +14,16 @@ Each skill is a self-contained `SKILL.md` (plus any bundled resources) with fron
 
 ## Using a skill
 
-Copy the skill's folder into your agent's skills directory — for example, in Claude Code:
+**Claude Code — install the whole jar as a plugin:**
+
+```
+/plugin marketplace add AP3X-Dev/skill-jar
+/plugin install skill-jar@skill-jar
+```
+
+Skills then load on demand (`/skill-jar:bug-pipeline`, etc.) and update with the repo.
+
+**Any agent — copy the folder** into its skills directory, e.g. in Claude Code:
 
 ```
 ~/.claude/skills/<skill-name>/
@@ -29,6 +40,10 @@ Then invoke it by name (`/<skill-name>`) or just describe your task — a capabl
 | [**building-optimization-loops**](building-optimization-loops/SKILL.md) | A specialized loop (one that `loop-engineering` can scaffold as its execution stage): generates a self-sustaining optimization-loop prompt for an existing codebase. Audits first, builds a concrete file-level backlog, then drives repeated **audit → fix → measure → track** cycles — with a re-measured metric vector, a no-regression ratchet, a restartable progress log, and guardrails for unattended runs. Built for hardening / quality passes after feature work. |
 
 *Three skills and counting — the jar fills up over time.*
+
+## For agents
+
+Reading this repo programmatically? Route from [`skills.json`](skills.json) — a generated index of every skill's `name`, routing `description`, and `path` (one fetch, no directory crawl; it's gate-checked against the frontmatter, so it can't drift). Install via the plugin marketplace above (Claude Code) or copy a skill's folder (any host). Every push is verified by `python scripts/audit-jar.py` — the badge above is that gate. If you *operate* in this repo (run a loop cycle, fix a bug), the rules in [`AGENTS.md`](AGENTS.md) bind you.
 
 ## Self-hosted loop
 

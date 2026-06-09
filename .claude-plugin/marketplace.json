@@ -1,0 +1,14 @@
+{
+  "name": "skill-jar",
+  "owner": {
+    "name": "AP3X"
+  },
+  "description": "A growing collection of Agent Skills -- drop-in capabilities that teach an AI agent how to do a specific job well.",
+  "plugins": [
+    {
+      "name": "skill-jar",
+      "source": "./",
+      "description": "All jar skills: loop-engineering, bug-pipeline, building-optimization-loops."
+    }
+  ]
+}

@@ -44,6 +44,13 @@ Keep the skill jar publish-ready via two loops, one task per cycle each:
 
 - The gate is `python scripts/audit-jar.py`; a task is never COMPLETED while it
   exits non-zero.
+- CI (`.github/workflows/audit.yml`) runs the same gate on every push/PR --
+  jar-audit's discovery is continuous now; cycles fix what CI flags. A red
+  badge is an automatic top-priority inbox finding.
+- `skills.json` and `.claude-plugin/*.json` are generated/declared wrapper
+  artifacts with their own gate checks (index sync, skill-list drift). Adding a
+  skill means: create the folder, run `python scripts/gen-index.py`, add the
+  path to `.claude-plugin/plugin.json`, and the gate confirms all three agree.
 - jar-audit findings live in `triage-inbox.md`; bug-pipeline findings live in
   `BUG_TRACKER.md`. Do not cross-file them.
 - Fixer never validates its own fix (maker != checker); the validator runs on a

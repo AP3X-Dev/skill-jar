@@ -1,0 +1,23 @@
+name: audit
+
+# The jar's verification gate, enforced on every push and PR — the same
+# command the self-hosted jar-audit loop runs locally (see
+# docs/prompts/jar-audit-driver.md). Red gate = red build.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # PyYAML strengthens the frontmatter check; the script falls back to a
+      # minimal parser without it, so this is belt-and-braces, not a hard dep.
+      - run: pip install pyyaml
+      - run: python scripts/audit-jar.py

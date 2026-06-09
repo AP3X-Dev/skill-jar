@@ -1,0 +1,13 @@
+{
+  "name": "skill-jar",
+  "description": "Agent Skills from the skill jar: scaffold self-running agent loops (loop-engineering), run a Hunter -> Fixer -> Validator repair pipeline (bug-pipeline), and generate codebase optimization loops (building-optimization-loops).",
+  "version": "1.0.0",
+  "author": {
+    "name": "AP3X"
+  },
+  "skills": [
+    "./bug-pipeline",
+    "./building-optimization-loops",
+    "./loop-engineering"
+  ]
+}
