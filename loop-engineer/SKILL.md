@@ -1,6 +1,6 @@
 ---
 name: loop-engineer
-description: "Use when the user wants to BUILD an agent loop or loop system — a self-running pipeline where automation discovers work, an agent executes it, a separate verifier checks it, state is recorded, and the loop decides what runs next — instead of hand-prompting every step. Scaffolds the loop into a repo: state files, maker≠checker subagents, automation/trigger and driver prompts, verification gates, safety rules, and worktree isolation. Agent-agnostic (Claude Code, Codex, or generic). NOT for running a single one-off task, fixing one bug (use bugfix), or an audit→fix hardening pass on an existing codebase (use building-optimization-loops — a specialized loop this skill can scaffold)."
+description: "Use when the user wants to BUILD an agent loop or loop system — a self-running pipeline where automation discovers work, an agent executes it, a separate verifier checks it, state is recorded, and the loop decides what runs next — instead of hand-prompting every step. Scaffolds the loop into a repo: state files, maker≠checker subagents, automation/trigger and driver prompts, verification gates, safety rules, and worktree isolation. Agent-agnostic (Claude Code, Codex, or generic). NOT for running a single one-off task, fixing one bug (use bugfix), or an audit→fix hardening pass on an existing codebase (use optimization-loop — a specialized loop this skill can scaffold)."
 ---
 
 # Loop Engineer
@@ -20,7 +20,7 @@ Loop:    Automation discovers → Agent executes → Verifier checks → State u
 
 ## Two layers — read this before you start
 
-Keep these straight, exactly as in [building-optimization-loops](../building-optimization-loops/SKILL.md):
+Keep these straight, exactly as in [optimization-loop](../optimization-loop/SKILL.md):
 
 1. **Layer 1 (the process YOU run now)** — discover, choose the loop, scaffold files, wire agents, set gates, hand off. You perform these steps.
 2. **Layer 2 (text that goes INTO the system)** — everything inside the template fences in the reference files: driver prompts, subagent instructions, automation prompts, `AGENTS.md` rules. You *author* this text; you do not perform it. A separate **loop-agent** runs it later, cycle after cycle.
@@ -45,7 +45,7 @@ A loop is a pattern, not a product. Every artifact this skill scaffolds is provi
 ## When NOT to Use
 
 - A single one-off task or one specific bug — just do it (use **bugfix** / **bug-fixer**).
-- An audit→fix→measure hardening pass on an existing codebase — use **building-optimization-loops** (a specialized loop; this skill can scaffold it as the execution stage).
+- An audit→fix→measure hardening pass on an existing codebase — use **optimization-loop** (a specialized loop; this skill can scaffold it as the execution stage).
 - A brand-new codebase with nothing to loop over yet — use **brainstorming** / **writing-plans** first.
 
 ## The loop architecture (six parts)
@@ -140,7 +140,7 @@ Run this gate on your own output before presenting the scaffolded loop. Fix any 
 
 ## Specialized loops this skill can scaffold
 
-- **building-optimization-loops** — for an audit→fix→measure→track hardening pass on an existing codebase. It builds natively on this skill's conventions (agent-state spine, driver at `docs/prompts/`, maker≠checker verifier, the scaffolder) and adds the optimization-specific machinery: intent discovery, an audit-derived backlog + metric vector, a no-regression ratchet, dual-mode cycles, and metric-driven termination — then wires the trigger and closes cycle 1 itself. When the user's loop IS optimization, invoke it directly; it hands off a running loop.
+- **optimization-loop** — for an audit→fix→measure→track hardening pass on an existing codebase. It builds natively on this skill's conventions (agent-state spine, driver at `docs/prompts/`, maker≠checker verifier, the scaffolder) and adds the optimization-specific machinery: intent discovery, an audit-derived backlog + metric vector, a no-regression ratchet, dual-mode cycles, and metric-driven termination — then wires the trigger and closes cycle 1 itself. When the user's loop IS optimization, invoke it directly; it hands off a running loop.
 - **bug-pipeline** — the Hunter → Fixer → Validator defect pipeline over a shared tracker; same relationship.
 
 ## Common Mistakes

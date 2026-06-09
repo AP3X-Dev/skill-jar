@@ -10,7 +10,7 @@ Everything inside a fenced block here is **Layer 2** — text that goes INTO the
 
 A gate is **a command that exits non-zero and STOPS the cycle.** It is not a vibe, not a self-grade, not "looks good." If a check cannot be expressed as a command with a 0/1 exit code (or an assertion that provably holds), it is not a gate — it's a hope, and hopes don't block bad commits.
 
-This is the same discipline `building-optimization-loops` enforces with its Acceptance checks and no-regression ratchet: every claim of "done" is falsifiable or it doesn't count. Soft gates are the single most common way a loop ships plausible-but-wrong work.
+This is the same discipline `optimization-loop` enforces with its Acceptance checks and no-regression ratchet: every claim of "done" is falsifiable or it doesn't count. Soft gates are the single most common way a loop ships plausible-but-wrong work.
 
 ### The gate set
 
@@ -141,4 +141,4 @@ The autonomy ladder grants the loop more of the *mechanical* work as it earns tr
 
 ---
 
-**Cross-reference:** the gate set here is the operational form of the Phase 5 hard stops and the "Before handoff — verify" checklist in `../SKILL.md`; the falsifiable-Acceptance and no-regression-ratchet discipline it mirrors lives in `../../building-optimization-loops/SKILL.md`. The `agent-state/` files these gates read and write are defined in `state-templates.md`; the worktree the cycle runs in is defined in `worktree-isolation.md`.
+**Cross-reference:** the gate set here is the operational form of the Phase 5 hard stops and the "Before handoff — verify" checklist in `../SKILL.md`; the falsifiable-Acceptance and no-regression-ratchet discipline it mirrors lives in `../../optimization-loop/SKILL.md`. The `agent-state/` files these gates read and write are defined in `state-templates.md`; the worktree the cycle runs in is defined in `worktree-isolation.md`.

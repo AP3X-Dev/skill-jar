@@ -1,9 +1,9 @@
 ---
-name: building-optimization-loops
+name: optimization-loop
 description: "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), or building a non-optimization loop (use loop-engineer directly)."
 ---
 
-# Building Optimization Loops
+# Optimization Loop
 
 Produce a **running, self-sustaining optimization loop** for any codebase: repeated cycles of improvement — fixing known issues, discovering new ones, re-measuring a metric vector, and tracking progress across session restarts.
 

@@ -12,7 +12,7 @@ Companion references:
 - [./safety-and-gates.md](./safety-and-gates.md) — `AGENTS.md` rules + runnable gates
 - [./worktree-isolation.md](./worktree-isolation.md) — one task per worktree per branch
 - [./role-skills/](./role-skills/) — per-job skills the loop installs so agents don't rediscover the repo
-- [../../building-optimization-loops/SKILL.md](../../building-optimization-loops/SKILL.md) — the specialized audit→fix→track loop this skill can scaffold as the execution stage
+- [../../optimization-loop/SKILL.md](../../optimization-loop/SKILL.md) — the specialized audit→fix→track loop this skill can scaffold as the execution stage
 
 ---
 
@@ -166,4 +166,4 @@ A loop is a pattern, not a product. Each primitive maps to whatever the host off
 
 A halt is not a dead end. The loop-agent writes the item to the **"Blocked — Needs Human Decision"** list in `agent-state/decisions.md` **(MemBerry)** and to `open_questions` if available — then **continues other work**. One blocked item never stalls the whole loop. When the verifier rejects twice, or a halt trigger fires, the item escalates to that list and the cycle moves on or ends cleanly.
 
-For the audit→fix→track variant of this stopping discipline (CONVERGED / STALLED / DIVERGING termination over a tracked metric vector), see [../../building-optimization-loops/SKILL.md](../../building-optimization-loops/SKILL.md), the specialized loop this skill can scaffold as the execution stage.
+For the audit→fix→track variant of this stopping discipline (CONVERGED / STALLED / DIVERGING termination over a tracked metric vector), see [../../optimization-loop/SKILL.md](../../optimization-loop/SKILL.md), the specialized loop this skill can scaffold as the execution stage.

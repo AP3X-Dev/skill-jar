@@ -1,6 +1,6 @@
 ---
 name: bug-pipeline
-description: "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use building-optimization-loops). Composes with loop-engineer, which scaffolds the loop infrastructure this pipeline runs on."
+description: "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use optimization-loop). Composes with loop-engineer, which scaffolds the loop infrastructure this pipeline runs on."
 ---
 
 # Bug Pipeline (Hunter → Fixer → Validator)
@@ -18,7 +18,7 @@ A three-agent repair loop over a shared markdown tracker. The **Hunter** (produc
 ## When NOT to Use
 
 - One specific known bug — just fix it (use **bugfix** / your debugger).
-- A quality/hardening pass with measured dimensions and a ratchet — use **building-optimization-loops**.
+- A quality/hardening pass with measured dimensions and a ratchet — use **optimization-loop**.
 - The repo has no runnable verification (tests, lint, a gate script). Build the gate first — a pipeline that can't verify fixes just churns the tracker.
 
 ## The three roles

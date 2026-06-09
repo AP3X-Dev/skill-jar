@@ -98,4 +98,4 @@ Whatever the host, the rules don't change: one task per branch, one agent per tr
 
 ---
 
-See [loop-architecture.md](loop-architecture.md) for where isolation sits in the six-part spine (execution stage), and [building-optimization-loops](../../building-optimization-loops/SKILL.md) for the specialized optimization loop, which runs its sessions on a single `opt/` branch — a one-agent, one-branch instance of the same discipline.
+See [loop-architecture.md](loop-architecture.md) for where isolation sits in the six-part spine (execution stage), and [optimization-loop](../../optimization-loop/SKILL.md) for the specialized optimization loop, which runs its sessions on a single `opt/` branch — a one-agent, one-branch instance of the same discipline.

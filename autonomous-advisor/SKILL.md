@@ -59,7 +59,7 @@ Starting execution.
    2. writing-plans (implementation plan)
    3. subagent-driven-development (build it)
    4. finishing-a-development-branch (PR or merge)
-   5. building-optimization-loops (generate optimizer + launch loop)
+   5. optimization-loop (generate optimizer + launch loop)
 
 **The advisor does NOT skip any phase.** It follows the same workflow a human would — it just answers faster and never stops to wait. **And no phase advances on say-so alone** — each phase ends at a gate (see Phase Gates below).
 
@@ -103,7 +103,7 @@ Each phase ends at a gate. **Advisor or verifier approval supplements a gate; it
 | **2 — Plan** | Plan file exists; every task names its files and a runnable acceptance check; verifier PASS |
 | **3 — Implementation** | The project's full suite runs and exits 0 AND reports a real test count (a suite that runs zero tests is a STOP-and-report, never a pass); lint/typecheck clean if the project has them |
 | **4 — Branch** | PR URL or merge SHA recorded in run-state |
-| **5 — Optimization** | The optimization loop's own termination conditions (its progress log + metric ratchet — see building-optimization-loops) |
+| **5 — Optimization** | The optimization loop's own termination conditions (its progress log + metric ratchet — see optimization-loop) |
 
 Never weaken, skip, or reinterpret a gate to advance a phase. A red gate is a Failed Attempts entry and a different approach — or an escalation to the human.
 
@@ -226,7 +226,7 @@ The advisor handles six categories of decisions. Each maps to specific checkpoin
 
 #### 1. DESIGN_APPROVAL — handled by the VERIFIER, not the advisor
 
-**Where:** brainstorming (design sections, spec review), building-optimization-loops (optimizer prompt review)
+**Where:** brainstorming (design sections, spec review), optimization-loop (optimizer prompt review)
 **What:** Approve, revise, or reject work products (designs, specs, plans, optimizer prompts)
 **How the verifier decides:** Compare the COMPLETE artifact against PRP requirements, constraints, and success criteria. Approve only with stated evidence (which PRP sections it satisfies and how); REJECT with specific required fixes if gaps exist. Default skeptical — a plausible-but-wrong design approved here poisons every later phase. Use the Verifier variant of the dispatch template in `./advisor-prompt.md`, on a different model than the artifact's author where possible.
 
@@ -336,7 +336,7 @@ digraph autonomous {
     }
 
     subgraph cluster_optimize {
-        label="Phase 5: Optimization (building-optimization-loops)";
+        label="Phase 5: Optimization (optimization-loop)";
         "Audit codebase against PRP" [shape=box];
         "Scaffold loop: backlog + driver + verifier" [shape=box];
         "Verifier gates optimizer" [shape=box];
@@ -419,12 +419,12 @@ The orchestrator:
    ```
    Implementation complete. Branch finished.
    Entering Phase 5: Optimization hardening.
-   Using building-optimization-loops to audit and continuously improve.
+   Using optimization-loop to audit and continuously improve.
    ```
 
-2. Invokes the `building-optimization-loops` skill with the PRP as the intent source
+2. Invokes the `optimization-loop` skill with the PRP as the intent source
 
-3. The building-optimization-loops skill runs its normal process:
+3. The optimization-loop skill runs its normal process:
    - **Phase 1 (Intent Discovery):** Uses the PRP + the design spec + the implementation plan as intent sources (no need to scan scattered docs — the autonomous pipeline already produced clean artifacts)
    - **Phase 2 (Codebase Audit):** Dispatches parallel audit agents against the freshly-built code
    - **Phase 3 (Gap Analysis):** Compares audit findings against PRP success criteria
@@ -435,7 +435,7 @@ The orchestrator:
 
 ### Confirming the Loop Is Running
 
-building-optimization-loops wires the trigger and closes cycle 1 itself (its Phase 5). The orchestrator's job is to confirm and configure, not to launch:
+optimization-loop wires the trigger and closes cycle 1 itself (its Phase 5). The orchestrator's job is to confirm and configure, not to launch:
 
 1. **Set the cadence** — in autonomous mode the advisor picks the trigger interval (default `/loop 5m docs/prompts/<name>-optimizer-driver.md`; Codex/generic hosts use a scheduled run per the skill's host-wiring guidance), since there is no human to choose.
 
@@ -465,7 +465,7 @@ building-optimization-loops wires the trigger and closes cycle 1 itself (its Pha
 
 ### Optimization Loop Adaptations for Autonomous Mode
 
-The building-optimization-loops skill has one human checkpoint:
+The optimization-loop skill has one human checkpoint:
 - **"User reviews prompt"** — the verifier handles this via DESIGN_APPROVAL dispatch
 
 All other aspects of the skill are already autonomous (audit agents, progress log protocol, dual-mode cycles).
@@ -550,12 +550,12 @@ Store the full summary to MemBerry as the final entry for this autonomous sessio
 6. **systematic-debugging** — triggered if bugs arise, advisor resolves escalations
 7. **receiving-code-review** — handles review feedback, advisor resolves conflicts
 8. **finishing-a-development-branch** — auto-selects PR creation
-9. **building-optimization-loops** — audit + scaffold loop + close cycle 1 + run to termination
+9. **optimization-loop** — audit + scaffold loop + close cycle 1 + run to termination
 
 **Skills wrapped (advisor replaces human at their checkpoints):**
 - brainstorming, writing-plans, executing-plans, subagent-driven-development
 - finishing-a-development-branch, systematic-debugging, receiving-code-review
-- test-driven-development, using-git-worktrees, building-optimization-loops
+- test-driven-development, using-git-worktrees, optimization-loop
 
 **Skills unchanged (no human checkpoints):**
 - dispatching-parallel-agents, verification-before-completion

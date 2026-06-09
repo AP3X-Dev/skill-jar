@@ -743,7 +743,7 @@ In **Transparent Mode**, the items marked *(firewall)* below are skipped. All ot
    - `writing-plans` → implementation plan
    - `subagent-driven-development` or `executing-plans` → code + tests
    - `finishing-a-development-branch` → merge/PR
-   - `building-optimization-loops` → iterate until success criteria met
+   - `optimization-loop` → iterate until success criteria met
 4. Monitor only; do not intervene unless the advisor asks a question the PRP genuinely can't answer. If that happens, amend the PRP, then resume — do NOT answer ad hoc.
 
 ### If autonomous-advisor is unavailable
