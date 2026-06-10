@@ -47,7 +47,7 @@ Templates for all three prompts: [references/forge-kit.md](references/forge-kit.
 
 ## Structure lint gate
 
-A skill that holds behaviourally still fails if it can't be installed or routed. The lint is runnable, not a vibe — for a jar skill it is literally `python scripts/audit-jar.py`; standalone, check the same things:
+A skill that holds behaviourally still fails if it can't be installed or routed. The lint is runnable, not a vibe — a real pass/fail per item, not an opinion:
 
 - Frontmatter parses as YAML with `name` + non-empty `description`.
 - `description` ≤ 1024 chars, written third-person, and contains a trigger (`use when` / `use during`) so an agent can route to it.
@@ -55,7 +55,7 @@ A skill that holds behaviourally still fails if it can't be installed or routed.
 - Every relative Markdown link resolves to a real file (bundle references one level deep).
 - Progressive disclosure: SKILL.md stays lean; heavy templates/catalogs live in `references/`.
 
-The full checklist is in [references/forge-kit.md](references/forge-kit.md).
+Where the host repo ships a skill-audit script (a jar-style `audit-jar.py`, say), the LINT step just calls it; otherwise run these as a short script or by hand. The full checklist is in [references/forge-kit.md](references/forge-kit.md).
 
 ## Optional: MemBerry rationalization corpus
 
@@ -75,4 +75,4 @@ If the skill ships utility scripts and [FUGAZI](https://github.com/AP3X-Dev/FUGA
 
 ---
 
-*Automates the superpowers **writing-skills** discipline (TDD-for-skills: pressure-test → close loopholes → bulletproof) and reuses **test-driven-development**'s red-green-refactor loop. For the jar itself, the structure lint is the repo's own audit gate — a forged skill drops into `development/` and passes `scripts/audit-jar.py` unchanged.*
+*Automates the superpowers **writing-skills** discipline (TDD-for-skills: pressure-test → close loopholes → bulletproof) and reuses **test-driven-development**'s red-green-refactor loop. Host-agnostic: it forges a skill for any agent that loads `SKILL.md` files — a personal `~/.claude/skills/` skill, a plugin, or a published collection — and where a repo already ships a skill-audit script, the LINT step simply calls it.*

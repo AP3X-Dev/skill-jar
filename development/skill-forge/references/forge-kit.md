@@ -54,7 +54,7 @@ When you patch the SKILL.md, close the *named* rationalizations, not the general
 
 ## Structure-lint checklist
 
-Runnable checks (for a jar skill, `python scripts/audit-jar.py` runs all of these):
+Runnable checks — each a real pass/fail (if the repo ships a skill-audit script, it runs all of these at once):
 
 - [ ] Frontmatter parses as YAML; has `name` and non-empty `description`.
 - [ ] `description` ≤ 1024 chars, third person, contains `use when` / `use during`.
