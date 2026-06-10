@@ -1,6 +1,6 @@
 # Canonical Plan Template
 
-Use this template when running [consolidate-plans](../SKILL.md). Adapt headings to the repo's convention, but keep every section represented.
+Use this template when running [plan-prune](../SKILL.md). Adapt headings to the repo's convention, but keep every section represented.
 
 ## Canonical plan
 
