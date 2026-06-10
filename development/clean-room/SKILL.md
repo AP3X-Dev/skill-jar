@@ -795,6 +795,10 @@ If Phase 3 surfaces a question:
 - **Never:** load the original source into the implementer's own context.
 - **Always:** failed fix attempts during parity closure or implementation get a `failed-attempts.md` row (what was tried, symptom, lesson) so no later session burns a cycle re-walking the dead path.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active clean-room run: `clean-room-analyzer`, `clean-room-researcher`, `clean-room-gap-checker`, `clean-room-improvement-sweeper`, `clean-room-contamination-reviewer`.
+
 ## Quick Reference
 
 | Question | Where it's answered |

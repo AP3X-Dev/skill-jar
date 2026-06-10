@@ -61,6 +61,10 @@ Iterating one design explores a single basin: every critique gets patched into t
 
 Skip every step marked *(MemBerry)* when the tools are absent — the panel works cold. When present: load prior decisions at step 1 (don't re-litigate what an ADR settled; don't re-propose a recorded rejection unless its reason expired), store at step 7 (the decision, the criteria used, the rejected alternative + reason — the *why*, not the spec text). Files (`docs/adr/`, the spec itself) stay authoritative; memory is the queryable index over them.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active design panel: `design-explorer`, `design-designer`, `design-judge`, `design-skeptic`.
+
 ## Common Mistakes
 
 - **Two variations instead of two designs.** "Same shape, different library" is one design twice. Force different *shapes* — different module boundaries, different data flow, different ownership.

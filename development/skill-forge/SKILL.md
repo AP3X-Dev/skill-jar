@@ -69,6 +69,10 @@ If a MemBerry-style memory MCP is available, the loophole knowledge compounds ac
 
 If the skill ships utility scripts and [FUGAZI](https://github.com/AP3X-Dev/FUGAZI) is available, run `fugazi dead-code` / `health` on the `scripts/` directory as part of LINT — a skill shouldn't ship dead or tangled helper code. Read-only; skip if the skill is docs-only or FUGAZI isn't installed.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active skill-forge loop: `skill-forge-pressure-tester`, `skill-forge-forger`, `skill-forge-judge`, `skill-forge-linter`.
+
 ## Common Mistakes
 
 - **Writing the skill first, testing never.** You'll close imagined loopholes and miss the real ones. RED before GREEN, always.

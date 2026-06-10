@@ -62,6 +62,10 @@ Modular monolith · HTTP + OpenAPI for public APIs (gRPC only for internal hot p
 
 If a MemBerry-style memory MCP is present, `berry_load` prior architecture decisions for the project at intake (don't re-litigate settled choices) and `berry_store` the chosen topology + the named requirements behind every stop-condition exception. The design doc and ADRs stay authoritative.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active system design pass: `system-intake-analyst`, `system-topology-designer`, `system-topology-skeptic`.
+
 ## Common Mistakes
 
 - **Designing from components instead of SLOs.** "We'll use Kafka and a mesh" before a single latency or availability number exists. SLOs first; mechanism earns its way in.

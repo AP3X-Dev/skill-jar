@@ -88,6 +88,26 @@ def validate_agents(data, category):
     return out
 
 
+def check_skill_references(category, agents):
+    """Ensure SKILL.md points to its generated roles without embedding bodies."""
+    errors = []
+    by_skill = {}
+    for agent in agents:
+        by_skill.setdefault(agent["skill"], []).append(agent["name"])
+    for skill, names in sorted(by_skill.items()):
+        skill_md = ROOT / category / skill / "SKILL.md"
+        text = skill_md.read_text(encoding="utf-8")
+        rel = skill_md.relative_to(ROOT).as_posix()
+        if "../agents/README.md" not in text:
+            errors.append("%s: missing generated agent-pack link to ../agents/README.md" % rel)
+        if "../agents/manifest.json" not in text:
+            errors.append("%s: missing generated agent manifest link to ../agents/manifest.json" % rel)
+        for name in names:
+            if name not in text:
+                errors.append("%s: missing generated agent role `%s`" % (rel, name))
+    return errors
+
+
 def body(agent):
     lines = [
         "# %s" % agent["title"],
@@ -165,6 +185,9 @@ def build_expected():
     for path in manifests:
         category = path.parent.parent.name
         agents = validate_agents(load_manifest(path), category)
+        reference_errors = check_skill_references(category, agents)
+        if reference_errors:
+            raise ValueError("; ".join(reference_errors))
         files.update(expected_files(path.parent, agents))
         agent_count += len(agents)
     return files, agent_count, len(manifests)

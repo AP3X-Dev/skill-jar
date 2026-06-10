@@ -71,6 +71,10 @@ If [FUGAZI](https://github.com/AP3X-Dev/FUGAZI) (CLI `fugazi` or the `fugazi-mcp
 
 If a MemBerry-style memory MCP is available, `berry_load` at step 2 to recall findings this project has confirmed as false positives before (a "dead" registry that's actually reflection-loaded, a "duplicate" that's deliberately separate), and `berry_store` at step 7 when a finding is refuted with a durable reason. Memory de-noises future panels; it never silences a fresh finding — step 5 still runs. On conflict, the codebase wins.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active review panel: `review-correctness`, `review-security`, `review-simplicity`, `review-synthesizer`.
+
 ## Common Mistakes
 
 - **Performative agreement.** "You're absolutely right!" then implementing an unverified finding is how a confident-but-wrong review breaks working code. Verify against the codebase first; push back with reasoning when the finding is wrong.

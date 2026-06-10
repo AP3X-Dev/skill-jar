@@ -83,6 +83,10 @@ If a MemBerry-style memory MCP is available, `berry_store` the gotchas backfilli
 
 Scaffold via [loop-engineer](../loop-engineer/SKILL.md), drop the three agents, pin the suite + coverage commands as the gate, and dry-run one cycle. Then **offer** the human a scheduled `/loop` or cron — backfilling spends compute, and the human owns the spend. Start at autonomy Level 2: commits locally, human reviews and pushes.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active backfill loop: `test-backfill-scout`, `test-backfill-writer`, `test-backfill-verifier`.
+
 ## Common Mistakes
 
 - **Tests that don't bite.** The #1 failure — coverage rises, safety doesn't. The bite test is the whole point.
