@@ -133,6 +133,17 @@ One bug per cycle. Full driver-prompt patterns live in loop-engineer's automatio
 
 **Autonomy:** start at Level 2 (loop-engineer's ladder) — the pipeline commits locally; a human reviews diffs and pushes. Earn higher levels with cycles where the Validator's verdicts match the human's review.
 
+## Optional enhancements
+
+Both are off by default — the tracker plus a runnable gate are all the pipeline needs. Add these only when the tools are present.
+
+- **(FUGAZI) — sharper hunting.** If [FUGAZI](https://github.com/AP3X-Dev/FUGAZI) (CLI `fugazi` or the `fugazi-mcp` MCP server) is available, the Hunter can seed its sweep from deterministic findings instead of reading blind: `fugazi dead-code --format json` (orphaned/unused code), `fugazi boundaries --format json` (seam violations), `fugazi circular-deps --format json` (load-order hazards), `fugazi health --format json` (the `complexity-hotspot` functions most likely to hide a defect). The evidence bar is unchanged — every filed bug still needs an observable symptom or repro, not just a static finding; a finding only tells the Hunter *where to look*. Keep it read-only; the pipeline fixes deliberately and never runs `fugazi fix`.
+- **(MemBerry) — cross-session memory.** If a MemBerry-style memory MCP is available, `berry_load` at the start of a cycle to recall prior root causes and rejected fix approaches for the area, and `berry_store` a fixed bug's **root cause and lesson** after the Validator passes. The tracker and `failed-attempts.md` stay authoritative for *what happened*; memory holds the *why*, so a later cycle on a similar symptom starts ahead. On any conflict, the files win.
+
+## Sync with the disciplines it runs on
+
+The pipeline is where two superpowers disciplines become enforced gates instead of good intentions: the **Fixer** works the way **systematic-debugging** prescribes — root cause before the diff, smallest fix, no thrashing (for a single deep bug, hand it to [diagnose-loop](../diagnose-loop/SKILL.md) instead); the **Validator** is **verification-before-completion** institutionalized — it re-runs the gate and the repro itself and approves only on a command's output, never on the Fixer's say-so.
+
 ## Common Mistakes
 
 - **Letting the fixer self-verify.** The whole point of the third agent is that plausible-but-wrong fixes die at the gate instead of shipping.

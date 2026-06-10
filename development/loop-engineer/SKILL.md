@@ -57,7 +57,7 @@ A loop is a pattern, not a product. Every artifact this skill scaffolds is provi
 
 ## When NOT to Use
 
-- A single one-off task or one specific bug — just do it (use **bugfix** / **bug-fixer**).
+- A single one-off task or one specific bug — just do it (use **bugfix**, or **diagnose-loop** for a hard bug whose cause is unknown).
 - An audit→fix→measure hardening pass on an existing codebase — use **optimization-loop** (a specialized loop; this skill can scaffold it as the execution stage).
 - A brand-new codebase with nothing to loop over yet — use **brainstorming** / **writing-plans** first.
 
@@ -102,7 +102,7 @@ digraph loop_engineering {
 
 ### Phase 0 — Discover
 
-Find out what the repo is and what loop the user actually needs. Read entry points, test/lint/build/typecheck commands, CI config, issue tracker, branch conventions, and the host platform (Claude Code? Codex? both? CI-only?). Identify the verification commands the loop will gate on — **a loop with no runnable verification is not a loop, it's a hope.** If MemBerry is available, `berry_load` prior context first (skip if not).
+Find out what the repo is and what loop the user actually needs. Read entry points, test/lint/build/typecheck commands, CI config, issue tracker, branch conventions, and the host platform (Claude Code? Codex? both? CI-only?). Identify the verification commands the loop will gate on — **a loop with no runnable verification is not a loop, it's a hope.** If MemBerry is available, `berry_load` prior context first (skip if not). If [FUGAZI](https://github.com/AP3X-Dev/FUGAZI) (`fugazi` / `fugazi-mcp`) is available, note it — it's a ready-made deterministic **discovery source**: a loop's Discovery stage can run `fugazi <cmd> --format json` and file findings to the triage-inbox instead of grepping by hand, and its `--format sarif` slots straight into a CI gate. [dead-code-reaper](../dead-code-reaper/SKILL.md) is a loop built entirely around it.
 
 ### Phase 1 — Pick loop type + autonomy level
 
@@ -155,6 +155,7 @@ Run this gate on your own output before presenting the scaffolded loop. Fix any 
 
 - **optimization-loop** — for an audit→fix→measure→track hardening pass on an existing codebase. It builds natively on this skill's conventions (agent-state spine, driver at `docs/prompts/`, maker≠checker verifier, the scaffolder) and adds the optimization-specific machinery: intent discovery, an audit-derived backlog + metric vector, a no-regression ratchet, dual-mode cycles, and metric-driven termination — then wires the trigger and closes cycle 1 itself. When the user's loop IS optimization, invoke it directly; it hands off a running loop.
 - **bug-pipeline** — the Hunter → Fixer → Validator defect pipeline over a shared tracker; same relationship.
+- **dead-code-reaper** — a FUGAZI-native removal loop: a Scout proves code dead with `fugazi trace`, a Reaper removes one cluster per cycle, a Validator re-runs FUGAZI + the gate against a finding-count/LOC ratchet. Same spine; specialized for safe deletion. Builds + dry-runs, then offers launch.
 - **auto-research** — the Karpathy-style experiment loop: mutate one experiment surface, run fixed-budget experiments against a frozen eval harness, keep/discard by ONE scalar metric (untracked `results.tsv` ledger, branch advance/reset). Same relationship — it builds the harness if missing, scaffolds, runs the baseline, then offers launch (human-gated).
 
 ## Common Mistakes

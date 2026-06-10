@@ -172,6 +172,16 @@ engineering work and the skill's biggest value-add. If one exists, verify the
 contract instead (run it once; check the grep works). Design guidance:
 [references/harness-design.md](references/harness-design.md).
 
+**(FUGAZI)** If your scalar is a *code-health* number — fewer dead-code
+findings, lower `complexity-hotspot` count, a higher maintainability score —
+[FUGAZI](https://github.com/AP3X-Dev/FUGAZI) is a ready-made frozen harness:
+`fugazi health --format json` prints a deterministic, greppable number and
+guarantees byte-identical output across runs, so it satisfies the contract
+out of the box (pin the FUGAZI version as part of the freeze). Optimizing one
+surface against it overnight is a legitimate single-metric speedrun. If the
+goal is *several* quality concerns at once, that's optimization-loop's backlog,
+not one scalar — skip this and use a real metric.
+
 ### Phase 3 — Scaffold
 
 1. Branch: `git checkout -b research/<tag>` (tag from date, e.g. `jun9`; must

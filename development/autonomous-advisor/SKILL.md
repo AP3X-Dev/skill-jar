@@ -107,6 +107,8 @@ Each phase ends at a gate. **Advisor or verifier approval supplements a gate; it
 
 Never weaken, skip, or reinterpret a gate to advance a phase. A red gate is a Failed Attempts entry and a different approach — or an escalation to the human.
 
+**(FUGAZI, optional)** Where the project has [FUGAZI](https://github.com/AP3X-Dev/FUGAZI), the **verifier** can add an objective dimension to its gates — `fugazi dead-code` / `health` / `boundaries --format json` (or `--format sarif` in CI) turns "the implementation looks clean" into a number it can cite against the PRP's success criteria, and Phase 5's optimization-loop can ratchet on those counts (see that skill's FUGAZI note). Read-only in the gate; an autonomous run never executes `fugazi fix`. Skip entirely if FUGAZI isn't present.
+
 ## MemBerry Memory Integration
 
 The advisor sub-agent has access to the project's MemBerry memory system. This gives it historical context — past decisions, architectural patterns, user preferences, and prior session outcomes.

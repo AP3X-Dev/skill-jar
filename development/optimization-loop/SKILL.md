@@ -133,6 +133,8 @@ Launch 4–6 agents in parallel; adapt focus areas to the codebase type:
 
 **Agent 4 — Code Quality**
 > "Scan for: dead code, inconsistent error handling, type-safety gaps, hardcoded values that should be config, missing input validation at boundaries, unhandled rejections. Report with file paths and line numbers."
+>
+> **(FUGAZI)** If [FUGAZI](https://github.com/AP3X-Dev/FUGAZI) (`fugazi` / `fugazi-mcp`) is available, ground this agent in deterministic findings instead of eyeballing: `fugazi dead-code --format json`, `fugazi health --format json` (complexity), `fugazi dupes --format json`, `fugazi boundaries --format json`. Treat dead-code findings as *candidates to confirm* — reflection, DI, and dynamic import defeat static reachability, and a library's public API reads as "unused" internally, so it never gets auto-deleted (that's Phase 3's confirm-before-destroying rule). Read-only only; never run `fugazi fix` in an audit.
 
 **Agent 5 — Build & Config** (if applicable)
 > "Check build pipeline health, dependency versions, configuration completeness, environment handling, CI/CD. Report gaps."
@@ -141,7 +143,7 @@ Launch 4–6 agents in parallel; adapt focus areas to the codebase type:
 
 ### Score each dimension
 
-From the reports, identify 5–8 natural dimensions for this codebase. For each: **name it**, **score it** (% solid vs. needs work), **list concrete findings** (files, problems), and **record a re-runnable measurement recipe** — the exact command and current number THIS toolchain produces (test pass count, `tsc --noEmit` error count, coverage %, lint warnings, bundle bytes, a key benchmark). If a dimension has no cheap measurement, write "n/a — no tooling" and keep it qualitative. **Never invent tooling.** This baseline vector is the loop's *setpoint*: re-measured every cycle and ratcheted so the loop can tell improvement from churn.
+From the reports, identify 5–8 natural dimensions for this codebase. For each: **name it**, **score it** (% solid vs. needs work), **list concrete findings** (files, problems), and **record a re-runnable measurement recipe** — the exact command and current number THIS toolchain produces (test pass count, `tsc --noEmit` error count, coverage %, lint warnings, bundle bytes, a key benchmark). **(FUGAZI)** Its finding counts make excellent ratchet metrics — the `fugazi dead-code` / `health` / `dupes` totals, the `complexity-hotspot` count, or the maintainability score, each a deterministic number that should trend down-only across cycles. If a dimension has no cheap measurement, write "n/a — no tooling" and keep it qualitative. **Never invent tooling.** This baseline vector is the loop's *setpoint*: re-measured every cycle and ratcheted so the loop can tell improvement from churn.
 
 ### (MemBerry) Store audit findings
 

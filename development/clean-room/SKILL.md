@@ -636,6 +636,8 @@ Run these sweeps against `DESIGN_DOC.md`. Each sweep produces candidate improvem
 | **Docs** | Gaps between §3 contract and actual documented behavior |
 | **Technical debt** | TODOs/FIXMEs in the original, commented-out code blocks, dead code, duplicated logic |
 
+**(FUGAZI) — ground the sweeps deterministically.** If [FUGAZI](https://github.com/AP3X-Dev/FUGAZI) (`fugazi` / `fugazi-mcp`) is available, run it to back the Architecture, Performance, Correctness, and Technical-debt sweeps with hard findings instead of impressions: `fugazi circular-deps`, `fugazi boundaries`, `fugazi health` (complexity), `fugazi dupes`, `fugazi dead-code` (`--format json`). In Transparent/Parity mode point it at the original *and* the rewrite-in-progress; in full clean-room, the analyzer may run it on the original as another structural input. It also cross-checks Pass 1b for TS/JS where this skill's own `inventory.json` carries `call_edges`/`field_io` for Python only — FUGAZI's module-graph reachability fills that gap. Read-only; every finding is a candidate to triage in 2c, never an auto-edit (and never `fugazi fix` here).
+
 ### 2b. Human-driven improvement input
 
 The human may have goals the agent can't infer. Surface a short questionnaire and capture answers into `IMPROVEMENTS.md` under a **"Stakeholder Directives"** section:

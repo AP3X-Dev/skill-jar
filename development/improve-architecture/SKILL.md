@@ -72,6 +72,8 @@ Then use the Agent tool with `subagent_type=Explore` to walk the codebase. Don't
 
 Apply the **deletion test** to anything you suspect is shallow: would deleting it concentrate complexity, or just move it? A "yes, concentrates" is the signal you want.
 
+**Optional — ground the exploration with FUGAZI.** If [FUGAZI](https://github.com/AP3X-Dev/FUGAZI) (CLI `fugazi` or the `fugazi-mcp` MCP server) is available, run it read-only to turn "I feel friction here" into deterministic signals before you write the report: `fugazi circular-deps --format json` (coupling the deletion test can't see by eye), `fugazi boundaries --format json` (seam violations against declared zones), `fugazi health --format json` (the `complexity-hotspot` / `cognitive-complexity` functions — frequently shallow modules hiding a complex implementation), and `fugazi dupes --format json` (the same rule implemented twice, especially across a front/back seam where it can drift). These tell you *where to look*, never *what to ship* — every candidate still goes through the human-judged grilling loop. Skip entirely if FUGAZI isn't installed; organic exploration is the baseline.
+
 ### 2. Present candidates as an HTML report
 
 Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Resolve the temp dir from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), and write to `<tmpdir>/architecture-review-<timestamp>.html` so each run gets a fresh file. Open it for the user — `xdg-open <path>` on Linux, `open <path>` on macOS, `start <path>` on Windows — and tell them the absolute path.
@@ -109,6 +111,13 @@ Two gates before any code moves:
 - **Depth check.** Re-confirm the change actually deepens: does the interface get simpler, does the module hide more, does the caller need to know less, does related behaviour move into one place? If the honest answer is no, the refactor is only rearranging files — stop and rework the shape, don't ship it.
 
 The migration is small, reversible steps with tests green between each, ending with the deep-module checklist as the acceptance gate.
+
+## Optional: memory, and turning detection into a loop
+
+Both are off by default — this skill is human-in-the-loop, and `CONTEXT.md` + the ADRs are the authoritative record. These only add reach when the tools are present.
+
+- **(MemBerry)** If a MemBerry-style memory MCP is available, `berry_load(task: "architecture review: <area>", tags: ["project:<tag>"])` at the start of Explore to recall prior reviews and the directions you already rejected, and `berry_store` the **decision and its load-bearing reason** after a candidate is accepted or rejected — the same thing an ADR captures, in queryable form. On any conflict, the ADR / `CONTEXT.md` files win; memory is a convenience index over them, never the source of truth.
+- **Detection on a schedule.** The *finding* half of this skill can run unattended even though the *deciding* half can't. Point [dead-code-reaper](../dead-code-reaper/SKILL.md) at the removal side, or stand up a [loop-engineer](../loop-engineer/SKILL.md) loop that watches `fugazi boundaries` / `circular-deps` and files new drift to a triage inbox for your next review. The human still owns every architecture decision; the loop just keeps the candidate list fresh between reviews.
 
 ## Common Mistakes
 

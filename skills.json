@@ -2,6 +2,12 @@
   "_generated": "by scripts/gen-index.py -- do not edit by hand; the audit gate fails if this file is stale",
   "skills": [
     {
+      "name": "arch-drift-watch",
+      "category": "development",
+      "description": "A scheduled detection loop that guards architecture against drift: each run executes FUGAZI boundaries / circular-deps / complexity (and dupes) read-only, diffs the findings against a committed baseline, and files only the NEW violations to a triage inbox — routing structural-judgment items to improve-architecture (human-owned) and offering small, safe auto-fixes only at higher autonomy. Detection-only by default (Level 1, no code writes). Builds the baseline and dry-runs one cycle, then offers the schedule. Use when you want continuous early warning on architecture entropy / AI-driven drift between periodic reviews. Requires FUGAZI. NOT for the judgment call of what to refactor (use improve-architecture), dead-code removal (use dead-code-reaper), or general hardening (use optimization-loop).",
+      "path": "development/arch-drift-watch/SKILL.md"
+    },
+    {
       "name": "auto-research",
       "category": "development",
       "description": "Use when the user wants a Karpathy-style auto-research loop — an agent autonomously running fixed-budget experiments against a frozen evaluation harness to optimize ONE scalar metric: hypothesize → mutate the experiment surface → run → keep or discard by the metric → log → repeat until interrupted. Generalizes the autoresearch/nanochat pattern to any domain with a runnable metric (model training, prompt optimization, algorithm performance, compression, benchmark scores). Builds the harness if the repo lacks one, scaffolds the loop on loop-engineer conventions, runs the real baseline, then OFFERS launch — never auto-launches. Triggers: 'karpathy loop', 'autoresearch', 'overnight experiments', 'let it experiment while I sleep', 'optimize this metric autonomously'. NOT for correctness/quality hardening (use optimization-loop), defect repair (use bug-pipeline), or non-experiment loops (use loop-engineer).",
@@ -26,6 +32,18 @@
       "path": "development/clean-room/SKILL.md"
     },
     {
+      "name": "dead-code-reaper",
+      "category": "development",
+      "description": "FUGAZI-native loop that safely removes confirmed-dead code — one trace-verified cluster per cycle, suite- and build-gated, with an independent verifier and a finding-count/LOC ratchet. A Scout runs FUGAZI's dead-code family and proves zero reachability with trace before filing a candidate; a Reaper removes exactly one cluster with the smallest diff; a Validator re-runs FUGAZI plus the repo gate and promotes or reopens. Builds and dry-runs the loop, then OFFERS launch — never auto-removes. Use when a codebase has accumulated dead code, unused exports/files/deps, or duplication to prune continuously and safely. NOT for a single obvious unused symbol (just delete it), live-but-ugly code (use improve-architecture), or defect repair (use bug-pipeline). Requires FUGAZI (CLI fugazi or fugazi-mcp) or an equivalent reachability analyzer.",
+      "path": "development/dead-code-reaper/SKILL.md"
+    },
+    {
+      "name": "diagnose-loop",
+      "category": "development",
+      "description": "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Builds on systematic-debugging with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause). Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop).",
+      "path": "development/diagnose-loop/SKILL.md"
+    },
+    {
       "name": "improve-architecture",
       "category": "development",
       "description": "Find — then ship — deepening opportunities in a codebase: refactors that turn shallow modules into deep ones for testability, locality, and AI-navigability. Human-in-the-loop by design (a strategic human picks direction; the AI explores, drafts, and migrates): explore for friction, present candidates as a visual HTML report, grill the chosen one into a module shape, then convert the approved design into an issue and a careful migration. Informed by the domain language in CONTEXT.md and decisions in docs/adr/. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, reduce AI-driven architecture drift/entropy, make a codebase more testable, or wants a periodic architecture review. NOT for autonomous metric-driven hardening (use optimization-loop), defect repair (use bug-pipeline), or reimplementing a codebase from scratch (use clean-room).",
@@ -42,6 +60,24 @@
       "category": "development",
       "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), building a non-optimization loop (use loop-engineer directly), single-metric experimentation on a frozen harness (use auto-research), or judgment-driven architecture / deep-module refactoring (use improve-architecture).",
       "path": "development/optimization-loop/SKILL.md"
+    },
+    {
+      "name": "review-panel",
+      "category": "development",
+      "description": "Adversarial multi-lens code review for a diff, branch, or PR: an optional FUGAZI pre-pass grounds the review in deterministic findings, then a panel of independent reviewers each works a distinct lens (correctness, security, simplicity/reuse) in parallel, findings are deduped and severity-ranked, and every finding is verified against the codebase before it is acted on — no performative agreement. Builds on requesting-code-review and receiving-code-review with a parallel panel, FUGAZI grounding, and optional MemBerry false-positive memory. Use when reviewing a branch/PR/diff and you want broad, adversarial, evidence-checked coverage rather than a single-reviewer pass — before a merge, or as a tougher gate on a risky change. NOT for a quick single-file glance (just review it) or a continuous defect pipeline (use bug-pipeline).",
+      "path": "development/review-panel/SKILL.md"
+    },
+    {
+      "name": "skill-forge",
+      "category": "development",
+      "description": "Loop that hardens an agent skill the way writing-skills prescribes — automatically. RED: run a pressure scenario against a fresh subagent WITHOUT the skill and record the rationalizations it invents; GREEN: draft or patch the SKILL.md to close them; REFACTOR: re-run, hunt new loopholes, repeat until K consecutive clean runs. Lints structure (frontmatter parses, description carries a trigger, links resolve, length) and grows a rationalization corpus in optional MemBerry. Use when writing a new skill or hardening an existing one against the loopholes agents talk themselves into — especially behavioural/discipline skills. NOT for a one-line skill tweak (just edit it), authoring non-skill docs, or building a code loop (use loop-engineer).",
+      "path": "development/skill-forge/SKILL.md"
+    },
+    {
+      "name": "test-backfill-loop",
+      "category": "development",
+      "description": "A loop-engineer loop that raises test coverage on an existing codebase one module per cycle: discovery finds the highest-value uncovered code (optional FUGAZI cold-code plus coverage gaps), a maker writes characterization tests that pin current behaviour (TDD discipline), and a separate verifier confirms the tests actually bite — they fail when behaviour changes — and that coverage ratchets up, never down. Builds and dry-runs the loop, then offers launch. Use when an existing codebase is under-tested and you want coverage raised safely and continuously, especially before a refactor. NOT for greenfield TDD on new features (just write tests first), a single missing test (just add it), or general multi-dimension hardening (use optimization-loop).",
+      "path": "development/test-backfill-loop/SKILL.md"
     }
   ]
 }

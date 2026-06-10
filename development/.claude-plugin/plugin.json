@@ -6,12 +6,18 @@
     "name": "AP3X"
   },
   "skills": [
+    "./arch-drift-watch",
     "./auto-research",
     "./autonomous-advisor",
     "./bug-pipeline",
     "./clean-room",
+    "./dead-code-reaper",
+    "./diagnose-loop",
     "./improve-architecture",
     "./loop-engineer",
-    "./optimization-loop"
+    "./optimization-loop",
+    "./review-panel",
+    "./skill-forge",
+    "./test-backfill-loop"
   ]
 }
