@@ -9,6 +9,13 @@ A service is production-ready when **operators can run it at 3am without its aut
 
 **Output:** the readiness package — SLOs + error-budget policy, dashboards + alert routes, probe configuration, the five standard runbooks, canary + rollback plan, incident-response card, postmortem template, cost notes — and a **pass/fail verdict** against the launch gate.
 
+## Operating Contract
+
+- Build a runnable readiness package, not a checklist summary. Every item is either a concrete artifact (URL, command, route, owner, file path, drill result) or a named blocker.
+- Page only on symptoms tied to SLO burn or golden signals. Metrics that do not drive an action belong on dashboards or tickets, not paging routes.
+- Prove reversibility. A rollback command that has not been executed in a drill is an unverified assumption, not a launch control.
+- End with `ready`, `ready after fixes`, or `not ready`; include the smallest fix list that would move the verdict.
+
 ## When to Use
 
 - A new service (or a major change) is heading to production.
@@ -47,6 +54,10 @@ No production launch without **all** of:
 - [ ] Owner, escalation path, postmortem template on file
 
 A red box is a blocker, not a footnote. "We'll add runbooks after launch" is how 3am pages become 4-hour outages.
+
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active readiness pass: `readiness-slo-operator`, `readiness-runbook-writer`, `readiness-launch-reviewer`.
 
 ## Common Mistakes
 

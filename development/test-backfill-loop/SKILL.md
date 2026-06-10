@@ -17,7 +17,7 @@ A specialized [loop-engineer](../loop-engineer/SKILL.md) loop that builds a **sa
 
 ## When NOT to Use
 
-- New feature work — write the tests first (**test-driven-development**), don't backfill.
+- New feature work — write the tests first with red-green discipline; don't backfill.
 - One obvious missing test — just add it.
 - A broad quality pass across many dimensions (perf, wiring, dead code) — use **optimization-loop**; coverage is one of its metrics, not the whole job.
 
@@ -83,6 +83,10 @@ If a MemBerry-style memory MCP is available, `berry_store` the gotchas backfilli
 
 Scaffold via [loop-engineer](../loop-engineer/SKILL.md), drop the three agents, pin the suite + coverage commands as the gate, and dry-run one cycle. Then **offer** the human a scheduled `/loop` or cron — backfilling spends compute, and the human owns the spend. Start at autonomy Level 2: commits locally, human reviews and pushes.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active backfill loop: `test-backfill-scout`, `test-backfill-writer`, `test-backfill-verifier`.
+
 ## Common Mistakes
 
 - **Tests that don't bite.** The #1 failure — coverage rises, safety doesn't. The bite test is the whole point.
@@ -93,4 +97,4 @@ Scaffold via [loop-engineer](../loop-engineer/SKILL.md), drop the three agents, 
 
 ---
 
-*Builds on **test-driven-development** (the red-green discipline, applied to existing code as characterization tests) and runs on [loop-engineer](../loop-engineer/SKILL.md) conventions, in the same shape as [bug-pipeline](../bug-pipeline/SKILL.md). Pairs naturally before [improve-architecture](../improve-architecture/SKILL.md): backfill the net, then deepen the module under it.*
+*Uses red-green discipline applied to existing code as characterization tests and runs on [loop-engineer](../loop-engineer/SKILL.md) conventions, in the same shape as [bug-pipeline](../bug-pipeline/SKILL.md). No external TDD skill is required. Pairs naturally before [improve-architecture](../improve-architecture/SKILL.md): backfill the net, then deepen the module under it.*

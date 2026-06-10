@@ -99,6 +99,10 @@ One cluster per cycle. Built on loop-engineer's spine; the reaper's shape:
 
 Scaffold via [loop-engineer](../loop-engineer/SKILL.md) (state spine, `AGENTS.md`, driver), drop the three agents (templates in [references/reaper-kit.md](references/reaper-kit.md)), pin the gate, and **dry-run exactly one cycle**. Then stop and **offer** the human launch — a scheduled `/loop` or a cron cold-start. Do not auto-launch a loop that deletes code; the spend and the risk are the human's call. Start at autonomy Level 2: the loop commits locally; a human reviews diffs and pushes.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active dead-code run: `dead-code-reaper-scout`, `dead-code-reaper-reaper`, `dead-code-reaper-validator`.
+
 ## Common Mistakes
 
 - **Deleting without a reachability proof.** FUGAZI's `unused-*` is the candidate; `trace` returning zero importers is the proof. File only proven clusters.

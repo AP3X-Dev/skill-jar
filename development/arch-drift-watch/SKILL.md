@@ -58,6 +58,10 @@ If a MemBerry-style memory MCP is available, `berry_store` the **accepted waiver
 
 Scaffold via [loop-engineer](../loop-engineer/SKILL.md) at Level 1, write `.fugazirc.json` zones with the user, capture the **baseline** on the current commit, and dry-run one cycle (it should find zero drift against its own fresh baseline). Then **offer** a schedule — a cron cold-start or `/loop` — since even a read-only loop consumes runs. The deliverable is a watch that's armed, not auto-armed.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active watch: `arch-drift-watcher`.
+
 ## Common Mistakes
 
 - **Re-reporting the whole backlog.** Without a baseline, every cycle screams about pre-existing violations and gets muted. Drift is the delta.

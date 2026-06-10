@@ -9,6 +9,12 @@ Surface architectural friction and propose — then ship — **deepening opportu
 
 Speed without architecture awareness creates entropy, and AI-assisted development accelerates both the speed and the entropy: every change that ignores the larger codebase can add a little duplication, hidden coupling, or an awkward dependency until the codebase is hard to understand, test, and safely change. The cure is not "cleaner code" — it's better architecture: deeper modules, clearer interfaces, stronger seams, better tests, better locality. This skill is the strategic counterweight to fast tactical change.
 
+**Output:** a concrete architecture review package: a temp HTML report of candidate deepening opportunities, the human-selected candidate's approved module/interface shape, a tracked issue or repo doc containing the migration plan, and a verified behaviour-preserving migration when the human asks to ship it.
+
+## Operating Contract
+
+Every candidate must be evidence-backed and shippable in one bounded migration. Name the files, the current shallow interface, the proposed deeper interface, the behaviour that moves behind the seam, the tests that become the interface gate, and the expected locality/leverage gain. Do not present "cleaner", "more maintainable", or "better separation" as standalone benefits; translate them into glossary terms and concrete files. If a candidate cannot name its migration steps and acceptance gate, mark it `Speculative` or drop it.
+
 ## Human-in-the-loop by design
 
 Do not run this as a fully autonomous pass. The split is deliberate:
@@ -82,6 +88,8 @@ The report uses **Tailwind via CDN** for layout and **Mermaid via CDN** for grap
 
 For each candidate, render a card with: **Files** involved · **Problem** (why the architecture causes friction) · **Solution** (plain English) · **Benefits** (in terms of locality and leverage, and how tests improve) · **Before/After diagram** (side-by-side, illustrating the shallowness and the deepening) · **Recommendation strength** badge (`Strong`, `Worth exploring`, `Speculative`). End with a **Top recommendation** section.
 
+Apply the candidate evidence contract in [HTML-REPORT.md](references/HTML-REPORT.md). A candidate with no file anchors, no current/proposed interface, or no acceptance gate is too abstract to show as `Strong`.
+
 **Use CONTEXT.md vocabulary for the domain, and [LANGUAGE.md](references/LANGUAGE.md) vocabulary for the architecture.** If `CONTEXT.md` defines "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
 
 **ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly in the card (e.g. a warning callout: _"contradicts ADR-0007 — but worth reopening because…"_). Don't list every theoretical refactor an ADR forbids.
@@ -118,6 +126,10 @@ Both are off by default — this skill is human-in-the-loop, and `CONTEXT.md` + 
 
 - **(MemBerry)** If a MemBerry-style memory MCP is available, `berry_load(task: "architecture review: <area>", tags: ["project:<tag>"])` at the start of Explore to recall prior reviews and the directions you already rejected, and `berry_store` the **decision and its load-bearing reason** after a candidate is accepted or rejected — the same thing an ADR captures, in queryable form. On any conflict, the ADR / `CONTEXT.md` files win; memory is a convenience index over them, never the source of truth.
 - **Detection on a schedule.** The *finding* half of this skill can run unattended even though the *deciding* half can't. Point [dead-code-reaper](../dead-code-reaper/SKILL.md) at the removal side, or stand up a [loop-engineer](../loop-engineer/SKILL.md) loop that watches `fugazi boundaries` / `circular-deps` and files new drift to a triage inbox for your next review. The human still owns every architecture decision; the loop just keeps the candidate list fresh between reviews.
+
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active architecture pass: `architecture-explorer`, `architecture-interface-designer`, `architecture-depth-checker`.
 
 ## Common Mistakes
 

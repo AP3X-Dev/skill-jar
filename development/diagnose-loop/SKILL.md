@@ -1,6 +1,6 @@
 ---
 name: diagnose-loop
-description: "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Builds on systematic-debugging with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause). Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop)."
+description: "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Uses systematic-debugging discipline with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause); Superpowers skills are optional accelerators, not prerequisites. Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop)."
 ---
 
 # Diagnose Loop
@@ -8,6 +8,10 @@ description: "Bounded diagnosis loop for ONE hard bug or performance regression:
 A **bounded convergence loop** for one hard defect. It does not run forever — it runs until the root cause is pinned and a regression test locks it, or until the evidence says *escalate to a human*. It takes the discipline of systematic-debugging (no fix without a root cause first) and adds three things that discipline alone can't give you: **parallel hypotheses** instead of one guess at a time, **seeded suspects** from static analysis and past bugs instead of a cold start, and a **separate verifier** so a plausible-but-wrong fix dies at the gate instead of shipping.
 
 **Output:** a confirmed root cause with boundary evidence, a regression test that fails without the fix and passes with it, the minimal fix, and (optionally) a stored root-cause signature so the next similar bug starts ahead.
+
+## Operating Contract
+
+Produce a diagnosis package, not a hunch: deterministic repro command, minimized failing case, suspect list, hypothesis table with confirmed/refuted evidence, named root cause, regression-test proof, minimal fix, repo gate result, and verifier verdict. Each stage fails closed when it lacks observed boundary values or a runnable command. A green symptom without root-cause evidence is not done.
 
 ## When to Use
 
@@ -71,6 +75,10 @@ If a MemBerry-style memory MCP is available, the loop remembers what past bugs t
 - **Solved:** root cause named with boundary evidence, regression test green, verifier passed. Done — record the signature and stop.
 - **Escalate** when: 3 fix rounds have failed (the architecture is the suspect now, not the line), the fix would change a public contract, or the cause crosses a boundary the loop isn't allowed to touch. Hand the human a tight summary: repro, what was ruled out (with evidence), and the surviving open questions.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active diagnosis loop: `diagnose-investigator`, `diagnose-analyst`, `diagnose-fixer`, `diagnose-verifier`.
+
 ## Common Mistakes
 
 - **Guessing in series.** One hypothesis at a time, fix-and-pray, is exactly what this loop replaces. Fan out; make each investigator try to *kill* its own idea.
@@ -81,4 +89,4 @@ If a MemBerry-style memory MCP is available, the loop remembers what past bugs t
 
 ---
 
-*Builds on the superpowers **systematic-debugging** (root-cause discipline), **test-driven-development** (regression test first), and **dispatching-parallel-agents** (the hypothesis fan-out) skills where they're installed — but stands alone without them. Sibling jar skills are optional accelerators: [bug-pipeline](../bug-pipeline/SKILL.md) for the many-bugs case, [loop-engineer](../loop-engineer/SKILL.md) if you want to turn a recurring class of failure into a scheduled loop.*
+*Uses the same root-cause, regression-test-first, and parallel-hypothesis disciplines as the Superpowers debugging skills where they're installed, but stands alone through [references/diagnosis-kit.md](references/diagnosis-kit.md). Sibling jar skills are optional accelerators: [bug-pipeline](../bug-pipeline/SKILL.md) for the many-bugs case, [loop-engineer](../loop-engineer/SKILL.md) if you want to turn a recurring class of failure into a scheduled loop.*

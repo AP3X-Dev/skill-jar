@@ -3,6 +3,8 @@
 Thumbs.db
 desktop.ini
 *.swp
+*.tmp
+*.log
 
 # Python (skill scripts)
 __pycache__/
@@ -13,7 +15,11 @@ venv/
 # Secrets / local env (never commit)
 .env
 .env.*
+*.env
 *.pem
 *.key
+id_rsa*
 credentials.json
 serviceAccountKey.*
+*.p12
+*.pfx

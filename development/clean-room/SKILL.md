@@ -31,7 +31,7 @@ See the **Transparent Mode** and **Parity Mode** sections below for the deltas f
 |-------|------|------|----------|
 | **1. Analyze** | Analyzer | Original source | `DESIGN_DOC.md` |
 | **2. Improve** | Architect + Human | Design doc | `IMPROVEMENTS.md` + `PRP.md` |
-| **3. Implement** | superpowers-2.0 autonomous-advisor | PRP only (no original source) | New codebase |
+| **3. Implement** | autonomous-advisor or host-neutral implementation stack | PRP only (no original source) | New codebase |
 
 **Hard rule:** The Phase 3 implementer MUST NOT read the original source. Start a fresh session between Phase 2 and Phase 3. Do not paste original code into the implementation session. If any detail is missing from the doc, either (a) return to Phase 1 or 2 to fix it, or (b) use the **Research Subagent Escape Hatch** below — the implementer itself never peeks.
 
@@ -138,7 +138,7 @@ Use this mode when a rewrite/port already exists but is missing features, edge c
 
 2. **Phase 2 — triage gaps and plan improvements.** Same as full mode: score each gap by impact/effort/risk, decide accept/defer/reject, roll into a PRP. Improvements can coexist with parity fixes — label each entry as `parity-gap` or `improvement`.
 
-3. **Phase 3 — autonomous parity closure.** Hand off to `superpowers:autonomous-advisor` (or fallback stack). The implementer works on the rewrite-in-progress directly; the firewall only blocks reads of the original. Research-subagent escape hatch still applies for any ambiguity about what the original actually does.
+3. **Phase 3 — autonomous parity closure.** Hand off to [autonomous-advisor](../autonomous-advisor/SKILL.md) when available, or the host-neutral fallback stack below. The implementer works on the rewrite-in-progress directly; the firewall only blocks reads of the original. Research-subagent escape hatch still applies for any ambiguity about what the original actually does.
 
 **Rules specific to Parity Mode:**
 - Gaps are closed one at a time, each with its own acceptance test (often ported from the original's test suite via the research subagent — pseudocode of the assertion, not the verbatim test code).
@@ -373,7 +373,7 @@ It walks H2/H3 sections, turns every bullet in §3 / §4 / §7 / §8 / §9 into 
 
 ### Parallelization (recommended for medium+ repos)
 
-Most passes are independent once Pass 1 establishes the map. Dispatch them concurrently via `superpowers:dispatching-parallel-agents`. Dependency waves:
+Most passes are independent once Pass 1 establishes the map. Dispatch them concurrently when the host supports parallel subagents; otherwise run the waves sequentially. Dependency waves:
 
 | Wave | Passes | Must wait for |
 |------|--------|---------------|
@@ -620,7 +620,7 @@ The clean-room rewrite is a rare opportunity to fix things the original got wron
 
 ### 2a. Agent-driven improvement sweep
 
-Run these sweeps against `DESIGN_DOC.md`. Each sweep produces candidate improvements tagged by category. You can dispatch parallel subagents per sweep (see `superpowers:dispatching-parallel-agents`).
+Run these sweeps against `DESIGN_DOC.md`. Each sweep produces candidate improvements tagged by category. Dispatch parallel subagents per sweep when the host supports it; otherwise run the sweeps one at a time.
 
 | Sweep | Looking for |
 |-------|-------------|
@@ -706,7 +706,7 @@ The PRP must contain:
 
 ## Phase 3: Autonomous Clean-Room Implementation
 
-Hand off `PRP.md` to the **autonomous-advisor** skill. It runs design → planning → implementation → optimization hardening with no human in the loop — with its own run-state file, phase gates, and advisor/verifier split (maker≠checker), so the handed-off run is itself crash-safe and evidence-gated.
+Hand off `PRP.md` to the **autonomous-advisor** skill when available. If it is not installed, use the fallback stack below: the important contract is PRP-only implementation, a run-state file, phase gates, and an advisor/verifier split (maker≠checker), not any particular plugin.
 
 ### Pre-flight checklist (enforce BEFORE dispatching)
 
@@ -739,21 +739,21 @@ In **Transparent Mode**, the items marked *(firewall)* below are skipped. All ot
 ### Handoff
 
 1. Start a fresh session. Do not carry conversation state from Phase 1/2.
-2. Invoke `superpowers:autonomous-advisor` with the path to `PRP.md`.
-3. The advisor pipeline runs end-to-end:
-   - `brainstorming` (advisor answers as stakeholder using the PRP)
-   - `writing-plans` → implementation plan
-   - `subagent-driven-development` or `executing-plans` → code + tests
-   - `finishing-a-development-branch` → merge/PR
-   - `optimization-loop` → iterate until success criteria met
+2. Invoke [autonomous-advisor](../autonomous-advisor/SKILL.md) with the path to `PRP.md`, or run the host-neutral fallback stack below.
+3. The implementation pipeline runs end-to-end:
+   - Design phase — advisor answers as stakeholder using the PRP
+   - Planning phase — implementation plan
+   - Implementation phase — code + tests, with maker≠checker verification
+   - Branch completion — merge/PR through the repo's normal workflow
+   - Optimization loop — iterate until success criteria are met
 4. Monitor only; do not intervene unless the advisor asks a question the PRP genuinely can't answer. If that happens, amend the PRP, then resume — do NOT answer ad hoc.
 
 ### If autonomous-advisor is unavailable
 
 Fallback order:
-1. `superpowers:subagent-driven-development` (in-session, task-by-task with reviews)
-2. `superpowers:executing-plans` (parallel session with checkpoints)
-3. Manual implementation — still from PRP only, still no peeking at original
+1. Host-native subagent implementation, task-by-task with review checkpoints.
+2. A separate execution session that follows the plan with explicit phase gates.
+3. Manual implementation — still from PRP only, still no peeking at original, still verified by a separate checker.
 
 ### Reverse-Contamination Scan (merge gate)
 
@@ -794,6 +794,10 @@ If Phase 3 surfaces a question:
 - **Third (heavy gaps):** return to Phase 1 — run a targeted deep-dive pass on the relevant module. Update `DESIGN_DOC.md`, propagate to PRP, resume.
 - **Never:** load the original source into the implementer's own context.
 - **Always:** failed fix attempts during parity closure or implementation get a `failed-attempts.md` row (what was tried, symptom, lesson) so no later session burns a cycle re-walking the dead path.
+
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active clean-room run: `clean-room-analyzer`, `clean-room-researcher`, `clean-room-gap-checker`, `clean-room-improvement-sweeper`, `clean-room-contamination-reviewer`.
 
 ## Quick Reference
 

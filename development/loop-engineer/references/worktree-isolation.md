@@ -88,7 +88,7 @@ On abandonment, capture the reason in `agent-state/failed-attempts.md` before re
 
 The branch-per-task + checker-before-merge discipline is identical on every host; only the mechanism that hands the agent a clean tree differs. Detect the host and use its native primitive:
 
-- **Claude Code** — isolate via git worktrees, and run the maker inside a worktree-isolated subagent so its filesystem and branch are its own. (The `superpowers:using-git-worktrees` skill provides this when present.)
+- **Claude Code** — isolate via git worktrees, and run the maker inside a worktree-isolated subagent so its filesystem and branch are its own. The `using-git-worktrees` skill can provide this when present.
 - **Codex** — each thread gets a built-in worktree; let the thread's own tree be the task's isolation boundary and still branch per task within it.
 - **Generic / CI host** — plain `git worktree` as scripted above; the CI job clones or adds the worktree, runs the gate commands, and tears the worktree down at the end of the job.
 

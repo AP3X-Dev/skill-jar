@@ -25,6 +25,38 @@ flowchart TD
     L -- No --> N[Keep the synchronous path small and bounded]
 ```
 
+## Data design package template
+
+Use this before product names. Any blank in consistency, ownership, or key justification is a blocker.
+
+```md
+# Data design: <system>
+
+## Access-pattern matrix
+| Pattern | Read/write | Shape | Rate / peak | Latency budget | Cardinality | Invariants |
+|---|---|---|---:|---:|---:|---|
+
+## Data-class consistency
+| Data class | Source of truth | Required consistency | Acceptable staleness | Conflict behavior | Retention / deletion |
+|---|---|---|---|---|---|
+
+## Store and key plan
+| Store | Data owned | Schema / aggregate | Partition or shard key | Query path justified | Failure / recovery path |
+|---|---|---|---|---|---|
+
+## Cache contract
+| Object | Owner | Source of truth | Invalidation | TTL | Staleness budget | Stampede protection |
+|---|---|---|---|---|---|---|
+
+## Queue / stream contract
+| Topic / queue | Producer | Consumer | Delivery semantics | Ordering key | Retry / DLQ owner | Backlog freshness |
+|---|---|---|---|---|---|---|
+
+## Migration and backfill
+| Step | Safety guard | Rollback / recovery | Verification |
+|---|---|---|---|
+```
+
 ## Relational layer
 
 **Patterns:** normalized first, denormalize for measured hot paths; read replicas for read-heavy loads (mind replica lag vs read-your-writes); native partitioning for large time/key-bounded tables; transactional outbox for event publication; short transactions; online schema changes.

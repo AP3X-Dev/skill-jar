@@ -142,7 +142,11 @@ Both are off by default — the tracker plus a runnable gate are all the pipelin
 
 ## Sync with the disciplines it runs on
 
-The pipeline is where two superpowers disciplines become enforced gates instead of good intentions: the **Fixer** works the way **systematic-debugging** prescribes — root cause before the diff, smallest fix, no thrashing (for a single deep bug, hand it to [diagnose-loop](../diagnose-loop/SKILL.md) instead); the **Validator** is **verification-before-completion** institutionalized — it re-runs the gate and the repro itself and approves only on a command's output, never on the Fixer's say-so.
+The pipeline turns two debugging disciplines into enforced gates instead of good intentions: the **Fixer** names the root cause before the diff, makes the smallest fix, and does not thrash (for a single deep bug, hand it to [diagnose-loop](../diagnose-loop/SKILL.md) instead); the **Validator** institutionalizes verification-before-completion — it re-runs the gate and the repro itself and approves only on a command's output, never on the Fixer's say-so. No external Superpowers skill is required.
+
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active bug-pipeline run: `bug-pipeline-hunter`, `bug-pipeline-fixer`, `bug-pipeline-validator`.
 
 ## Common Mistakes
 

@@ -54,6 +54,22 @@ Each candidate is one `<article>`:
 
 No paragraphs of explanation. If the diagram needs a paragraph to be understood, redraw the diagram.
 
+## Candidate evidence contract
+
+Each candidate must be concrete enough that a human could approve or reject it without another discovery pass. Include this evidence in the card or a compact details row:
+
+| Field | Required content |
+|---|---|
+| File anchors | The specific files/modules involved; include line anchors when the repo view supports them. |
+| Current interface | What callers must know today, including invariants/error modes that leak. |
+| Proposed interface | The smaller interface callers would use after the deepening. |
+| Hidden implementation | The behaviour or duplicated rules that move behind the seam. |
+| Migration steps | 3-7 reversible steps; if unknown, mark the candidate `Speculative`. |
+| Acceptance gate | Test/build/typecheck command, characterization test, or manual verification that proves behaviour survived. |
+| Locality/leverage gain | One concrete statement: fewer files touched, one source of truth, one interface tested, or duplicated path deleted. |
+
+Do not show a candidate as `Strong` unless every row is filled. `Worth exploring` may have one open question. `Speculative` means the idea needs more exploration before design approval.
+
 ## Diagram patterns
 
 Pick the pattern that fits the candidate. Mix them. Don't make every diagram look the same — variety is part of the point.

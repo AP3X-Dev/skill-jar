@@ -2,6 +2,35 @@
 
 Bundled prompt templates, the structure-lint checklist, and the optional MemBerry corpus schema for [skill-forge](../SKILL.md). Self-contained — adapt `<placeholders>`.
 
+## Forge run package template
+
+Store this beside the skill under review or in the repo's agent-run docs. The package is the evidence that the skill changed because pressure exposed a loophole.
+
+```md
+# Forge Run: <skill-name>
+
+## Scenario Set
+| ID | Pressure | Shortcut tempted |
+|----|----------|------------------|
+
+## RED Evidence
+| Scenario | Fresh-agent result | Verbatim rationalization |
+|----------|--------------------|--------------------------|
+
+## GREEN Patch
+- **Skill files changed:** <paths>
+- **Loopholes closed:** <named rationalizations>
+- **Rules added/tightened:** <sections>
+
+## REFACTOR Verdicts
+| Run | Scenario | Verdict | Evidence |
+|-----|----------|---------|----------|
+
+## Lint Evidence
+- **Command/check:** <command or checklist>
+- **Result:** <exit/result>
+```
+
 ## Pressure-test (RED — fresh subagent, no skill)
 
 The scenario must create *real* pressure to take the shortcut the skill exists to prevent. A weak scenario the agent passes by accident teaches nothing.

@@ -9,6 +9,13 @@ An API is a promise about semantics, not a list of routes. Most production API p
 
 **Output:** a contract package — protocol choice with rationale, the schema (OpenAPI / proto / GraphQL SDL), idempotency + retry semantics per endpoint, pagination/error/auth/rate-limit policy, cacheability notes, and the backward-compatibility release gate.
 
+## Operating Contract
+
+- Treat the API as a versioned interface contract. For each operation, write the caller, trust boundary, inputs, outputs, side effects, auth scope, rate limit, deadline, retry policy, and observability signal.
+- Side-effecting operations must declare idempotency behavior before retries are allowed. If the effect cannot be safely replayed, the contract says no automatic retry.
+- Prefer machine-checkable artifacts: OpenAPI/proto/SDL, schema examples, enum lists, error envelope, compatibility notes, and conformance tests. Avoid hand-wavy endpoint prose.
+- End with a release verdict: `ship`, `ship after named fixes`, or `block`, with blockers tied to backward compatibility, safety, abuse, or operability.
+
 ## When to Use
 
 - Designing a new API or reviewing one before it ships.
@@ -46,7 +53,11 @@ Decision tree + the full playbook: [references/api-playbook.md](references/api-p
 
 ## Release gate
 
-No public API change ships without: backward-compatibility assessment · schema/OpenAPI updated · retry/idempotency review · abuse & resource-consumption review. A gate failure is a redesign, not a footnote.
+No public API change ships without: backward-compatibility assessment · schema/OpenAPI updated · operation matrix completed · retry/idempotency review · abuse & resource-consumption review · conformance/eval cases for the changed contract. A gate failure is a redesign, not a footnote.
+
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active API design pass: `api-contract-designer`, `api-compatibility-reviewer`, `api-abuse-reviewer`.
 
 ## Common Mistakes
 

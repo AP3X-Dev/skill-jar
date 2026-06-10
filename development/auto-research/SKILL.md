@@ -36,6 +36,10 @@ untracked `results.tsv` ledger + `experiment-state.md`, research rules in
    everything, prove the harness with a baseline, present the cost per cycle —
    then ask.
 
+## Operating Contract
+
+Before launch, pin the metric name, direction, run command, fixed budget, mutable surface, frozen paths, freeze commit, noise floor, and baseline value. Every cycle must produce one hypothesis, one surface diff, one harness run, one `results.tsv` row, and one keep/discard decision made only by the metric plus integrity gate. If any field is unknown or the baseline cannot be reproduced, stop at the launch gate; do not start a vague experiment loop.
+
 ## How the six-part spine specializes for research
 
 | Spine stage | Auto-research form |

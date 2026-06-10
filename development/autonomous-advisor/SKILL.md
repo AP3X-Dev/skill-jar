@@ -1,6 +1,6 @@
 ---
 name: autonomous-advisor
-description: "Full autonomous execution mode. Given a PRP (Product Requirements Plan), runs the entire pipeline — design, planning, implementation, optimization — with zero human input. An advisor sub-agent replaces the human at direction decisions; a separate verifier sub-agent gates work products (maker≠checker). Use when the user provides a PRP for hands-off execution, says 'run this autonomously', or another skill (e.g. clean-room) hands off a PRP for implementation. NOT for projects without a PRP (use brainstorming first, with the human)."
+description: "Full autonomous execution mode. Given a PRP (Product Requirements Plan), runs the entire pipeline — design, planning, implementation, optimization — with zero human input. An advisor sub-agent replaces the human at direction decisions; a separate verifier sub-agent gates work products (maker≠checker). Runs host-neutrally from PRP, run-state files, subagents, and runnable gates; Superpowers skills are optional accelerators, not prerequisites. Use when the user provides a PRP for hands-off execution, says 'run this autonomously', or another skill (e.g. clean-room) hands off a PRP for implementation. NOT for projects without a PRP (create one with the human first)."
 ---
 
 # Autonomous Advisor
@@ -15,6 +15,12 @@ The human writes the PRP (Product Requirements Plan). They hand it off. From tha
 
 **The pipeline does not stop at implementation.** After the code is built and the branch is finished, the autonomous advisor continues into the optimization phase — building an optimization loop prompt and running it on a recurring interval until the codebase meets the PRP's success criteria.
 
+**Output:** a completed autonomous run package: the run-state file with phase gates and failed attempts, the design/spec artifact, the implementation plan, the code changes, verifier/advisor decision logs, branch/PR or merge evidence, and optimization-loop evidence or a recorded blocker explaining why optimization could not launch.
+
+## Superpowers is optional
+
+This skill does not require the Superpowers plugin. If Superpowers skills are installed, use them as accelerators for design, planning, implementation, review, and branch completion. If they are absent, run the same phases directly from this skill: write the spec and plan as normal repo docs, dispatch host-native subagents or execute tasks inline with maker≠checker review, record state under `docs/agent-runs/`, and gate every phase with runnable commands.
+
 ## When to Use
 
 - The human has written a complete PRP and wants hands-off execution
@@ -23,7 +29,7 @@ The human writes the PRP (Product Requirements Plan). They hand it off. From tha
 
 ## When NOT to Use
 
-- No PRP exists (use brainstorming to create one first — WITH the human)
+- No PRP exists (create one through a human-guided design/planning pass first)
 - The PRP is vague or incomplete (send it back to the human)
 - The project involves irreversible external actions (deploying to production, publishing packages, sending emails)
 
@@ -55,11 +61,11 @@ Starting execution.
 6. **Create the run-state file** (see Run State below) with the PRP path, session id, phase table, and `Next action: Phase 1 — design`. This happens before any pipeline work so a crash one minute in is already recoverable.
 
 7. Proceed through the **full pipeline:**
-   1. brainstorming (design phase)
-   2. writing-plans (implementation plan)
-   3. subagent-driven-development (build it)
-   4. finishing-a-development-branch (PR or merge)
-   5. optimization-loop (generate optimizer + launch loop)
+   1. Design phase — use brainstorming/design-panel if installed; otherwise write the spec directly from the PRP and repo context.
+   2. Planning phase — use writing-plans if installed; otherwise write an implementation plan with files, tasks, and acceptance commands.
+   3. Implementation phase — use host-native subagents where available; otherwise execute tasks inline with a separate verifier.
+   4. Branch completion — use the repo's normal PR/merge workflow; never push directly unless the PRP explicitly allows it.
+   5. Optimization loop — generate optimizer + launch loop through [optimization-loop](../optimization-loop/SKILL.md).
 
 **The advisor does NOT skip any phase.** It follows the same workflow a human would — it just answers faster and never stops to wait. **And no phase advances on say-so alone** — each phase ends at a gate (see Phase Gates below).
 
@@ -67,7 +73,7 @@ Starting execution.
 
 An autonomous run is long and crash-expensive. The run-state file is what makes it **restartable**: a fresh session reads it and resumes mid-pipeline instead of starting over or guessing.
 
-**File:** `docs/superpowers/run-state-<prp-name>.md`. Created at activation step 6, updated at every phase boundary, after every implementation task, and whenever a blocker is resolved.
+**File:** `docs/agent-runs/run-state-<prp-name>.md` by default, or the repo's existing run-state convention. Created at activation step 6, updated at every phase boundary, after every implementation task, and whenever a blocker is resolved.
 
 ```markdown
 # Autonomous Run State — <PRP title>
@@ -88,7 +94,7 @@ An autonomous run is long and crash-expensive. The run-state file is what makes 
 |---|-----------|----------------|---------------|-------------------|
 
 ## Decisions
-Full log: docs/superpowers/advisor-log-<date>-<prp-name>.md
+Full log: docs/agent-runs/advisor-log-<date>-<prp-name>.md
 ```
 
 **Restart protocol:** a fresh session resuming an autonomous run reads the run-state file FIRST, then the PRP, then resumes from **Next action**. It does not re-run completed phases (their gate evidence is recorded), and it checks **Failed Attempts** before retrying anything. If In-flight names a half-done task, recover it from the working tree or revert to the last green commit — never start new work on top of an unrecovered crash.
@@ -99,7 +105,7 @@ Each phase ends at a gate. **Advisor or verifier approval supplements a gate; it
 
 | Phase ends | Gate |
 |------------|------|
-| **1 — Design** | Spec file exists in `docs/superpowers/specs/` AND the **verifier** (not the advisor) returns PASS on it against the PRP |
+| **1 — Design** | Spec file exists in `docs/agent-runs/specs/` or the repo's design-doc convention AND the **verifier** (not the advisor) returns PASS on it against the PRP |
 | **2 — Plan** | Plan file exists; every task names its files and a runnable acceptance check; verifier PASS |
 | **3 — Implementation** | The project's full suite runs and exits 0 AND reports a real test count (a suite that runs zero tests is a STOP-and-report, never a pass); lint/typecheck clean if the project has them |
 | **4 — Branch** | PR URL or merge SHA recorded in run-state |
@@ -188,7 +194,7 @@ This PRP is missing critical information needed for autonomous execution:
 
 I need these filled in before I can run autonomously. Want to:
 1. Add the missing sections now
-2. Run brainstorming together to flesh this out
+2. Run a human-guided design/planning pass to flesh this out
 ```
 
 This is the ONE place the skill asks the human. After PRP validation passes, no more human interaction.
@@ -228,13 +234,13 @@ The advisor handles six categories of decisions. Each maps to specific checkpoin
 
 #### 1. DESIGN_APPROVAL — handled by the VERIFIER, not the advisor
 
-**Where:** brainstorming (design sections, spec review), optimization-loop (optimizer prompt review)
+**Where:** design/spec review, optimization-loop optimizer prompt review
 **What:** Approve, revise, or reject work products (designs, specs, plans, optimizer prompts)
 **How the verifier decides:** Compare the COMPLETE artifact against PRP requirements, constraints, and success criteria. Approve only with stated evidence (which PRP sections it satisfies and how); REJECT with specific required fixes if gaps exist. Default skeptical — a plausible-but-wrong design approved here poisons every later phase. Use the Verifier variant of the dispatch template in `./advisor-prompt.md`, on a different model than the artifact's author where possible.
 
 #### 2. SELECTION
 
-**Where:** writing-plans (execution approach), finishing-a-development-branch (completion method), using-git-worktrees (directory location)
+**Where:** planning (execution approach), branch completion (completion method), worktree setup (directory location)
 **What:** Choose between presented options
 **How the advisor decides:**
 - Execution approach: Always choose **subagent-driven** (recommended by the skill, better quality)
@@ -244,7 +250,7 @@ The advisor handles six categories of decisions. Each maps to specific checkpoin
 
 #### 3. ESCALATION
 
-**Where:** executing-plans (blockers), systematic-debugging (3+ failed fixes), subagent-driven-development (BLOCKED status, plan wrong)
+**Where:** implementation/blocker handling, diagnosis after 3+ failed fixes, plan revision
 **What:** Decide how to proceed when blocked
 **How the advisor decides:**
 - **First, read the run-state Failed Attempts table.** Never choose an approach already logged there as failed — pick a different angle, decompose the task, or escalate. "Never give up" means find a NEW path, not re-walk a dead one.
@@ -256,13 +262,13 @@ The advisor handles six categories of decisions. Each maps to specific checkpoin
 
 #### 4. CLARIFICATION
 
-**Where:** receiving-code-review (unclear feedback), subagent-driven-development (implementer questions, NEEDS_CONTEXT)
+**Where:** review-feedback clarification, implementer questions, missing context
 **What:** Answer questions or provide missing context
 **How the advisor decides:** Read the PRP and codebase to find the answer. If the PRP specifies the answer, provide it verbatim. If not, use engineering judgment consistent with the PRP's constraints and patterns.
 
 #### 5. PERMISSION
 
-**Where:** test-driven-development (exceptions), using-git-worktrees (proceed with failing baseline)
+**Where:** test-process exceptions, worktree setup with failing baseline
 **What:** Grant or deny exceptions to process
 **How the advisor decides:**
 - TDD exceptions: **Deny by default.** Only grant for generated code or config files explicitly listed in PRP scope.
@@ -270,7 +276,7 @@ The advisor handles six categories of decisions. Each maps to specific checkpoin
 
 #### 6. CONFIRMATION
 
-**Where:** finishing-a-development-branch (discard confirmation)
+**Where:** branch completion and destructive cleanup confirmations
 **What:** Confirm destructive actions
 **How the advisor decides:** **Never confirm discard.** The advisor always preserves work. Choose PR or keep-as-is instead.
 
@@ -286,7 +292,11 @@ The orchestrator MUST log every advisor decision AND every verifier verdict for 
 **Reasoning:** [why, referencing PRP sections]
 ```
 
-Save this log to `docs/superpowers/advisor-log-YYYY-MM-DD-<prp-name>.md` at the end of execution.
+Save this log to `docs/agent-runs/advisor-log-YYYY-MM-DD-<prp-name>.md` at the end of execution.
+
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active autonomous run: `autonomous-advisor`, `autonomous-verifier`.
 
 ## Autonomous Workflow
 
@@ -305,7 +315,7 @@ digraph autonomous {
     "Announce autonomous mode" [shape=box];
 
     subgraph cluster_design {
-        label="Phase 1: Design (brainstorming)";
+        label="Phase 1: Design";
         "Explore context" [shape=box];
         "Skip visual companion" [shape=box];
         "Extract requirements from PRP" [shape=box];
@@ -316,14 +326,14 @@ digraph autonomous {
     }
 
     subgraph cluster_plan {
-        label="Phase 2: Planning (writing-plans)";
+        label="Phase 2: Planning";
         "Write implementation plan" [shape=box];
         "Plan self-review" [shape=box];
         "Auto-select subagent-driven" [shape=box];
     }
 
     subgraph cluster_implement {
-        label="Phase 3: Implementation (subagent-driven-development)";
+        label="Phase 3: Implementation";
         "Dispatch implementer per task" [shape=box];
         "Advisor answers implementer Qs" [shape=box];
         "Advisor resolves blockers" [shape=box];
@@ -331,7 +341,7 @@ digraph autonomous {
     }
 
     subgraph cluster_finish {
-        label="Phase 4: Branch Completion (finishing-a-development-branch)";
+        label="Phase 4: Branch Completion";
         "Verify tests" [shape=box];
         "Auto-select PR creation" [shape=box];
         "Execute + cleanup" [shape=box];
@@ -384,7 +394,7 @@ digraph autonomous {
 
 ## Design Phase Adaptations
 
-During the brainstorming skill, the advisor changes the process:
+During the design phase, the advisor changes the process:
 
 1. **Visual companion:** Always skip — no browser available in autonomous mode
 2. **Clarifying questions:** The orchestrator does NOT ask questions one-at-a-time to the advisor. Instead:
@@ -398,7 +408,7 @@ During the brainstorming skill, the advisor changes the process:
 
 ## Implementation Phase Adaptations
 
-During subagent-driven-development:
+During implementation:
 
 1. **Implementer questions:** Advisor answers by referencing PRP + codebase
 2. **NEEDS_CONTEXT:** Advisor explores codebase and provides context
@@ -521,7 +531,7 @@ When the full pipeline completes (implementation + optimization loop done), prod
 <2-3 sentence summary>
 
 ## Decisions made
-<count> decisions made autonomously. Full log: `docs/superpowers/advisor-log-<date>-<name>.md`
+<count> decisions made autonomously. Full log: `docs/agent-runs/advisor-log-<date>-<name>.md`
 
 ## Key decisions
 <list the 3-5 most consequential decisions with reasoning>
@@ -543,38 +553,31 @@ Store the full summary to MemBerry as the final entry for this autonomous sessio
 
 ## Integration
 
-**The full autonomous pipeline invokes these skills in order:**
-1. **brainstorming** — design phase, advisor approves design
-2. **writing-plans** — plan phase, auto-selects subagent-driven
-3. **using-git-worktrees** — workspace isolation, auto-configured
-4. **subagent-driven-development** — implementation, advisor answers all questions
-5. **test-driven-development** — enforced within implementation, no exceptions
-6. **systematic-debugging** — triggered if bugs arise, advisor resolves escalations
-7. **receiving-code-review** — handles review feedback, advisor resolves conflicts
-8. **finishing-a-development-branch** — auto-selects PR creation
-9. **optimization-loop** — audit + scaffold loop + close cycle 1 + run to termination
+**The full autonomous pipeline runs these phases in order:**
+1. **Design** — write and verify a design spec against the PRP
+2. **Planning** — write an implementation plan with files, tasks, and acceptance commands
+3. **Workspace isolation** — create or choose an isolated branch/worktree where the host supports it
+4. **Implementation** — execute the plan task-by-task; advisor answers context questions
+5. **Regression discipline** — require tests for changed behavior; deny test-skipping by default
+6. **Diagnosis** — if bugs arise, use a reproduce-first diagnosis loop
+7. **Review handling** — verify review findings before implementing them
+8. **Branch completion** — preserve work through the repo's PR/merge workflow
+9. **Optimization loop** — audit + scaffold loop + close cycle 1 + run to termination
 
-**Skills wrapped (advisor replaces human at their checkpoints):**
-- brainstorming, writing-plans, executing-plans, subagent-driven-development
-- finishing-a-development-branch, systematic-debugging, receiving-code-review
-- test-driven-development, using-git-worktrees, optimization-loop
-
-**Skills unchanged (no human checkpoints):**
-- dispatching-parallel-agents, verification-before-completion
-- using-superpowers, writing-skills, requesting-code-review
+**Optional Superpowers accelerators:** brainstorming, writing-plans, using-git-worktrees, subagent-driven-development, executing-plans, test-driven-development, systematic-debugging, receiving-code-review, finishing-a-development-branch, dispatching-parallel-agents, verification-before-completion, writing-skills, and requesting-code-review. Use them if installed; otherwise run the equivalent phase directly from this skill, the target repo's conventions, and the bundled jar skills.
 
 **External integrations:**
-- **MemBerry memory** — loads project history at start, stores decisions throughout
-- **`/loop` skill** — launches the optimization loop on a 5-minute interval
+- **MemBerry memory** — optional; loads project history at start and stores decisions throughout when available
+- **Host scheduler / loop primitive** — optional; launches the optimization loop on the chosen cadence when available
 
 **Required input:**
 - A PRP file (path or inline content)
 
 **Produces:**
 - Working code on a feature branch (or PR)
-- Design spec document (`docs/superpowers/specs/`)
-- Implementation plan document (`docs/superpowers/plans/`)
+- Design spec document (`docs/agent-runs/specs/` or repo convention)
+- Implementation plan document (`docs/agent-runs/plans/` or repo convention)
 - Optimizer prompt + progress log (`docs/prompts/`)
-- Run-state file with phase-gate evidence + failed attempts (`docs/superpowers/run-state-*.md`)
-- Advisor decision log incl. verifier verdicts (`docs/superpowers/advisor-log-*.md`)
+- Run-state file with phase-gate evidence + failed attempts (`docs/agent-runs/run-state-*.md` or repo convention)
+- Advisor decision log incl. verifier verdicts (`docs/agent-runs/advisor-log-*.md` or repo convention)
 - MemBerry memory entries for all key decisions

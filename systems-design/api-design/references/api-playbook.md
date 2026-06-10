@@ -21,6 +21,43 @@ flowchart TD
     I --> K[Pin delivery semantics, retries, DLQ, idempotent consumers]
 ```
 
+## Contract package template
+
+Use this before implementation or review. Missing rows are contract gaps.
+
+```md
+# API contract: <surface>
+
+## Protocol decision
+Chosen protocol: <HTTP/gRPC/GraphQL/events>
+Reason: <consumer shape, latency, coupling, governance>
+Rejected alternatives: <why not>
+
+## Operation matrix
+| Operation | Caller / trust boundary | Request schema | Response schema | Side effect | Auth scope | Deadline | Retry / idempotency | Rate limit | Cacheability | SLI |
+|---|---|---|---|---|---|---|---|---|---|---|
+
+## Error envelope
+~~~json
+{
+  "code": "STRING_ENUM",
+  "message": "safe user-facing message",
+  "correlation_id": "uuid",
+  "retryable": false,
+  "details": {}
+}
+~~~
+
+## Compatibility and release gate
+| Check | Evidence | Verdict |
+|---|---|---|
+| Backward-compatible schema diff |  | pass/fail |
+| Idempotency reviewed for retried writes |  | pass/fail |
+| Abuse and resource limits reviewed |  | pass/fail |
+| Contract conformance tests added |  | pass/fail |
+| Observability fields/dashboards defined |  | pass/fail |
+```
+
 ## Failure modes → mitigations
 
 | Failure | Mechanism | Mitigation |
