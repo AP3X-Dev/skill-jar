@@ -155,6 +155,7 @@ Run this gate on your own output before presenting the scaffolded loop. Fix any 
 
 - **optimization-loop** — for an audit→fix→measure→track hardening pass on an existing codebase. It builds natively on this skill's conventions (agent-state spine, driver at `docs/prompts/`, maker≠checker verifier, the scaffolder) and adds the optimization-specific machinery: intent discovery, an audit-derived backlog + metric vector, a no-regression ratchet, dual-mode cycles, and metric-driven termination — then wires the trigger and closes cycle 1 itself. When the user's loop IS optimization, invoke it directly; it hands off a running loop.
 - **bug-pipeline** — the Hunter → Fixer → Validator defect pipeline over a shared tracker; same relationship.
+- **auto-research** — the Karpathy-style experiment loop: mutate one experiment surface, run fixed-budget experiments against a frozen eval harness, keep/discard by ONE scalar metric (untracked `results.tsv` ledger, branch advance/reset). Same relationship — it builds the harness if missing, scaffolds, runs the baseline, then offers launch (human-gated).
 
 ## Common Mistakes
 

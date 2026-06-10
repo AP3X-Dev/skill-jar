@@ -2,6 +2,12 @@
   "_generated": "by scripts/gen-index.py -- do not edit by hand; the audit gate fails if this file is stale",
   "skills": [
     {
+      "name": "auto-research",
+      "category": "development",
+      "description": "Use when the user wants a Karpathy-style auto-research loop — an agent autonomously running fixed-budget experiments against a frozen evaluation harness to optimize ONE scalar metric: hypothesize → mutate the experiment surface → run → keep or discard by the metric → log → repeat until interrupted. Generalizes the autoresearch/nanochat pattern to any domain with a runnable metric (model training, prompt optimization, algorithm performance, compression, benchmark scores). Builds the harness if the repo lacks one, scaffolds the loop on loop-engineer conventions, runs the real baseline, then OFFERS launch — never auto-launches. Triggers: 'karpathy loop', 'autoresearch', 'overnight experiments', 'let it experiment while I sleep', 'optimize this metric autonomously'. NOT for correctness/quality hardening (use optimization-loop), defect repair (use bug-pipeline), or non-experiment loops (use loop-engineer).",
+      "path": "development/auto-research/SKILL.md"
+    },
+    {
       "name": "autonomous-advisor",
       "category": "development",
       "description": "Full autonomous execution mode. Given a PRP (Product Requirements Plan), runs the entire pipeline — design, planning, implementation, optimization — with zero human input. An advisor sub-agent replaces the human at direction decisions; a separate verifier sub-agent gates work products (maker≠checker). Use when the user provides a PRP for hands-off execution, says 'run this autonomously', or another skill (e.g. clean-room) hands off a PRP for implementation. NOT for projects without a PRP (use brainstorming first, with the human).",
@@ -28,7 +34,7 @@
     {
       "name": "optimization-loop",
       "category": "development",
-      "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), or building a non-optimization loop (use loop-engineer directly).",
+      "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), building a non-optimization loop (use loop-engineer directly), or single-metric experimentation on a frozen harness (use auto-research).",
       "path": "development/optimization-loop/SKILL.md"
     }
   ]

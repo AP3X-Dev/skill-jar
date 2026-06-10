@@ -1,6 +1,6 @@
 ---
 name: optimization-loop
-description: "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), or building a non-optimization loop (use loop-engineer directly)."
+description: "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), building a non-optimization loop (use loop-engineer directly), or single-metric experimentation on a frozen harness (use auto-research)."
 ---
 
 # Optimization Loop
@@ -60,6 +60,7 @@ Every optimization loop runs on its own branch: `opt/<project>-<focus>` (pick `<
 - Brand-new codebase (nothing to optimize — brainstorming/writing-plans first).
 - One specific bug (just fix it, or run **bug-pipeline** for an ongoing defect pipeline).
 - A loop whose job isn't optimization (triage, releases, migrations) — use **loop-engineer** directly.
+- Hypothesis-driven experimentation against a frozen eval harness, chasing one scalar (training speedruns, prompt optimization) — use **auto-research**.
 
 ## The Process (Layer 1)
 

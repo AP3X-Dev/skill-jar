@@ -6,6 +6,7 @@
     "name": "AP3X"
   },
   "skills": [
+    "./auto-research",
     "./autonomous-advisor",
     "./bug-pipeline",
     "./clean-room",
