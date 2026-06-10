@@ -26,6 +26,12 @@
       "path": "development/clean-room/SKILL.md"
     },
     {
+      "name": "improve-codebase-architecture",
+      "category": "development",
+      "description": "Find — then ship — deepening opportunities in a codebase: refactors that turn shallow modules into deep ones for testability, locality, and AI-navigability. Human-in-the-loop by design (a strategic human picks direction; the AI explores, drafts, and migrates): explore for friction, present candidates as a visual HTML report, grill the chosen one into a module shape, then convert the approved design into an issue and a careful migration. Informed by the domain language in CONTEXT.md and decisions in docs/adr/. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, reduce AI-driven architecture drift/entropy, make a codebase more testable, or wants a periodic architecture review. NOT for autonomous metric-driven hardening (use optimization-loop), defect repair (use bug-pipeline), or reimplementing a codebase from scratch (use clean-room).",
+      "path": "development/improve-codebase-architecture/SKILL.md"
+    },
+    {
       "name": "loop-engineer",
       "category": "development",
       "description": "Use when the user wants to BUILD an agent loop or loop system — a self-running pipeline where automation discovers work, an agent executes it, a separate verifier checks it, state is recorded, and the loop decides what runs next — instead of hand-prompting every step. Scaffolds the loop into a repo: state files, maker≠checker subagents, automation/trigger and driver prompts, verification gates, safety rules, and worktree isolation. Agent-agnostic (Claude Code, Codex, or generic). NOT for running a single one-off task, fixing one bug (use bugfix), or an audit→fix hardening pass on an existing codebase (use optimization-loop — a specialized loop this skill can scaffold).",
@@ -34,7 +40,7 @@
     {
       "name": "optimization-loop",
       "category": "development",
-      "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), building a non-optimization loop (use loop-engineer directly), or single-metric experimentation on a frozen harness (use auto-research).",
+      "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (use brainstorming/writing-plans), building a non-optimization loop (use loop-engineer directly), single-metric experimentation on a frozen harness (use auto-research), or judgment-driven architecture / deep-module refactoring (use improve-codebase-architecture).",
       "path": "development/optimization-loop/SKILL.md"
     }
   ]

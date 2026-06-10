@@ -10,6 +10,7 @@
     "./autonomous-advisor",
     "./bug-pipeline",
     "./clean-room",
+    "./improve-codebase-architecture",
     "./loop-engineer",
     "./optimization-loop"
   ]

@@ -8,7 +8,7 @@
     {
       "name": "skill-jar-development",
       "source": "./development",
-      "description": "development-category skills: auto-research, autonomous-advisor, bug-pipeline, clean-room, loop-engineer, optimization-loop."
+      "description": "development-category skills: auto-research, autonomous-advisor, bug-pipeline, clean-room, improve-codebase-architecture, loop-engineer, optimization-loop."
     }
   ]
 }
