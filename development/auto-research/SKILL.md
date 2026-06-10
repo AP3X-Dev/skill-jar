@@ -180,8 +180,8 @@ contract instead (run it once; check the grep works). Design guidance:
    [references/driver-template.md](references/driver-template.md) →
    `docs/prompts/<tag>-research-driver.md`.
 3. Ledger: create `results.tsv` with only its header row.
-4. State: create `experiment-state.md` from the template (baseline fields
-   blank until Phase 4).
+4. State: create `experiment-state.md` from the template (Status: `setup`;
+   baseline fields blank until Phase 4).
 5. Rules: append the research-rules block to the target repo's `AGENTS.md`.
 6. Gitignore: add `results.tsv`, `experiment-state.md`, `run.log`.
 7. Commit the driver, `AGENTS.md`, and `.gitignore` (NOT the ledger/state).
@@ -190,13 +190,15 @@ contract instead (run it once; check the grep works). Design guidance:
 
 Run the unmodified code for real: `<run command> > run.log 2>&1`. Extract the
 metric. Row 1 of `results.tsv` is always `baseline`. Fill `Baseline` and
-`Current best` in `experiment-state.md`. If extraction fails or the budget
+`Current best` in `experiment-state.md`. Set Status to `baselined`. If extraction fails or the budget
 isn't enforced, the harness contract is broken — go back to Phase 2. Never
 offer launch on an unproven harness.
 
-If the metric is noisy (common outside ML training: API-judged evals,
-wall-clock benchmarks), run the baseline twice and record the spread as the
-noise floor in `experiment-state.md` — the keep rule uses it.
+Run the baseline twice and record the spread as the noise floor in
+`experiment-state.md` — the keep rule uses it. Fixed-seed training is
+near-deterministic (spread ≈ 0); API-judged evals and wall-clock benchmarks
+are not. If a second run is too expensive, record `0 (not measured)` and
+treat hair-thin improvements with suspicion.
 
 ### Phase 5 — The launch gate
 
@@ -211,7 +213,7 @@ noise floor in `experiment-state.md` — the keep rule uses it.
 - What the human still owns: spend, when to stop, and what to do with the
   winning branch.
 
-Then ASK: launch now? **Yes** → wire the chosen trigger and start. **No** →
+Then ASK: launch now? **Yes** → wire the chosen trigger, set Status to `running`, and start. **No** →
 hand off with the exact launch command for each option.
 
 ## Before the launch offer — verify your own output
@@ -223,8 +225,9 @@ hand off with the exact launch command for each option.
 - [ ] Frozen paths are listed in `experiment-state.md` with the freeze commit
       SHA; the integrity-gate command runs and exits 0.
 - [ ] Baseline row exists in `results.tsv`; state file fully filled.
-- [ ] The driver names real commands and paths — zero unfilled
-      `<placeholders>`.
+- [ ] The driver names real commands and paths — zero unfilled scaffold-time
+      `<placeholders>` (run-time tokens like `<reset point>` stay; see the
+      token table in the driver template).
 - [ ] `AGENTS.md` rules and `.gitignore` entries committed on the research
       branch.
 - [ ] Launch was OFFERED with costs, not performed.

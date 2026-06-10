@@ -15,8 +15,17 @@ any leftover.
 | `<mutable surface>` | path(s) the agent may edit | `train.py` |
 | `<frozen paths>` | read-only harness paths | `prepare.py` |
 | `<freeze commit>` | SHA recorded at scaffold time | `a1b2c3d` |
-| `<constraint_name>` | soft-constraint column | `memory_gb` |
+| `<constraint_name>` | soft-constraint column (`n/a` if the domain has none — log `0.0`) | `memory_gb` |
 | `<noise floor>` | min improvement that counts | `0.0005` or `0 (not measured)` |
+
+**Scaffold-time vs run-time tokens.** Fill once, at install time: every row in
+the table above, plus the self-describing state fields
+(`<where in the harness>`, `<guidance, …>`). Angle-bracket tokens the table
+does NOT list — `<reset point>`, `<short sha>`, `<metric value>`,
+`<constraint value>`, `<status>`, `<description>`,
+`<one-line experiment description>`, and the baseline `<value>` / `<sha>`
+fields — are run-time values: the loop-agent computes them each cycle (or the
+Phase 4 baseline run fills them). LEAVE THOSE as written when installing.
 
 ## 1. The driver — install at `docs/prompts/<tag>-research-driver.md`
 
@@ -52,13 +61,14 @@ continue — the human already decided at the launch gate.
    or stream the log into your context. If the run exceeds 2× <budget>, kill
    it and treat it as a crash.
 7. **Extract.** `grep "^<metric_name>:" run.log` and
-   `grep "^<constraint_name>:" run.log`. An empty metric grep = crash (see
-   Crashes).
+   `grep "^<constraint_name>:" run.log` (skip if the constraint is `n/a`).
+   An empty metric grep = crash (see Crashes).
 8. **Integrity gate.** `git diff --quiet <freeze commit> -- <frozen paths>`
    must exit 0. If it doesn't, you (or the run) touched the frozen harness:
-   `git checkout <freeze commit> -- <frozen paths>`, reset to your reset
-   point, log a `crash` row "integrity violation", and move on. No
-   exceptions; the number from a touched harness is meaningless.
+   restore the harness (`git checkout <freeze commit> -- <frozen paths>`),
+   log a `crash` row "integrity violation" (use the experiment's sha), THEN
+   reset to your reset point and move on. No exceptions; the number from a
+   touched harness is meaningless.
 9. **Log.** Append ONE tab-separated row to `results.tsv`:
    `<short sha>\t<metric value>\t<constraint value>\t<status>\t<description>`
    Statuses: `keep` / `discard` / `crash`. On crash: metric `0.000000`,
@@ -79,10 +89,11 @@ continue — the human already decided at the launch gate.
 ## Crashes
 
 Empty metric grep → read `tail -n 50 run.log`. A dumb cause (typo, missing
-import, shape error) → fix it on the same commit chain and re-run once or
-twice. A fundamentally broken idea → log the `crash` row, reset to your reset
+import, shape error) → fix it, commit (or amend) so a kept result stays
+reproducible from its logged sha, and re-run — once or twice at most. A fundamentally broken idea → log the `crash` row, reset to your reset
 point, move on. If 3+ CONSECUTIVE experiments crash with no metric, the
-harness itself may be broken: STOP and report to the human — this is the only
+harness itself may be broken: set `Status: interrupted` in
+`experiment-state.md`, STOP, and report to the human — this is the only
 self-stop.
 
 ## Rules
