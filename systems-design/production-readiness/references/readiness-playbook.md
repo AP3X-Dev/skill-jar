@@ -9,6 +9,44 @@ Templates for [production-readiness](../SKILL.md): runbook skeleton, incident ca
 3. Error budget = 1 − SLO over the window (99.9%/30d ≈ 43m of burn).
 4. Budget policy — write the actual rules: burn rate > X → freeze risky launches; budget healthy → ship faster. Alert on burn *rate* (fast-burn page, slow-burn ticket), not raw error count.
 
+## Readiness package template
+
+Use this as the launch review artifact. Unknowns are blockers until replaced with URLs, commands, owners, or drill evidence.
+
+```md
+# Readiness review: <service>
+
+## Verdict
+Status: ready / ready after fixes / not ready
+Smallest fix list:
+- <fix>
+
+## SLOs and error budget
+| Journey | SLI | SLO | Window | Fast-burn alert | Slow-burn ticket | Budget policy |
+|---|---|---:|---|---|---|---|
+
+## Dashboards and alerts
+| Signal | Dashboard URL | Alert route | Page? | Runbook |
+|---|---|---|---|---|
+
+## Probes and deployment
+| Control | Current setting | Failure behavior | Evidence |
+|---|---|---|---|
+| Liveness |  |  |  |
+| Readiness |  |  |  |
+| Startup |  |  |  |
+| Canary gate |  |  |  |
+| Rollback command |  |  | tested <date> |
+
+## Failure drills
+| Drill | Ran when | Result | Follow-up |
+|---|---|---|---|
+
+## Cost and capacity
+| Resource | Current load | Limit / budget | Risk |
+|---|---:|---:|---|
+```
+
 ## Runbook skeleton (one per failure mode)
 
 ```md

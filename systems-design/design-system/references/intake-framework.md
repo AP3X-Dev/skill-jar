@@ -19,6 +19,50 @@ Worksheets for [design-system](../SKILL.md): the intake SOP, the capacity math, 
 
 **Required outputs:** architecture diagram · component list · API style · primary data model · cache + queue choices · scaling model · risk register · dashboards + alerts · canary plan · runbook references · cost notes.
 
+## Design package template
+
+Use this shape for the final answer or design doc. Keep blanks as blockers, not vague prose.
+
+```md
+# Design: <system>
+
+## Inputs and assumptions
+| Item | Value | Source | Confidence |
+|---|---|---|---|
+| User journeys |  |  | high/med/low |
+| Latency SLO |  |  | high/med/low |
+| Availability SLO |  |  | high/med/low |
+| Peak traffic |  |  | high/med/low |
+| Consistency requirement |  |  | high/med/low |
+| Compliance / retention |  |  | high/med/low |
+| Team / ops ceiling |  |  | high/med/low |
+
+## Chosen topology
+| Component | Responsibility | Requirement earned | Owner | Operational cost |
+|---|---|---|---|---|
+
+## Request, data, and failure paths
+- Request path:
+- Data path:
+- Failure path:
+
+## Capacity envelope
+| Path | Peak rate | Latency budget | Concurrency estimate | Headroom |
+|---|---:|---:|---:|---:|
+
+## Complexity exceptions
+<copy the stop-condition register and fill every row>
+
+## Risks and gates
+| Risk | Trigger | Mitigation | Evidence needed before launch |
+|---|---|---|---|
+
+## Handoffs
+- API contract:
+- Data-layer contract:
+- Production-readiness artifacts:
+```
+
 ## Capacity worksheet
 
 - **Little's Law:** `concurrency L = arrival rate λ × service time W`. 500 RPS × 0.2s = 100 concurrent requests — size worker pools/connections from this, not vibes.

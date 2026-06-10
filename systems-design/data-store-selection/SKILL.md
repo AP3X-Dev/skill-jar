@@ -9,6 +9,13 @@ Databases don't fail because the brand was wrong — they fail because the **acc
 
 **Output:** a data design — store choice(s) with rationale, schema/partition-key plan justified against the dominant query path, named consistency model per data class, cache policy (per cached object: owner, source of truth, invalidation, TTL, staleness budget), queue/stream choice with delivery semantics, and backfill/migration notes.
 
+## Operating Contract
+
+- Fill the access-pattern and consistency matrices before naming products. A database recommendation without read/write shape, rate, latency, cardinality, and invariants is incomplete.
+- For every stateful component, declare the contract: owner, source of truth, schema/key model, consistency guarantee, retention/deletion behavior, failure mode, and recovery path.
+- Treat caches and queues as contracts, not add-ons. A cache needs invalidation and staleness rules; a queue needs delivery semantics, idempotency, retry/DLQ ownership, and backlog freshness.
+- End with a pass/fail data-layer verdict. Fail designs with unnamed consistency, unjustified partition keys, unowned DLQs, or cache entries with no source-of-truth path.
+
 ## When to Use
 
 - Choosing a primary store, adding a second one, or reviewing a schema/shard-key design.
@@ -44,6 +51,7 @@ Full tables, key-design rules, and patterns: [references/data-playbook.md](refer
 
 - **Reject** if the partition/shard key cannot be justified against the dominant query path.
 - **Reject** if consistency expectations are not explicitly named (per data class, including what readers may see mid-flight).
+- **Reject** if a stateful component has no owner, source of truth, retention/deletion rule, or recovery path.
 - No queue/topic is production-ready without delivery semantics, replay policy, idempotency contract, and DLQ ownership.
 - No cached object without owner, source of truth, invalidation mechanism, TTL, and acceptable staleness.
 

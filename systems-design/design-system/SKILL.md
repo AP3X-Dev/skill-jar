@@ -9,6 +9,13 @@ System design is making **explicit tradeoffs under uncertainty** — not assembl
 
 **Output:** a design package — architecture diagram, component list with the chosen API style / data model / cache & queue decisions, SLOs + capacity envelope, failure-domain map, risk register, and the operational artifact list (dashboards, alerts, canary plan, runbook references, cost notes). Each major surface then deepens via the sibling skills.
 
+## Operating Contract
+
+- Start by converting the request into a design contract: known inputs, missing inputs, explicit assumptions, non-goals, and the user journeys being protected.
+- Produce a decision record, not an architecture survey. Every major component must name the requirement it satisfies, the failure mode it addresses, the owner who would run it, and the operational cost it introduces.
+- If latency, traffic, consistency, or survival requirements are missing, ask for them; if the user wants a draft anyway, proceed with conservative assumptions and label confidence.
+- Keep detailed API, data, and launch design in the sibling skills. This skill chooses the topology and hands off concrete surfaces; it does not hide those contracts in prose.
+
 ## When to Use
 
 - A new system, service, or major subsystem needs an architecture.
@@ -30,7 +37,7 @@ Run the stages in order; each produces a recorded artifact. Full worksheets in [
 3. **Define SLOs + capacity envelope** — SLIs/SLOs per user-visible journey; throughput/concurrency from Little's Law (`L = λ × W`); design to **p95/p99 budgets, not means** — tail latency dominates fan-out systems. Size steady-state from measured/estimated peak with headroom so queues don't explode under burst.
 4. **Choose the simplest topology that meets the SLO** — the five questions, in order: *user-visible SLO & acceptable consistency model? dominant read/write patterns? steady + peak load? which failures must it survive? what operational complexity can the team actually sustain?* If a component doesn't improve one of those five, it's premature. Defaults-by-scale tables: [references/defaults-and-cases.md](references/defaults-and-cases.md).
 5. **Design the three paths** — for each: **request path** (API style, LB layer, cache position), **data path** (store, replication, partitioning, consistency zone), **failure path** (what breaks first; timeouts + retry budgets + circuit breakers + load shedding + degraded modes; failure domains and blast radius).
-6. **Emit the operational artifact set** — diagram, component list, risk register, golden-signal dashboards + alerts, canary + rollback plan, runbook references, cost notes (caches/CDN reduce origin work and egress; observability cardinality is a cost control). [production-readiness](../production-readiness/SKILL.md) turns this list into the launch gate.
+6. **Emit the operational artifact set** — use the design-package template in [references/intake-framework.md](references/intake-framework.md): diagram, component list, risk register, golden-signal dashboards + alerts, canary + rollback plan, runbook references, cost notes (caches/CDN reduce origin work and egress; observability cardinality is a cost control). [production-readiness](../production-readiness/SKILL.md) turns this list into the launch gate.
 
 When the topology choice is genuinely contested (two viable shapes), run a [design-panel](../../development/design-panel/SKILL.md): two designers, judged against the SLO/ops criteria, human picks.
 
