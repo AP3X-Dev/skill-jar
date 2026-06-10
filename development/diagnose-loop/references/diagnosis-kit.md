@@ -2,6 +2,37 @@
 
 Bundled templates and catalogs for [diagnose-loop](../SKILL.md). Self-contained — copy what you need; adapt `<placeholders>` to the repo. Nothing here requires FUGAZI or MemBerry; the optional sections are clearly marked.
 
+## Diagnosis package template
+
+Use this package for handoff or final reporting. It keeps the diagnosis from collapsing into "the fix worked".
+
+```md
+# Diagnosis: <symptom>
+
+## Repro
+- **Command/script:** <exact command>
+- **Expected:** <expected result>
+- **Actual:** <failing result>
+- **Minimized case:** <smallest input/path that still fails>
+
+## Suspects and Hypotheses
+| Hypothesis | Investigator | Verdict | Boundary evidence |
+|------------|--------------|---------|-------------------|
+
+## Root Cause
+<single cause, with the observed value/path that proved it>
+
+## Regression Test
+- **Test:** <path/name>
+- **Fails without fix:** <command/result>
+- **Passes with fix:** <command/result>
+
+## Fix and Verification
+- **Files changed:** <paths + why>
+- **Repo gate:** <command + exit/result>
+- **Verifier verdict:** PASS | REJECT, with evidence
+```
+
 ## Subagent templates
 
 Dispatch one **investigator per hypothesis** (parallel if the hypotheses are independent), then a single **analyst** to converge, then the **fixer** → **verifier** pair. Keep the contracts intact — they encode maker≠checker.

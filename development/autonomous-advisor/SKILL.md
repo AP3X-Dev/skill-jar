@@ -15,6 +15,8 @@ The human writes the PRP (Product Requirements Plan). They hand it off. From tha
 
 **The pipeline does not stop at implementation.** After the code is built and the branch is finished, the autonomous advisor continues into the optimization phase — building an optimization loop prompt and running it on a recurring interval until the codebase meets the PRP's success criteria.
 
+**Output:** a completed autonomous run package: the run-state file with phase gates and failed attempts, the design/spec artifact, the implementation plan, the code changes, verifier/advisor decision logs, branch/PR or merge evidence, and optimization-loop evidence or a recorded blocker explaining why optimization could not launch.
+
 ## Superpowers is optional
 
 This skill does not require the Superpowers plugin. If Superpowers skills are installed, use them as accelerators for design, planning, implementation, review, and branch completion. If they are absent, run the same phases directly from this skill: write the spec and plan as normal repo docs, dispatch host-native subagents or execute tasks inline with maker≠checker review, record state under `docs/agent-runs/`, and gate every phase with runnable commands.

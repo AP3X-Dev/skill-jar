@@ -4,6 +4,34 @@ How to take an approved deepening from a design the human signed off in the gril
 
 **Precondition.** The grilling loop has converged on a module shape the human approved. Do not start moving code before that sign-off.
 
+## Deepening package
+
+Before code moves, create or update the issue/doc with this concrete package:
+
+```md
+# Deepening Package: <module name>
+
+## Approved Interface
+- **Entry points:** <methods/functions/events>
+- **Caller invariants:** <what callers must know>
+- **Error modes:** <observable failures and handling>
+- **Ordering/config:** <anything order- or config-sensitive>
+
+## Hidden Implementation
+<behaviour, duplicated rules, adapters, or data movement that becomes internal>
+
+## Migration Steps
+1. <small reversible step>
+2. <small reversible step>
+
+## Acceptance Gate
+- **Characterization:** <test/command proving current behaviour>
+- **Final gate:** <test/build/typecheck/manual check with expected result>
+
+## Rollback Point
+<last safe commit/step before deleting the old shallow surface>
+```
+
 ## 1. Re-run the depth check
 
 Before writing any code, confirm the change actually deepens. All of these should be "yes":

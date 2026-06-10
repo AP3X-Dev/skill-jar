@@ -9,6 +9,10 @@ Writing a skill that *holds under pressure* is test-driven work: a skill is only
 
 **Output:** a hardened `SKILL.md` — tight description, a rationalization table, a red-flags list, closed loopholes — proven by K consecutive clean pressure runs and a passing structure lint.
 
+## Operating Contract
+
+Do not edit a skill from taste alone. Every rule added or tightened must map to a captured pressure-run failure, a known routing/install defect, or a concrete user requirement. Keep the run package: RED transcript, verbatim rationalizations, patch summary, REFACTOR verdicts, and lint evidence. A skill is not forged until the package shows one failing run first, then K clean runs with the skill loaded.
+
 ## When to Use
 
 - Authoring a new skill, especially a **discipline/behavioural** one (an agent must do — or refuse — something under pressure).

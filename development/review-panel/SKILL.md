@@ -13,6 +13,10 @@ A code review that does not trust one reviewer or one finding. It runs a **panel
 
 If `requesting-code-review`, `receiving-code-review`, or `dispatching-parallel-agents` are installed, they can provide familiar reviewer dispatch and review-receipt mechanics. If they are absent, use this skill directly: the bundled lens prompts in [references/reviewer-kit.md](references/reviewer-kit.md) define the reviewers, synthesizer, severity model, and verify-before-act protocol.
 
+## Operating Contract
+
+The review output is a verified review package, not a list of opinions. Pin `BASE_SHA` and `HEAD_SHA` before dispatch. Every finding must include `file:line`, trigger or abuse path, impact, severity, and origin lens. The synthesizer may dedupe and rank only findings the reviewers raised. The author must verify or refute each finding against the code before acting; fixes for Critical/Important findings name the command that proved the issue gone.
+
 ## When to Use
 
 - A branch/PR/diff is about to merge and you want adversarial, broad coverage.

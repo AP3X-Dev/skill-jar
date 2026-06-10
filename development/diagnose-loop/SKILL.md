@@ -9,6 +9,10 @@ A **bounded convergence loop** for one hard defect. It does not run forever — 
 
 **Output:** a confirmed root cause with boundary evidence, a regression test that fails without the fix and passes with it, the minimal fix, and (optionally) a stored root-cause signature so the next similar bug starts ahead.
 
+## Operating Contract
+
+Produce a diagnosis package, not a hunch: deterministic repro command, minimized failing case, suspect list, hypothesis table with confirmed/refuted evidence, named root cause, regression-test proof, minimal fix, repo gate result, and verifier verdict. Each stage fails closed when it lacks observed boundary values or a runnable command. A green symptom without root-cause evidence is not done.
+
 ## When to Use
 
 - One stubborn bug whose cause is genuinely unknown — you can see the symptom but not why.

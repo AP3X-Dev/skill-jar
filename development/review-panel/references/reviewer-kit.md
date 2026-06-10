@@ -2,6 +2,38 @@
 
 Bundled lens templates, the verify-before-act protocol, and the optional FUGAZI/MemBerry mappings for [review-panel](../SKILL.md). Self-contained — adapt `<placeholders>` to the repo.
 
+## Review package template
+
+Return this package after synthesis and verification. A raw reviewer transcript is not enough.
+
+```md
+# Review Panel: <branch-or-pr>
+
+## Diff Under Review
+- **Base:** <BASE_SHA>
+- **Head:** <HEAD_SHA>
+- **Scope note:** <files/areas intentionally included or excluded>
+
+## Lens Results
+| Lens | Findings returned | Notes |
+|------|-------------------|-------|
+| Correctness | <count> | <short summary> |
+| Security | <count> | <short summary> |
+| Simplicity / reuse | <count> | <short summary> |
+
+## Verified Findings
+| Severity | File:line | Claim | Verification evidence | Action |
+|----------|-----------|-------|-----------------------|--------|
+
+## Refuted Findings
+| File:line | Claim | Refutation evidence |
+|-----------|-------|---------------------|
+
+## Gate Evidence
+- **Review gate:** <commands or checks run, with exit/result>
+- **Fix gate:** <commands proving Critical/Important fixes, if any>
+```
+
 ## Lens templates (dispatch one per lens, in parallel)
 
 Each reviewer gets: the diff (`git diff <BASE>...<HEAD>`), read access to the repo, and its lens prompt. Each returns findings as `severity | file:line | claim | why it matters | suggested direction`.

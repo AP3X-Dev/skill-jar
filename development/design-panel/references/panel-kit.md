@@ -2,6 +2,41 @@
 
 Bundled prompt templates and the scoring rubric for [design-panel](../SKILL.md). Self-contained — adapt `<placeholders>`.
 
+## Design package template
+
+Every panel run ends with this package in the spec file. Do not replace it with a prose recap.
+
+```md
+# Design: <topic>
+
+## Framed Problem
+<one paragraph: what must change and why now>
+
+## Inputs
+- **Constraints:** <hard limits with file/doc references>
+- **Non-goals:** <what this design deliberately will not solve>
+- **Judging criteria:** <ordered list; the judge scores only these>
+
+## Alternatives
+| Design | Shape | Main cost | Main benefit | Score |
+|--------|-------|-----------|--------------|-------|
+| A | <module/interface/data-flow summary> | <cost> | <benefit> | <criteria scores> |
+| B | <module/interface/data-flow summary> | <cost> | <benefit> | <criteria scores> |
+
+## Decision
+- **Chosen:** <design or explicit hybrid>
+- **Rejected:** <losing design + durable reason>
+- **Why:** <deciding criterion and evidence>
+
+## Skeptic Findings
+| Finding | Severity | Disposition | Spec change / reason |
+|---------|----------|-------------|----------------------|
+
+## Handoff
+- **Implementation plan / PRP path:** <path or next action>
+- **Verification gates:** <commands or checks the implementation must pass>
+```
+
 ## Explorer dispatch (×N, parallel, read-only)
 
 Split by concern, not by directory. Typical trio:

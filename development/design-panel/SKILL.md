@@ -13,6 +13,10 @@ Brainstorming's biggest failure mode isn't a bad idea — it's the **first plaus
 
 This skill can use Superpowers skills when they are installed, but it does not require them. If `brainstorming`, `dispatching-parallel-agents`, or `writing-plans` are unavailable, run this `SKILL.md` directly: use the bundled role prompts in [references/panel-kit.md](references/panel-kit.md), save the spec to the repo's normal design-doc location, and hand off by writing an implementation plan or PRP.
 
+## Operating Contract
+
+The panel produces a concrete design package, not a brainstorming summary. Before any designer runs, write the framed problem, hard constraints, explicit non-goals, and judging criteria. Each proposed design must name module boundaries, interfaces, data flow, migration path, tests/gates, risks, and tradeoffs. The judge scores only against the agreed criteria, with evidence from the design text. The skeptic's findings are resolved, accepted, or refuted in the final spec; an unaddressed finding blocks handoff.
+
 ## When to Use
 
 - A feature/component/refactor is worth designing before building, and the solution space is wide enough that the first idea shouldn't win by default.

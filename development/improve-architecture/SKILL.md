@@ -9,6 +9,12 @@ Surface architectural friction and propose — then ship — **deepening opportu
 
 Speed without architecture awareness creates entropy, and AI-assisted development accelerates both the speed and the entropy: every change that ignores the larger codebase can add a little duplication, hidden coupling, or an awkward dependency until the codebase is hard to understand, test, and safely change. The cure is not "cleaner code" — it's better architecture: deeper modules, clearer interfaces, stronger seams, better tests, better locality. This skill is the strategic counterweight to fast tactical change.
 
+**Output:** a concrete architecture review package: a temp HTML report of candidate deepening opportunities, the human-selected candidate's approved module/interface shape, a tracked issue or repo doc containing the migration plan, and a verified behaviour-preserving migration when the human asks to ship it.
+
+## Operating Contract
+
+Every candidate must be evidence-backed and shippable in one bounded migration. Name the files, the current shallow interface, the proposed deeper interface, the behaviour that moves behind the seam, the tests that become the interface gate, and the expected locality/leverage gain. Do not present "cleaner", "more maintainable", or "better separation" as standalone benefits; translate them into glossary terms and concrete files. If a candidate cannot name its migration steps and acceptance gate, mark it `Speculative` or drop it.
+
 ## Human-in-the-loop by design
 
 Do not run this as a fully autonomous pass. The split is deliberate:
@@ -81,6 +87,8 @@ Write a self-contained HTML file to the OS temp directory so nothing lands in th
 The report uses **Tailwind via CDN** for layout and **Mermaid via CDN** for graph-shaped diagrams, mixed with hand-built CSS/SVG visuals for the editorial ones (mass diagrams, cross-sections, collapse animations). Each candidate gets a **before/after visualisation**. Be visual.
 
 For each candidate, render a card with: **Files** involved · **Problem** (why the architecture causes friction) · **Solution** (plain English) · **Benefits** (in terms of locality and leverage, and how tests improve) · **Before/After diagram** (side-by-side, illustrating the shallowness and the deepening) · **Recommendation strength** badge (`Strong`, `Worth exploring`, `Speculative`). End with a **Top recommendation** section.
+
+Apply the candidate evidence contract in [HTML-REPORT.md](references/HTML-REPORT.md). A candidate with no file anchors, no current/proposed interface, or no acceptance gate is too abstract to show as `Strong`.
 
 **Use CONTEXT.md vocabulary for the domain, and [LANGUAGE.md](references/LANGUAGE.md) vocabulary for the architecture.** If `CONTEXT.md` defines "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
 
