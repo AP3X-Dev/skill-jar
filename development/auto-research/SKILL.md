@@ -176,7 +176,7 @@ contract instead (run it once; check the grep works). Design guidance:
 
 1. Branch: `git checkout -b research/<tag>` (tag from date, e.g. `jun9`; must
    not already exist — a fresh run gets a fresh branch).
-2. Driver: specialize every `<placeholder>` in
+2. Driver: specialize every scaffold-time `<placeholder>` in
    [references/driver-template.md](references/driver-template.md) →
    `docs/prompts/<tag>-research-driver.md`.
 3. Ledger: create `results.tsv` with only its header row.
@@ -188,11 +188,11 @@ contract instead (run it once; check the grep works). Design guidance:
 
 ### Phase 4 — Baseline run
 
-Run the unmodified code for real: `<run command> > run.log 2>&1`. Extract the
-metric. Row 1 of `results.tsv` is always `baseline`. Fill `Baseline` and
-`Current best` in `experiment-state.md`. Set Status to `baselined`. If extraction fails or the budget
-isn't enforced, the harness contract is broken — go back to Phase 2. Never
-offer launch on an unproven harness.
+Run the unmodified code for real: `<run command> > run.log 2>&1`. Extract
+the metric. Row 1 of `results.tsv` is always `baseline`. Fill `Baseline`
+and `Current best` in `experiment-state.md`. Set Status to `baselined`. If
+extraction fails or the budget isn't enforced, the harness contract is
+broken — go back to Phase 2. Never offer launch on an unproven harness.
 
 Run the baseline twice and record the spread as the noise floor in
 `experiment-state.md` — the keep rule uses it. Fixed-seed training is
@@ -213,8 +213,9 @@ treat hair-thin improvements with suspicion.
 - What the human still owns: spend, when to stop, and what to do with the
   winning branch.
 
-Then ASK: launch now? **Yes** → wire the chosen trigger, set Status to `running`, and start. **No** →
-hand off with the exact launch command for each option.
+Then ASK: launch now? **Yes** → wire the chosen trigger, set Status to
+`running`, and start. **No** → hand off with the exact launch command for
+each option.
 
 ## Before the launch offer — verify your own output
 

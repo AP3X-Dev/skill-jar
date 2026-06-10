@@ -2,8 +2,8 @@
 
 Everything in the fences below is text you SPECIALIZE and INSTALL into the
 target repo — written in the imperative for the future loop-agent, not for
-you. Replace every `<placeholder>`; the skill's pre-launch checklist fails on
-any leftover.
+you. Replace every scaffold-time `<placeholder>` (see the token note below the
+table); the skill's pre-launch checklist fails on any leftover.
 
 | Placeholder | Meaning | autoresearch example |
 |---|---|---|
@@ -90,11 +90,11 @@ continue — the human already decided at the launch gate.
 
 Empty metric grep → read `tail -n 50 run.log`. A dumb cause (typo, missing
 import, shape error) → fix it, commit (or amend) so a kept result stays
-reproducible from its logged sha, and re-run — once or twice at most. A fundamentally broken idea → log the `crash` row, reset to your reset
-point, move on. If 3+ CONSECUTIVE experiments crash with no metric, the
-harness itself may be broken: set `Status: interrupted` in
-`experiment-state.md`, STOP, and report to the human — this is the only
-self-stop.
+reproducible from its logged sha, and re-run — once or twice at most. A
+fundamentally broken idea → log the `crash` row, reset to your reset point,
+move on. If 3+ CONSECUTIVE experiments crash with no metric, the harness
+itself may be broken: set `Status: interrupted` in `experiment-state.md`,
+STOP, and report to the human — this is the only self-stop.
 
 ## Rules
 
