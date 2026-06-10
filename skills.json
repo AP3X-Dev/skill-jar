@@ -32,12 +32,6 @@
       "path": "development/clean-room/SKILL.md"
     },
     {
-      "name": "consolidate-plans",
-      "category": "development",
-      "description": "Use when a repo has fragmented, stale, duplicated, or conflicting planning documentation and needs one current plan grounded in the live codebase, git history, tests, and existing docs. Use for roadmap reconciliation, PRP/spec/handoff cleanup, plan updates after development drift, reducing outdated docs, or when agents are unsure which plan is authoritative. NOT for creating a brand-new plan from no prior docs, architecture redesign (use improve-architecture), or quality hardening loops (use optimization-loop).",
-      "path": "development/consolidate-plans/SKILL.md"
-    },
-    {
       "name": "dead-code-reaper",
       "category": "development",
       "description": "FUGAZI-native loop that safely removes confirmed-dead code — one trace-verified cluster per cycle, suite- and build-gated, with an independent verifier and a finding-count/LOC ratchet. A Scout runs FUGAZI's dead-code family and proves zero reachability with trace before filing a candidate; a Reaper removes exactly one cluster with the smallest diff; a Validator re-runs FUGAZI plus the repo gate and promotes or reopens. Builds and dry-runs the loop, then OFFERS launch — never auto-removes. Use when a codebase has accumulated dead code, unused exports/files/deps, or duplication to prune continuously and safely. NOT for a single obvious unused symbol (just delete it), live-but-ugly code (use improve-architecture), or defect repair (use bug-pipeline). Requires FUGAZI (CLI fugazi or fugazi-mcp) or an equivalent reachability analyzer.",
@@ -72,6 +66,12 @@
       "category": "development",
       "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (do design/planning first), building a non-optimization loop (use loop-engineer directly), single-metric experimentation on a frozen harness (use auto-research), or judgment-driven architecture / deep-module refactoring (use improve-architecture).",
       "path": "development/optimization-loop/SKILL.md"
+    },
+    {
+      "name": "plan-prune",
+      "category": "development",
+      "description": "Use when a repo has fragmented, stale, duplicated, or conflicting planning documentation and needs one current plan grounded in the live codebase, git history, tests, and existing docs. Use for roadmap reconciliation, PRP/spec/handoff cleanup, plan updates after development drift, reducing outdated docs, or when agents are unsure which plan is authoritative. NOT for creating a brand-new plan from no prior docs, architecture redesign (use improve-architecture), or quality hardening loops (use optimization-loop).",
+      "path": "development/plan-prune/SKILL.md"
     },
     {
       "name": "review-panel",

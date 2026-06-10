@@ -1,11 +1,11 @@
 ---
-name: consolidate-plans
+name: plan-prune
 description: "Use when a repo has fragmented, stale, duplicated, or conflicting planning documentation and needs one current plan grounded in the live codebase, git history, tests, and existing docs. Use for roadmap reconciliation, PRP/spec/handoff cleanup, plan updates after development drift, reducing outdated docs, or when agents are unsure which plan is authoritative. NOT for creating a brand-new plan from no prior docs, architecture redesign (use improve-architecture), or quality hardening loops (use optimization-loop)."
 ---
 
-# Consolidate Plans
+# Plan Prune
 
-Planning docs rot by multiplication: a roadmap here, a handoff there, a PRP that predates the last sprint, an agent-state file that knows what actually shipped. This skill finds the fragments, reconciles them against the current repo, and leaves one canonical plan that future work can trust.
+Planning docs rot by multiplication: a roadmap here, a handoff there, a PRP that predates the last sprint, an agent-state file that knows what actually shipped. This workflow finds the fragments, reconciles them against the current repo, and leaves one canonical plan that future work can trust.
 
 **Output:** one canonical plan file (`docs/PLAN.md` or the repo's existing canonical path), a source inventory that accounts for every planning document found, current-state evidence from code/git/tests, a conflict and blocked-decision table, and a reduced planning surface where stale fragments are deleted, archived, or replaced with tiny pointer stubs so outdated plans are not floating around.
 
@@ -25,7 +25,7 @@ Consolidate down and update; do not merely summarize. Every surviving plan item 
 - No prior plan exists and the user wants first-time product discovery.
 - The main issue is code quality, defects, or optimization; use [optimization-loop](../optimization-loop/SKILL.md) or [bug-pipeline](../bug-pipeline/SKILL.md).
 - The main issue is choosing architecture direction; use [improve-architecture](../improve-architecture/SKILL.md) or a systems-design skill.
-- The user wants a historical report only. This skill changes the planning surface.
+- The user wants a historical report only. This workflow changes the planning surface.
 
 ## Source Discovery
 
