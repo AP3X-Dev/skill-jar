@@ -32,6 +32,12 @@
       "path": "development/clean-room/SKILL.md"
     },
     {
+      "name": "consolidate-plans",
+      "category": "development",
+      "description": "Use when a repo has fragmented, stale, duplicated, or conflicting planning documentation and needs one current plan grounded in the live codebase, git history, tests, and existing docs. Use for roadmap reconciliation, PRP/spec/handoff cleanup, plan updates after development drift, reducing outdated docs, or when agents are unsure which plan is authoritative. NOT for creating a brand-new plan from no prior docs, architecture redesign (use improve-architecture), or quality hardening loops (use optimization-loop).",
+      "path": "development/consolidate-plans/SKILL.md"
+    },
+    {
       "name": "dead-code-reaper",
       "category": "development",
       "description": "FUGAZI-native loop that safely removes confirmed-dead code — one trace-verified cluster per cycle, suite- and build-gated, with an independent verifier and a finding-count/LOC ratchet. A Scout runs FUGAZI's dead-code family and proves zero reachability with trace before filing a candidate; a Reaper removes exactly one cluster with the smallest diff; a Validator re-runs FUGAZI plus the repo gate and promotes or reopens. Builds and dry-runs the loop, then OFFERS launch — never auto-removes. Use when a codebase has accumulated dead code, unused exports/files/deps, or duplication to prune continuously and safely. NOT for a single obvious unused symbol (just delete it), live-but-ugly code (use improve-architecture), or defect repair (use bug-pipeline). Requires FUGAZI (CLI fugazi or fugazi-mcp) or an equivalent reachability analyzer.",
