@@ -43,7 +43,7 @@ ROOT = jarlib.repo_root()
 # Project identity (not per-skill) -- the only hand-set values.
 MARKETPLACE_NAME = "skill-jar"
 OWNER = {"name": "AP3X"}
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 
 def grouped_skills():
