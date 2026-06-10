@@ -12,6 +12,7 @@
     "./bug-pipeline",
     "./clean-room",
     "./dead-code-reaper",
+    "./design-panel",
     "./diagnose-loop",
     "./improve-architecture",
     "./loop-engineer",

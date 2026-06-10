@@ -1,0 +1,14 @@
+{
+  "name": "skill-jar-systems-design",
+  "description": "The jar's systems-design-category skills.",
+  "version": "1.2.0",
+  "author": {
+    "name": "AP3X"
+  },
+  "skills": [
+    "./api-design",
+    "./data-store-selection",
+    "./design-system",
+    "./production-readiness"
+  ]
+}

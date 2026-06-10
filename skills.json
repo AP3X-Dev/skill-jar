@@ -38,6 +38,12 @@
       "path": "development/dead-code-reaper/SKILL.md"
     },
     {
+      "name": "design-panel",
+      "category": "development",
+      "description": "Upgraded brainstorming for any non-trivial design: parallel exploration agents map the codebase/domain fast, optional MemBerry recalls prior designs and rejected approaches, then a design-it-twice rule forces at least two genuinely different shapes which an independent judge panel scores against named criteria — the human picks, a skeptic agent adversarially grills the winner (failure modes, scale, edge cases), and only then is the spec written and handed to planning. Use when designing a feature, component, or refactor before implementation and one-shot brainstorming isn't enough — when the user wants design alternatives compared, a design stress-tested, or says 'design it twice'. NOT for trivial changes (just build), full system/architecture intake with SLOs and topology (use systems-design skills), or when a PRP already exists (use autonomous-advisor).",
+      "path": "development/design-panel/SKILL.md"
+    },
+    {
       "name": "diagnose-loop",
       "category": "development",
       "description": "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Builds on systematic-debugging with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause). Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop).",
@@ -78,6 +84,30 @@
       "category": "development",
       "description": "A loop-engineer loop that raises test coverage on an existing codebase one module per cycle: discovery finds the highest-value uncovered code (optional FUGAZI cold-code plus coverage gaps), a maker writes characterization tests that pin current behaviour (TDD discipline), and a separate verifier confirms the tests actually bite — they fail when behaviour changes — and that coverage ratchets up, never down. Builds and dry-runs the loop, then offers launch. Use when an existing codebase is under-tested and you want coverage raised safely and continuously, especially before a refactor. NOT for greenfield TDD on new features (just write tests first), a single missing test (just add it), or general multi-dimension hardening (use optimization-loop).",
       "path": "development/test-backfill-loop/SKILL.md"
+    },
+    {
+      "name": "api-design",
+      "category": "systems-design",
+      "description": "Design an API surface that survives production: choose the protocol by consumer shape (HTTP+OpenAPI default for public/partner APIs, gRPC for latency-sensitive internal RPC, GraphQL only for governed graph-shaped client reads, async events when decoupling in time beats a synchronous answer), then pin the contract — safety and idempotency semantics, cursor pagination, deadlines and retry budgets, additive versioning, error schema, auth, rate limits, cacheability — and gate releases on backward compatibility. Use when designing or reviewing an API, choosing REST vs gRPC vs GraphQL vs events, making endpoints safe to retry, or planning schema evolution. NOT for the whole system topology (use design-system), store selection (use data-store-selection), or implementing handlers (just build them).",
+      "path": "systems-design/api-design/SKILL.md"
+    },
+    {
+      "name": "data-store-selection",
+      "category": "systems-design",
+      "description": "Choose and shape the data layer from access patterns, not brand loyalty: write the dominant read/write patterns first, name the required consistency model, then pick relational (joins, transactions, multi-row invariants — the default), document, key-value/wide-column (keyed access at scale), or Spanner-class global SQL — plus the cache layer (cache-aside vs write-through, explicit invalidation, stampede protection) and queue/stream choice (Kafka-style log vs RabbitMQ-style broker) with outbox wiring. Hard release gates: reject any design whose partition/shard key isn't justified against the dominant query path, or whose consistency expectations are unnamed. Use when choosing a database, designing a schema/partition strategy, adding a cache, picking a queue, or debugging hot partitions and invalidation. NOT for system topology (use design-system) or API contracts (use api-design).",
+      "path": "systems-design/data-store-selection/SKILL.md"
+    },
+    {
+      "name": "design-system",
+      "category": "systems-design",
+      "description": "Front-door for designing a software system or major subsystem: translate product requirements into SLOs and a capacity envelope (Little's Law, tail latency), then choose the SIMPLEST topology that meets the SLO with headroom — request path, data path, and failure path made explicit — and emit the operational artifact set (diagram, component list, risk register, dashboards/alerts, canary plan, runbook references, cost notes). Hard stop-conditions block premature complexity: no multi-region, service mesh, sharding, or polyglot persistence without a named requirement simpler options can't satisfy. Use when designing a new system/service, doing systems-design intake, sizing an architecture, choosing a topology, or reviewing a proposed architecture for over-engineering. NOT for one feature inside an existing design (use design-panel), API surface detail (use api-design), store choice detail (use data-store-selection), or launch gating (use production-readiness).",
+      "path": "systems-design/design-system/SKILL.md"
+    },
+    {
+      "name": "production-readiness",
+      "category": "systems-design",
+      "description": "The launch gate that turns a design into an operable service: define SLIs/SLOs and an error-budget policy, build golden-signal dashboards and symptom-based alerts (bounded cardinality, no PII labels), wire liveness/readiness/startup probes correctly, write runbooks for the five standard failures (dependency outage, database failover, cache failure, queue backlog, bad deploy), set the progressive-delivery path (canary, health gates, rollback command), define incident response (roles, safest-reversible-mitigation-first, blameless postmortem), and check cost as a first-class property. No launch without dashboard URLs, alert routes, a rollback command, and one tested failure drill. Use when preparing a service for production, writing SLOs or runbooks, designing alerts/observability, setting up canary deploys, or asking 'is this ready to launch?'. NOT for designing the system itself (use design-system) or diagnosing a live incident's root cause (use diagnose-loop).",
+      "path": "systems-design/production-readiness/SKILL.md"
     }
   ]
 }
