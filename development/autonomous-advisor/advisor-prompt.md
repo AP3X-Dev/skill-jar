@@ -146,7 +146,7 @@ This is a Node.js/TypeScript project using Express. Current structure has contro
 
 ## Decision Required
 **Decision type:** DESIGN_APPROVAL
-**Asking skill:** brainstorming
+**Asking workflow:** design phase
 **Context:** Design phase, presenting the authentication architecture section
 **Question:** Does this design section look right?
 
@@ -174,11 +174,11 @@ You are the Autonomous Advisor...
 [full PRP]
 
 ## Project Context
-Plan written and saved to docs/superpowers/plans/2025-01-15-auth-system.md. 5 tasks identified.
+Plan written and saved to docs/agent-runs/plans/2025-01-15-auth-system.md. 5 tasks identified.
 
 ## Decision Required
 **Decision type:** SELECTION
-**Asking skill:** writing-plans
+**Asking workflow:** planning phase
 **Context:** Plan complete, need to choose execution approach
 **Question:** Which execution approach?
 
@@ -207,7 +207,7 @@ Working on Task 3 (database migration). The implementer sub-agent reported BLOCK
 
 ## Decision Required
 **Decision type:** ESCALATION
-**Asking skill:** subagent-driven-development
+**Asking workflow:** implementation phase
 **Context:** Implementer blocked on Task 3, plan assumption doesn't match project reality
 **Question:** How should we proceed?
 
@@ -238,7 +238,7 @@ Working on Task 2 (API endpoints). Implementer asks:
 
 ## Decision Required
 **Decision type:** CLARIFICATION
-**Asking skill:** subagent-driven-development
+**Asking workflow:** implementation phase
 **Context:** Implementer needs clarification on API response shape
 **Question:** Should POST /api/users return the password hash in the response?
 

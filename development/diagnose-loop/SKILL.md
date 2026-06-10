@@ -1,6 +1,6 @@
 ---
 name: diagnose-loop
-description: "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Builds on systematic-debugging with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause). Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop)."
+description: "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Uses systematic-debugging discipline with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause); Superpowers skills are optional accelerators, not prerequisites. Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop)."
 ---
 
 # Diagnose Loop
@@ -81,4 +81,4 @@ If a MemBerry-style memory MCP is available, the loop remembers what past bugs t
 
 ---
 
-*Builds on the superpowers **systematic-debugging** (root-cause discipline), **test-driven-development** (regression test first), and **dispatching-parallel-agents** (the hypothesis fan-out) skills where they're installed — but stands alone without them. Sibling jar skills are optional accelerators: [bug-pipeline](../bug-pipeline/SKILL.md) for the many-bugs case, [loop-engineer](../loop-engineer/SKILL.md) if you want to turn a recurring class of failure into a scheduled loop.*
+*Uses the same root-cause, regression-test-first, and parallel-hypothesis disciplines as the Superpowers debugging skills where they're installed, but stands alone through [references/diagnosis-kit.md](references/diagnosis-kit.md). Sibling jar skills are optional accelerators: [bug-pipeline](../bug-pipeline/SKILL.md) for the many-bugs case, [loop-engineer](../loop-engineer/SKILL.md) if you want to turn a recurring class of failure into a scheduled loop.*

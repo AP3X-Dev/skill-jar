@@ -7,7 +7,11 @@ description: "Upgraded brainstorming for any non-trivial design: parallel explor
 
 Brainstorming's biggest failure mode isn't a bad idea — it's the **first plausible idea, iterated**. One designer converges early, explores the repo serially, forgets what past designs already settled, and the human approves a shape no rival shape ever challenged. This skill keeps brainstorming's collaborative dialogue and hard gate (no implementation before an approved design) and adds the jar's machinery: **parallel exploration**, **design memory**, a **design-it-twice panel**, and an **adversarial grilling** before anything becomes a spec.
 
-**Output:** an approved design spec (`docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` or the repo's convention) that survived a judged comparison and a skeptic's attack — plus the rejected alternatives recorded with reasons, so they aren't re-proposed next quarter.
+**Output:** an approved design spec (`docs/agent-runs/specs/YYYY-MM-DD-<topic>-design.md` or the repo's convention) that survived a judged comparison and a skeptic's attack — plus the rejected alternatives recorded with reasons, so they aren't re-proposed next quarter.
+
+## Superpowers is optional
+
+This skill can use Superpowers skills when they are installed, but it does not require them. If `brainstorming`, `dispatching-parallel-agents`, or `writing-plans` are unavailable, run this `SKILL.md` directly: use the bundled role prompts in [references/panel-kit.md](references/panel-kit.md), save the spec to the repo's normal design-doc location, and hand off by writing an implementation plan or PRP.
 
 ## When to Use
 
@@ -37,11 +41,11 @@ The designer never judges its own design — that's how the first idea wins.
 
 1. **Recall** *(optional MemBerry)* — `berry_load(task: "design: <topic>", tags: ["project:<tag>"])`: prior designs in this area, ADR-style decisions, and **previously rejected approaches with reasons**. A rejected approach is only re-proposed if its rejection reason no longer holds — say so explicitly.
 2. **Explore in parallel** — dispatch read-only explorers (codebase seams + conventions, similar prior art, external constraints). Minutes instead of a serial read, and the designers start informed.
-3. **Frame with the human** — brainstorming's dialogue: clarify intent one question at a time, then agree the **judging criteria** (e.g. locality, blast radius, migration cost, testability, time-to-ship). Criteria first, designs second — otherwise the judges improvise values.
+3. **Frame with the human** — clarify intent one question at a time, then agree the **judging criteria** (e.g. locality, blast radius, migration cost, testability, time-to-ship). Criteria first, designs second — otherwise the judges improvise values.
 4. **Design it twice** — two designers, isolated, each a complete approach: shape, interfaces, data flow, migration path, tradeoffs. If both come back the same shape, the framing over-constrained the problem — loosen it and redo. (A third design is allowed when the two reveal an obvious hybrid; more than three is churn.)
 5. **Judge** — the panel scores both against the agreed criteria and recommends with reasoning. Present both + scores to the human; **the human picks**.
 6. **Grill** — the skeptic attacks the winner. Each finding is resolved (design amended), accepted (recorded as a known tradeoff), or refuted (with reasoning). No unaddressed findings.
-7. **Spec + record** — write the design doc; hand off to **writing-plans** / a PRP. *(MemBerry)* store the decision, the criteria, and the **losing design with why it lost**.
+7. **Spec + record** — write the design doc; hand off to an implementation plan / PRP. *(MemBerry)* store the decision, the criteria, and the **losing design with why it lost**.
 
 Prompt templates for every role: [references/panel-kit.md](references/panel-kit.md).
 
@@ -63,4 +67,4 @@ Skip every step marked *(MemBerry)* when the tools are absent — the panel work
 
 ---
 
-*Builds on the superpowers **brainstorming** skill (the dialogue, the no-code-before-approval gate, the spec artifact) and **dispatching-parallel-agents** (exploration + isolated designers) — but stands alone. Downstream: **writing-plans**, [to-prd / autonomous-advisor](../autonomous-advisor/SKILL.md) for execution; the systems-design category's [design-system](../../systems-design/design-system/SKILL.md) uses this panel for its architecture alternatives.*
+*Borrows the Superpowers brainstorming and parallel-agent disciplines when available, but stands alone through the bundled panel prompts. Downstream: an implementation plan / PRP, [autonomous-advisor](../autonomous-advisor/SKILL.md) for hands-off execution, or the repo's normal planning workflow; the systems-design category's [design-system](../../systems-design/design-system/SKILL.md) uses this panel for its architecture alternatives.*

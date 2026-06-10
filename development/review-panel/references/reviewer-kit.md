@@ -52,7 +52,7 @@ You merge three lens reports (below) into ONE ranked list.
 Return: the single ranked list, each entry tagged with its origin lens.
 ```
 
-## Verify-before-act protocol (receiving-code-review discipline)
+## Verify-before-act protocol
 
 The author runs this on **every** synthesized finding before touching code:
 

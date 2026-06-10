@@ -1,6 +1,6 @@
 ---
 name: review-panel
-description: "Adversarial multi-lens code review for a diff, branch, or PR: an optional FUGAZI pre-pass grounds the review in deterministic findings, then a panel of independent reviewers each works a distinct lens (correctness, security, simplicity/reuse) in parallel, findings are deduped and severity-ranked, and every finding is verified against the codebase before it is acted on — no performative agreement. Builds on requesting-code-review and receiving-code-review with a parallel panel, FUGAZI grounding, and optional MemBerry false-positive memory. Use when reviewing a branch/PR/diff and you want broad, adversarial, evidence-checked coverage rather than a single-reviewer pass — before a merge, or as a tougher gate on a risky change. NOT for a quick single-file glance (just review it) or a continuous defect pipeline (use bug-pipeline)."
+description: "Adversarial multi-lens code review for a diff, branch, or PR: an optional FUGAZI pre-pass grounds the review in deterministic findings, then a panel of independent reviewers each works a distinct lens (correctness, security, simplicity/reuse) in parallel, findings are deduped and severity-ranked, and every finding is verified against the codebase before it is acted on — no performative agreement. Applies requesting/receiving-code-review discipline with bundled prompts, FUGAZI grounding, and optional MemBerry false-positive memory; Superpowers skills are optional accelerators, not prerequisites. Use when reviewing a branch/PR/diff and you want broad, adversarial, evidence-checked coverage rather than a single-reviewer pass — before a merge, or as a tougher gate on a risky change. NOT for a quick single-file glance (just review it) or a continuous defect pipeline (use bug-pipeline)."
 ---
 
 # Review Panel
@@ -8,6 +8,10 @@ description: "Adversarial multi-lens code review for a diff, branch, or PR: an o
 A code review that does not trust one reviewer or one finding. It runs a **panel** of independent reviewers, each on a distinct lens, grounds them in deterministic static-analysis findings, then makes every finding **earn its place** by verifying it against the codebase before anyone acts on it. The two failure modes of AI code review — a single reviewer's blind spots, and confident-but-wrong findings implemented via performative agreement — are designed out.
 
 **Output:** a deduped, severity-ranked findings list where each entry is marked *verified* (reproduced against the code) or *refuted*, plus the actions taken (Critical/Important fixed, Minor noted).
+
+## Superpowers is optional
+
+If `requesting-code-review`, `receiving-code-review`, or `dispatching-parallel-agents` are installed, they can provide familiar reviewer dispatch and review-receipt mechanics. If they are absent, use this skill directly: the bundled lens prompts in [references/reviewer-kit.md](references/reviewer-kit.md) define the reviewers, synthesizer, severity model, and verify-before-act protocol.
 
 ## When to Use
 
@@ -19,7 +23,7 @@ A code review that does not trust one reviewer or one finding. It runs a **panel
 
 - A quick single-file change — just review it directly.
 - A continuous find→fix→verify backlog across the whole repo — use **bug-pipeline**.
-- You only want the project's standard reviewer — use **requesting-code-review** / the `code-review` command.
+- You only want the project's standard reviewer — use that reviewer or command directly.
 
 ## The panel (maker ≠ checker)
 
@@ -41,13 +45,13 @@ Run reviewers **in parallel** — independent lenses, no shared state. Lens temp
 2. **(Optional) FUGAZI pre-pass** — ground the panel before opinions form (see below).
 3. **Dispatch the panel** — one reviewer per lens, in parallel, each handed the diff, the base SHAs, and its lens prompt. Each returns findings with `file:line`, severity, and a concrete rationale.
 4. **Synthesize** — dedupe across lenses, rank by severity (Critical / Important / Minor), collapse the three lists into one.
-5. **Verify before acting** — for each finding, the author *reproduces the claim against the codebase* (does the edge case actually reach this line? is the "duplicate" really equivalent?). This is **receiving-code-review** discipline: a finding that can't be reproduced is refuted, with a one-line reason — not silently implemented. No performative agreement.
+5. **Verify before acting** — for each finding, the author *reproduces the claim against the codebase* (does the edge case actually reach this line? is the "duplicate" really equivalent?). A finding that can't be reproduced is refuted, with a one-line reason — not silently implemented. No performative agreement.
 6. **Act** — fix Critical and Important; note Minor. Each fix is its own small change.
 7. **(Optional) Record** — store confirmed false-positive patterns to MemBerry so repeat noise is auto-deprioritized next time.
 
 ## Severity model
 
-Inherited from requesting-code-review, applied after verification:
+Apply after verification:
 
 - **Critical** — correctness/security defect that will bite in production. Fix before merge.
 - **Important** — real problem, not a blocker. Fix now or file it.
@@ -73,4 +77,4 @@ If a MemBerry-style memory MCP is available, `berry_load` at step 2 to recall fi
 
 ---
 
-*Builds on the superpowers **requesting-code-review** (panel dispatch + severity model), **receiving-code-review** (verify-before-implement, no performative agreement), and **dispatching-parallel-agents** (the lens fan-out) skills — but stands alone. For one bug found here that needs deep root-causing, hand it to [diagnose-loop](../diagnose-loop/SKILL.md); for an ongoing repo-wide defect sweep, [bug-pipeline](../bug-pipeline/SKILL.md).*
+*Borrows the Superpowers review disciplines when available, but stands alone through the bundled reviewer-kit prompts. For one bug found here that needs deep root-causing, hand it to [diagnose-loop](../diagnose-loop/SKILL.md); for an ongoing repo-wide defect sweep, [bug-pipeline](../bug-pipeline/SKILL.md).*

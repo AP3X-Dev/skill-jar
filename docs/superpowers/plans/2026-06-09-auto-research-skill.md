@@ -1,6 +1,6 @@
 # auto-research Skill Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Implement this plan task-by-task with host-native subagents or inline execution plus review checkpoints. If Superpowers `subagent-driven-development` or `executing-plans` is installed, it is a useful accelerator, not a prerequisite. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add the `auto-research` skill (Karpathy-style fixed-budget experiment loops) to the skill jar, with cross-routing edits and regenerated indices, gate-green and committed locally.
 
