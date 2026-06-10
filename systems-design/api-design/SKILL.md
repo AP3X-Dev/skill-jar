@@ -55,6 +55,10 @@ Decision tree + the full playbook: [references/api-playbook.md](references/api-p
 
 No public API change ships without: backward-compatibility assessment · schema/OpenAPI updated · operation matrix completed · retry/idempotency review · abuse & resource-consumption review · conformance/eval cases for the changed contract. A gate failure is a redesign, not a footnote.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active API design pass: `api-contract-designer`, `api-compatibility-reviewer`, `api-abuse-reviewer`.
+
 ## Common Mistakes
 
 - **Auto-retrying non-idempotent writes.** The classic duplicate-charge bug. Idempotency keys first, retries second.

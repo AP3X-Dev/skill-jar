@@ -144,6 +144,10 @@ Both are off by default — the tracker plus a runnable gate are all the pipelin
 
 The pipeline turns two debugging disciplines into enforced gates instead of good intentions: the **Fixer** names the root cause before the diff, makes the smallest fix, and does not thrash (for a single deep bug, hand it to [diagnose-loop](../diagnose-loop/SKILL.md) instead); the **Validator** institutionalizes verification-before-completion — it re-runs the gate and the repro itself and approves only on a command's output, never on the Fixer's say-so. No external Superpowers skill is required.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active bug-pipeline run: `bug-pipeline-hunter`, `bug-pipeline-fixer`, `bug-pipeline-validator`.
+
 ## Common Mistakes
 
 - **Letting the fixer self-verify.** The whole point of the third agent is that plausible-but-wrong fixes die at the gate instead of shipping.

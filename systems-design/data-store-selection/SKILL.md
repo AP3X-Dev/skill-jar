@@ -55,6 +55,10 @@ Full tables, key-design rules, and patterns: [references/data-playbook.md](refer
 - No queue/topic is production-ready without delivery semantics, replay policy, idempotency contract, and DLQ ownership.
 - No cached object without owner, source of truth, invalidation mechanism, TTL, and acceptable staleness.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active data-store selection: `data-access-analyst`, `data-store-designer`, `data-gate-reviewer`.
+
 ## Common Mistakes
 
 - **Brand-first selection.** "We're a Mongo shop" is not an access pattern. Patterns → model → product.

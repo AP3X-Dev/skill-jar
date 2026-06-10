@@ -71,6 +71,10 @@ If a MemBerry-style memory MCP is available, the loop remembers what past bugs t
 - **Solved:** root cause named with boundary evidence, regression test green, verifier passed. Done — record the signature and stop.
 - **Escalate** when: 3 fix rounds have failed (the architecture is the suspect now, not the line), the fix would change a public contract, or the cause crosses a boundary the loop isn't allowed to touch. Hand the human a tight summary: repro, what was ruled out (with evidence), and the surviving open questions.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active diagnosis loop: `diagnose-investigator`, `diagnose-analyst`, `diagnose-fixer`, `diagnose-verifier`.
+
 ## Common Mistakes
 
 - **Guessing in series.** One hypothesis at a time, fix-and-pray, is exactly what this loop replaces. Fan out; make each investigator try to *kill* its own idea.

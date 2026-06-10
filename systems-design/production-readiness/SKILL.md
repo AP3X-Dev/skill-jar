@@ -55,6 +55,10 @@ No production launch without **all** of:
 
 A red box is a blocker, not a footnote. "We'll add runbooks after launch" is how 3am pages become 4-hour outages.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active readiness pass: `readiness-slo-operator`, `readiness-runbook-writer`, `readiness-launch-reviewer`.
+
 ## Common Mistakes
 
 - **Targets without budgets.** An SLO nobody spends is a poster. The error budget must gate launch velocity, or reliability and delivery stay at war.

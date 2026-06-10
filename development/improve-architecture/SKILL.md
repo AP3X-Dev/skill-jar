@@ -119,6 +119,10 @@ Both are off by default — this skill is human-in-the-loop, and `CONTEXT.md` + 
 - **(MemBerry)** If a MemBerry-style memory MCP is available, `berry_load(task: "architecture review: <area>", tags: ["project:<tag>"])` at the start of Explore to recall prior reviews and the directions you already rejected, and `berry_store` the **decision and its load-bearing reason** after a candidate is accepted or rejected — the same thing an ADR captures, in queryable form. On any conflict, the ADR / `CONTEXT.md` files win; memory is a convenience index over them, never the source of truth.
 - **Detection on a schedule.** The *finding* half of this skill can run unattended even though the *deciding* half can't. Point [dead-code-reaper](../dead-code-reaper/SKILL.md) at the removal side, or stand up a [loop-engineer](../loop-engineer/SKILL.md) loop that watches `fugazi boundaries` / `circular-deps` and files new drift to a triage inbox for your next review. The human still owns every architecture decision; the loop just keeps the candidate list fresh between reviews.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active architecture pass: `architecture-explorer`, `architecture-interface-designer`, `architecture-depth-checker`.
+
 ## Common Mistakes
 
 - **Running it autonomously.** This needs human judgment on direction. The AI explores and drafts; it does not decide what is healthy for the codebase.

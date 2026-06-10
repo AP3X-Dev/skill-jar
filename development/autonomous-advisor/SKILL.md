@@ -292,6 +292,10 @@ The orchestrator MUST log every advisor decision AND every verifier verdict for 
 
 Save this log to `docs/agent-runs/advisor-log-YYYY-MM-DD-<prp-name>.md` at the end of execution.
 
+## Generated agents
+
+Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active autonomous run: `autonomous-advisor`, `autonomous-verifier`.
+
 ## Autonomous Workflow
 
 The full autonomous pipeline — five phases, zero human input after PRP handoff:
