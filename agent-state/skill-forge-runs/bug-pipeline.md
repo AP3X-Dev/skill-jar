@@ -28,6 +28,7 @@
 
 | Run | Scenario | Verdict | Evidence |
 |-----|----------|---------|----------|
+| 1 | SF-004-RED-1 | COMPLY | Independent judge confirmed the current skill blocks all seven captured shortcuts: static/linter output stays a lead until file:line plus observable symptom/repro, internal style/smell issues are refused, fixers cannot verify, validators cannot be skipped, pending bugs stay one-per-cycle, gates cannot be loosened or skipped, and reopened bugs remain in tracker/failed-attempts. |
 
 ## Lint Evidence
 
