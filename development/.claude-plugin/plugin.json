@@ -20,6 +20,7 @@
     "./plan-prune",
     "./review-panel",
     "./skill-forge",
+    "./sprint-ticket-runner",
     "./test-backfill-loop"
   ]
 }

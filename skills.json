@@ -86,6 +86,12 @@
       "path": "development/skill-forge/SKILL.md"
     },
     {
+      "name": "sprint-ticket-runner",
+      "category": "development",
+      "description": "Use when running a long development sprint, autonomous coding cycle, or multi-ticket implementation push that needs a local Linear-style board, durable ticket state, worktree isolation, maker-checker verification, and first-class parallelism detection. Turns PRPs/PRDs/plans/user requests into executable tickets, keeps `agent-state/sprint/` current across restarts, classifies what can run in parallel, and prevents agents from drifting during multi-hour or multi-day work. NOT for a single bug, one-off edit, plan cleanup (use plan-prune), or generic quality loop (use optimization-loop).",
+      "path": "development/sprint-ticket-runner/SKILL.md"
+    },
+    {
       "name": "test-backfill-loop",
       "category": "development",
       "description": "A loop-engineer loop that raises test coverage on an existing codebase one module per cycle: discovery finds the highest-value uncovered code (optional FUGAZI cold-code plus coverage gaps), a maker writes characterization tests that pin current behaviour (TDD discipline), and a separate verifier confirms the tests actually bite — they fail when behaviour changes — and that coverage ratchets up, never down. Builds and dry-runs the loop, then offers launch. Use when an existing codebase is under-tested and you want coverage raised safely and continuously, especially before a refactor. NOT for greenfield TDD on new features (just write tests first), a single missing test (just add it), or general multi-dimension hardening (use optimization-loop).",
