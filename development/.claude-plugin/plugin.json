@@ -21,6 +21,7 @@
     "./review-panel",
     "./skill-forge",
     "./sprint-ticket-runner",
-    "./test-backfill-loop"
+    "./test-backfill-loop",
+    "./unit-test-quality"
   ]
 }

@@ -167,6 +167,19 @@
       "maturity": "linted"
     },
     {
+      "name": "unit-test-quality",
+      "category": "development",
+      "description": "Use when writing, reviewing, hardening, or setting CI standards for unit tests and test suites; when tests need to be fast, isolated, deterministic, behavior-focused, mutation-resistant, low-flake, or free of test smells; or when coverage numbers need interpretation instead of blind maximization. NOT for test-first feature work itself (use TDD), continuous coverage backfill (use test-backfill-loop), or broad multi-metric hardening (use optimization-loop).",
+      "path": "development/unit-test-quality/SKILL.md",
+      "tags": [
+        "testing",
+        "quality",
+        "validation"
+      ],
+      "core": false,
+      "maturity": "linted"
+    },
+    {
       "name": "api-design",
       "category": "systems-design",
       "description": "Design an API surface that survives production: choose the protocol by consumer shape (HTTP+OpenAPI default for public/partner APIs, gRPC for latency-sensitive internal RPC, GraphQL only for governed graph-shaped client reads, async events when decoupling in time beats a synchronous answer), then pin the contract — safety and idempotency semantics, cursor pagination, deadlines and retry budgets, additive versioning, error schema, auth, rate limits, cacheability — and gate releases on backward compatibility. Use when designing or reviewing an API, choosing REST vs gRPC vs GraphQL vs events, making endpoints safe to retry, or planning schema evolution. NOT for the whole system topology (use design-system), store selection (use data-store-selection), or implementing handlers (just build them).",

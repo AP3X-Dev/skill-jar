@@ -37,6 +37,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-11-UNIT-TEST-QUALITY | Add unit-test-quality skill from research report | report-derived-skills-1 | this commit | Added `development/unit-test-quality` with a lean SKILL.md, report-derived reference playbook, generated index/plugin updates, and a pending Skillforge tracker row. |
 
 ## Failed Attempts
 
@@ -81,3 +82,10 @@ fix/validate ONE pending bug if any. skill-forge(1) is now scaffolded: start at
 SF-001 `arch-drift-watch` with a RED pressure scenario, record evidence under
 `agent-state/skill-forge-runs/arch-drift-watch.md`, then stop after updating the
 tracker and running `python scripts/audit-jar.py`.
+
+report-derived-skills(1) added SF-021 `unit-test-quality` from
+`C:\Users\Guerr\Downloads\deep-research-report (5).md`. Next jar-audit cycle:
+run `python scripts/audit-jar.py`; if green, preserve the generated
+`skills.json` and plugin manifest updates. Next skill-forge cycle: continue
+the existing queue order and eventually run RED for SF-021 using weak-assertion,
+coverage-chasing, mutation-skipping, and flaky-test pressure.

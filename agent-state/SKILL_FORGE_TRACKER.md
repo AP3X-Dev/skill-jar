@@ -42,6 +42,7 @@ removed or renamed, mark the row `blocked` and record the decision in
 | SF-018 | data-store-selection | systems-design | `systems-design/data-store-selection/SKILL.md` | pending-red | 0/3 | brand-choice and shard-key pressure | - | RED scenario |
 | SF-019 | design-system | systems-design | `systems-design/design-system/SKILL.md` | pending-red | 0/3 | premature complexity pressure | - | RED scenario |
 | SF-020 | production-readiness | systems-design | `systems-design/production-readiness/SKILL.md` | pending-red | 0/3 | launch-without-drill pressure | - | RED scenario |
+| SF-021 | unit-test-quality | development | `development/unit-test-quality/SKILL.md` | pending-red | 0/3 | weak assertions and coverage-metric pressure | - | RED scenario |
 
 ## Run Package Rules
 
