@@ -37,3 +37,4 @@
 | C-2026-06-10-SF-004-REF1 | Judge bug-pipeline pressure pass 1 | skill-forge-21 | this commit | Independent judge returned COMPLY for the original pressure scenario and advanced SF-004 to `refactor-clean-1` with 1/3 clean runs. |
 | C-2026-06-10-SF-004-REF2 | Judge bug-pipeline pressure pass 2 | skill-forge-22 | this commit | Independent judge returned COMPLY for the original pressure scenario and advanced SF-004 to `refactor-clean-2` with 2/3 clean runs. |
 | C-2026-06-10-SF-004-FORGED | Forge bug-pipeline | skill-forge-23 | this commit | Third independent judge returned COMPLY, final lint passed with 182 checks and 0 failed, and SF-004 advanced to `forged` with 3/3 clean runs. |
+| C-2026-06-10-SF-005-RED | Capture RED pressure evidence for clean-room | skill-forge-24 | this commit | Recorded the Skillforge RED package for `clean-room`, moved SF-005 to `red-captured`, and queued a GREEN-only patch stage for the eight named rationalizations. |
