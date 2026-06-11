@@ -41,6 +41,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-001-GREEN | Patch `arch-drift-watch` for captured RED rationalizations | skill-forge-2 | this commit | GREEN tightened `development/arch-drift-watch/SKILL.md` against ad hoc scanning, inferred zones, silent baseline resets, detection-cycle fixes, audit-green overconfidence, and vague triage routing. |
 | C-2026-06-10-SF-001-REF1 | Judge `arch-drift-watch` pressure pass 1 | skill-forge-3 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
 | C-2026-06-10-SF-001-REF2 | Judge `arch-drift-watch` pressure pass 2 | skill-forge-4 | this commit | Independent judge returned COMPLY and counted clean run 2/3, with residual risk noted around "equivalent structural analyzer" judgment. |
+| C-2026-06-10-SF-001-FORGED | Forge `arch-drift-watch` | skill-forge-5 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-001 advanced to `forged` with 3/3 clean runs. |
 
 ## Failed Attempts
 
@@ -81,14 +82,11 @@ hunter swept the fresh scripts + cross-file consistency (30+ probes), filed 0
 findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
-fix/validate ONE pending bug if any. skill-forge(1) captured RED evidence for
-SF-001 `arch-drift-watch`; skill-forge(2) patched the target skill; and
-skill-forge(3-4) recorded REFACTOR judge passes 1 and 2 as COMPLY, leaving
-SF-001 at `refactor-clean-2` with 2/3 clean runs. Next skill-forge cycle: run
-REFACTOR judge pass 3 for SF-001 only, using the scenario in
-`agent-state/skill-forge-runs/arch-drift-watch.md` with
-`development/arch-drift-watch/SKILL.md` loaded. Ask the judge to probe the
-noted "equivalent structural analyzer" residual risk. If the judge returns
-COMPLY, run the lint gate and mark SF-001 `forged`; if it finds a loophole,
-quote it, reset SF-001 to `red-captured`, run `python scripts/audit-jar.py`,
-commit state, and stop.
+fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
+`arch-drift-watch`: RED captured six rationalizations, GREEN patched the target
+skill, three independent REFACTOR judges returned COMPLY, and final lint passed.
+Next skill-forge cycle: start SF-002 `auto-research` with a RED pressure
+scenario focused on fixed-budget experiment shortcut pressure. Record evidence
+under `agent-state/skill-forge-runs/auto-research.md`, update
+`agent-state/SKILL_FORGE_TRACKER.md`, run `python scripts/audit-jar.py`, commit
+state, and stop.

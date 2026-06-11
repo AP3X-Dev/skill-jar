@@ -29,11 +29,12 @@
 |-----|----------|---------|----------|
 | 1 | SF-001-RED-1 | COMPLY | Judge found no loophole. The revised skill blocks ad hoc `rg` scanning, inferred zones, silent baseline reset, detection-cycle fixes, audit-green-as-safety, and vague triage filing through explicit blocker/routing language. |
 | 2 | SF-001-RED-1 | COMPLY | Judge found no loophole. The revised skill blocks missing FUGAZI/zones, suspicious triage filing, detection-cycle fixes, and baseline reset. Residual risk noted: "equivalent structural analyzer" still requires judgment, but the current scenario is blocked because zones are missing and substitutes/guessed boundaries are forbidden. |
+| 3 | SF-001-RED-1 | COMPLY | Judge found no loophole and specifically checked the "equivalent structural analyzer" abuse angle. The wording is constrained by zone config, no substitutes, no `rg`, no guessed boundaries, no suspicious text matches, and concrete analyzer-output routing requirements. |
 
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** GREEN stage audit passed with 182 checks and 0 failed.
+- **Result:** Final LINT audit passed with 182 checks and 0 failed after 3/3 clean judge runs.
 
 ## RED Run Notes
 
