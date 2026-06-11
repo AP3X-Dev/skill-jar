@@ -62,6 +62,8 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-004-FORGED | Forge `bug-pipeline` | skill-forge-23 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-004 advanced to `forged` with 3/3 clean runs. |
 | C-2026-06-10-SF-005-RED | Capture RED pressure evidence for `clean-room` | skill-forge-24 | this commit | RED surfaced eight rationalizations around internal/time-boxed ownership, side-by-side parity copying, implementer peeking, eyeballed gaps, skipped mode lock, helper source snippets, deferred contamination scans, and compare-port-test cleanup. |
 | C-2026-06-10-SF-005-GREEN | Patch `clean-room` for captured RED rationalizations | skill-forge-25 | this commit | GREEN added pressure-rationalization rules and tightened mode lock, Phase 3 firewall, research leakage, inventory grounding, contamination scan timing, and red flags. |
+| C-2026-06-11-UNIT-TEST-QUALITY | Add unit-test-quality skill from research report | report-derived-skills-1 | this commit | Added `development/unit-test-quality` with a lean SKILL.md, report-derived reference playbook, generated index/plugin updates, and a pending Skillforge tracker row. |
+| C-2026-06-11-UNIT-TEST-SLOP-GATE | Tighten unit-test-quality around real tests and AI slop rejection | report-derived-skills-2 | this commit | Reframed `development/unit-test-quality` around building useful unit tests, auditing existing suites, and rejecting AI-generated tests that only execute code, assert tautologies, or chase coverage. |
 
 ## Failed Attempts
 
@@ -117,3 +119,16 @@ scenario in `agent-state/skill-forge-runs/clean-room.md` with
 `development/clean-room/SKILL.md` loaded. If the judge returns COMPLY, mark
 `refactor-clean-1`; if it finds a loophole, quote it, reset SF-005 to
 `red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.
+
+report-derived-skills(1) added SF-021 `unit-test-quality` from
+`C:\Users\Guerr\Downloads\deep-research-report (5).md`. Next jar-audit cycle:
+run `python scripts/audit-jar.py`; if green, preserve the generated
+`skills.json` and plugin manifest updates. Next skill-forge cycle: continue
+the existing queue order and eventually run RED for SF-021 using weak-assertion,
+coverage-chasing, mutation-skipping, and flaky-test pressure.
+
+report-derived-skills(2) tightened SF-021 from the user's concrete requirement:
+the skill must build real unit tests and audit or replace AI-generated slop
+tests. Next skill-forge cycle remains formal RED capture; SF-021 is still
+`pending-red`, with pressure expanded to AI slop tests, weak assertions, and
+coverage-metric shortcuts.
