@@ -21,9 +21,9 @@
 
 ## GREEN Patch
 
-- **Skill files changed:** pending
-- **Loopholes closed:** pending
-- **Rules added/tightened:** pending
+- **Skill files changed:** `development/clean-room/SKILL.md`
+- **Loopholes closed:** internal/time-boxed posture deferral; non-public function names and exact error strings as parity markers; implementer peeking at the original; eyeballed gap lists replacing AST inventory/diff; skipped mode-lock file; research-helper source/test leakage; final-merge-only contamination scan; compare-port-test cleanup as a substitute for Phase 1/2 gates.
+- **Rules added/tightened:** Added a `Known pressure rationalizations` table and tightened mode selection, Phase 3 firewall wording, research-subagent rejection rules, Parity Mode inventory grounding, `RUN_STATE.md` timing, Pass 1b gate behavior, reverse-contamination scan timing, and red flags.
 
 ## REFACTOR Verdicts
 
@@ -33,7 +33,7 @@
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** RED stage pending gate.
+- **Result:** GREEN stage audit passed with 182 checks and 0 failed.
 
 ## RED Run Notes
 

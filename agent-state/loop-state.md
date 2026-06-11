@@ -61,6 +61,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-004-REF2 | Judge `bug-pipeline` pressure pass 2 | skill-forge-22 | this commit | Independent judge returned COMPLY and counted clean run 2/3 for the captured hunter/fixer/validator shortcut scenario. |
 | C-2026-06-10-SF-004-FORGED | Forge `bug-pipeline` | skill-forge-23 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-004 advanced to `forged` with 3/3 clean runs. |
 | C-2026-06-10-SF-005-RED | Capture RED pressure evidence for `clean-room` | skill-forge-24 | this commit | RED surfaced eight rationalizations around internal/time-boxed ownership, side-by-side parity copying, implementer peeking, eyeballed gaps, skipped mode lock, helper source snippets, deferred contamination scans, and compare-port-test cleanup. |
+| C-2026-06-10-SF-005-GREEN | Patch `clean-room` for captured RED rationalizations | skill-forge-25 | this commit | GREEN added pressure-rationalization rules and tightened mode lock, Phase 3 firewall, research leakage, inventory grounding, contamination scan timing, and red flags. |
 
 ## Failed Attempts
 
@@ -108,9 +109,11 @@ captured RED evidence for SF-004 `bug-pipeline`; skill-forge(20) patched the
 target skill for those named rationalizations; skill-forge(21) counted
 REFACTOR judge pass 1 clean; skill-forge(22) counted REFACTOR judge pass 2
 clean; skill-forge(23) forged SF-004 `bug-pipeline` after the third clean
-judge pass plus final lint; and skill-forge(24) captured RED evidence for
-SF-005 `clean-room`, leaving it at `red-captured` with 0/3 clean runs. Next
-skill-forge cycle: run GREEN for SF-005 only. Patch
-`development/clean-room/SKILL.md` only to close the named rationalizations in
-`agent-state/skill-forge-runs/clean-room.md`, update state, run
-`python scripts/audit-jar.py`, commit code plus state, and stop.
+judge pass plus final lint; skill-forge(24) captured RED evidence for SF-005
+`clean-room`; and skill-forge(25) patched the target skill for those named
+rationalizations, leaving SF-005 at `patched` with 0/3 clean runs. Next
+skill-forge cycle: run REFACTOR judge pass 1 for SF-005 only, using the
+scenario in `agent-state/skill-forge-runs/clean-room.md` with
+`development/clean-room/SKILL.md` loaded. If the judge returns COMPLY, mark
+`refactor-clean-1`; if it finds a loophole, quote it, reset SF-005 to
+`red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.

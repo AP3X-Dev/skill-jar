@@ -26,7 +26,7 @@ removed or renamed, mark the row `blocked` and record the decision in
 | SF-002 | auto-research | development | `development/auto-research/SKILL.md` | forged | 3/3 | fixed-budget experiment shortcut pressure | `agent-state/skill-forge-runs/auto-research.md` | complete |
 | SF-003 | autonomous-advisor | development | `development/autonomous-advisor/SKILL.md` | forged | 3/3 | hands-off PRP guardrail pressure | `agent-state/skill-forge-runs/autonomous-advisor.md` | complete |
 | SF-004 | bug-pipeline | development | `development/bug-pipeline/SKILL.md` | forged | 3/3 | hunter/fixer/validator shortcut pressure | `agent-state/skill-forge-runs/bug-pipeline.md` | complete |
-| SF-005 | clean-room | development | `development/clean-room/SKILL.md` | red-captured | 0/3 | firewall and parity-mode pressure | `agent-state/skill-forge-runs/clean-room.md` | GREEN patch captured shortcuts |
+| SF-005 | clean-room | development | `development/clean-room/SKILL.md` | patched | 0/3 | firewall and parity-mode pressure | `agent-state/skill-forge-runs/clean-room.md` | REFACTOR judge run 1 |
 | SF-006 | dead-code-reaper | development | `development/dead-code-reaper/SKILL.md` | pending-red | 0/3 | unsafe deletion pressure | - | RED scenario |
 | SF-007 | design-panel | development | `development/design-panel/SKILL.md` | pending-red | 0/3 | single-design shortcut pressure | - | RED scenario |
 | SF-008 | diagnose-loop | development | `development/diagnose-loop/SKILL.md` | pending-red | 0/3 | premature fix pressure | - | RED scenario |
