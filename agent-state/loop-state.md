@@ -10,7 +10,7 @@
 
 ## Current Objective
 
-Keep the skill jar publish-ready via two loops, one task per cycle each:
+Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 - **jar-audit** -- fix structural failures surfaced by the audit gate
   (frontmatter, triggers, naming, links, script compile + idempotency).
@@ -18,6 +18,9 @@ Keep the skill jar publish-ready via two loops, one task per cycle each:
 - **bug-pipeline** -- hunt, fix, and validate content/script defects via
   `agent-state/BUG_TRACKER.md` (Hunter -> Fixer -> Validator).
   Driver: `docs/prompts/bug-pipeline-driver.md`.
+- **skill-forge** -- pressure-test and harden every jar skill via
+  `agent-state/SKILL_FORGE_TRACKER.md`, one skill-stage per cycle.
+  Driver: `docs/prompts/skill-forge-driver.md`.
 
 ## Verification Commands
 
@@ -53,10 +56,17 @@ Keep the skill jar publish-ready via two loops, one task per cycle each:
   path to `.claude-plugin/plugin.json`, and the gate confirms all three agree.
 - jar-audit findings live in `triage-inbox.md`; bug-pipeline findings live in
   `BUG_TRACKER.md`. Do not cross-file them.
+- skill-forge findings live in `SKILL_FORGE_TRACKER.md`, with evidence packages
+  under `agent-state/skill-forge-runs/`. Do not file forge pressure results in
+  `triage-inbox.md` or `BUG_TRACKER.md`.
 - Fixer never validates its own fix (maker != checker); the validator runs on a
   stronger/different model than the fixer.
+- A skill-forge patch must cite a RED rationalization, a known routing/install
+  defect, or a concrete user requirement. No taste-only skill rewrites.
+- A skill is not `forged` until it has RED evidence, 3/3 clean judge runs, and
+  `python scripts/audit-jar.py` exits 0.
 - Loops commit locally only. Pushing to the remote is the human's call.
-- `assets/` and git history are off-limits to both loops.
+- `assets/` and git history are off-limits to all loops.
 
 ## Next Run Instructions
 
@@ -67,4 +77,7 @@ hunter swept the fresh scripts + cross-file consistency (30+ probes), filed 0
 findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
-fix/validate ONE pending bug if any.
+fix/validate ONE pending bug if any. skill-forge(1) is now scaffolded: start at
+SF-001 `arch-drift-watch` with a RED pressure scenario, record evidence under
+`agent-state/skill-forge-runs/arch-drift-watch.md`, then stop after updating the
+tracker and running `python scripts/audit-jar.py`.

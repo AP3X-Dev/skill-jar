@@ -44,9 +44,12 @@ Skill Jar contains the skill that improves Skill Jar.
 
 [**skill-forge**](development/skill-forge/SKILL.md) pressure-tests skills by
 watching fresh agents fail, patching the loopholes they found, and re-running
-until the behavior holds. This repo also dogfoods its own loop machinery:
-`jar-audit` runs the deterministic gate, records state under `agent-state/`,
-and requires a separate checker before work is marked complete.
+until the behavior holds. This repo also dogfoods that workflow through
+`docs/prompts/skill-forge-driver.md`, a jar-wide queue in
+`agent-state/SKILL_FORGE_TRACKER.md`, and per-skill run packages under
+`agent-state/skill-forge-runs/`. The `jar-audit` loop runs the deterministic
+gate, records state under `agent-state/`, and requires a separate checker before
+work is marked complete.
 
 That makes the jar a self-hardening skill library: the operating procedures, the
 role agents, the state files, and the audit gate all reinforce each other.
@@ -128,5 +131,6 @@ Development and systems-design skills also ship generated sub-agent packs in [`d
 
 - **jar-audit** — keeps the jar publish-ready. Discovery is a deterministic gate, `python scripts/audit-jar.py`: frontmatter parses, descriptions carry triggers, names match directories, every relative link resolves, scripts compile, the scaffolder stays idempotent. Red check → one fix per cycle, verified by a separate agent.
 - The repo also dogfoods the [**bug-pipeline**](development/bug-pipeline/SKILL.md) skill on itself — its instance lives in `.claude/agents/` + `docs/prompts/bug-pipeline-driver.md`, tracking to `agent-state/BUG_TRACKER.md`.
+- **skill-forge** — works through `agent-state/SKILL_FORGE_TRACKER.md` until every skill has RED pressure evidence, a focused GREEN patch when needed, 3/3 clean judge runs, and the audit gate green. Run packages live in `agent-state/skill-forge-runs/`; the driver is `docs/prompts/skill-forge-driver.md`.
 
-Run a cycle by handing your agent the matching driver in `docs/prompts/`. Both loops run at autonomy Level 2: they commit locally; a human reviews and pushes.
+Run a cycle by handing your agent the matching driver in `docs/prompts/`. All three loops run at autonomy Level 2: they commit locally; a human reviews and pushes.
