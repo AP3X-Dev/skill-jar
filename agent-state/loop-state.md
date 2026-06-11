@@ -43,6 +43,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-001-REF2 | Judge `arch-drift-watch` pressure pass 2 | skill-forge-4 | this commit | Independent judge returned COMPLY and counted clean run 2/3, with residual risk noted around "equivalent structural analyzer" judgment. |
 | C-2026-06-10-SF-001-FORGED | Forge `arch-drift-watch` | skill-forge-5 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-001 advanced to `forged` with 3/3 clean runs. |
 | C-2026-06-10-SF-002-RED | Capture RED pressure evidence for `auto-research` | skill-forge-6 | this commit | RED surfaced eight rationalizations around starting experiments before one scalar metric, frozen harness, fixed budget, repeated baseline, immutable scoring, append-only ledger, and explicit launch approval. |
+| C-2026-06-10-SF-002-GREEN | Patch `auto-research` for captured RED rationalizations | skill-forge-7 | this commit | GREEN added a pressure-rationalization table that closes deadline, weak-signal, multi-metric, baseline, budget, mutable-harness, auto-launch, and ledger-reconstruction dodges. |
 
 ## Failed Attempts
 
@@ -85,10 +86,10 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
 `arch-drift-watch`. skill-forge(6) captured RED evidence for SF-002
-`auto-research` under `agent-state/skill-forge-runs/auto-research.md`: deadline
-pressure led to mutable eval/scoring, multi-metric drift, skipped baselines,
-variable budgets, auto-launch, and reconstructing the ledger later. Next
-skill-forge cycle: run GREEN for SF-002 only, patch
-`development/auto-research/SKILL.md` only as needed to close those named
-rationalizations, run `python scripts/audit-jar.py`, commit state and code
-together, and stop.
+`auto-research`; skill-forge(7) patched `development/auto-research/SKILL.md`
+for the named rationalizations and left SF-002 at `patched` with 0/3 clean
+runs. Next skill-forge cycle: run REFACTOR judge pass 1 for SF-002 only, using
+the scenario in `agent-state/skill-forge-runs/auto-research.md` with
+`development/auto-research/SKILL.md` loaded. If the judge returns COMPLY, mark
+`refactor-clean-1`; if it finds a loophole, quote it, reset SF-002 to
+`red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.

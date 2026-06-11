@@ -46,6 +46,21 @@ untracked `results.tsv` ledger + `experiment-state.md`, research rules in
 
 Before launch, pin the metric name, direction, run command, fixed budget, mutable surface, frozen paths, freeze commit, noise floor, and baseline value. Every cycle must produce one hypothesis, one surface diff, one harness run, one `results.tsv` row, and one keep/discard decision made only by the metric plus integrity gate. If any field is unknown or the baseline cannot be reproduced, stop at the launch gate; do not start a vague experiment loop.
 
+### Pressure Rationalizations
+
+These thoughts are hard stops, not tradeoffs:
+
+| Rationalization | Required response |
+|---|---|
+| "The lead said by tonight, so spending time on a clean harness is the real risk." | Deadline pressure never relaxes the harness. If the harness cannot be built or verified in time, hand off setup; do not launch. |
+| "A few tests and logs are enough to get directional signal overnight." | Tests and logs are exploratory evidence, not a frozen greppable harness. No scalar from a real run command means no loop. |
+| "Latency and quality can both be optimized; whichever improves more can become the metric after we see results." | Choose one scalar and direction before seeing results. Split the work or use optimization-loop for multi-metric quality work. |
+| "Two baseline runs are unnecessary ceremony when we already have logs." | Existing logs do not replace baseline proof. Run the baseline twice now, or explicitly record `0 (not measured)` only when the second run is too expensive. |
+| "Pinning a budget before seeing early results would artificially limit upside." | Budget is part of the experiment definition. Pin it before the baseline; changing it after early data invalidates comparisons. |
+| "Letting the loop edit eval scripts and scoring is fine because eval quality is part of the system." | Eval and scoring are the frozen harness. Fix them before the freeze; after freeze, integrity gate blocks edits. |
+| "Auto-start is implied by overnight experiments; asking again would waste the window." | Overnight is not consent. Launch only after an explicit human yes at Phase 5. |
+| "The ledger can be reconstructed later from commits and run logs." | The ledger is written during each cycle. If `results.tsv` cannot be appended, stop; reconstruction later is not allowed. |
+
 ## How the six-part spine specializes for research
 
 | Spine stage | Auto-research form |

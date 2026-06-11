@@ -21,9 +21,9 @@
 
 ## GREEN Patch
 
-- **Skill files changed:** pending
-- **Loopholes closed:** pending
-- **Rules added/tightened:** pending
+- **Skill files changed:** `development/auto-research/SKILL.md`
+- **Loopholes closed:** deadline pressure over harness setup; weak tests/logs as directional signal; post-hoc metric choice; skipped second baseline; unpinned budget; mutable eval/scoring; implied auto-start; reconstructed ledger.
+- **Rules added/tightened:** Added a `Pressure Rationalizations` table under the operating contract that treats each captured dodge as a hard stop with the required response.
 
 ## REFACTOR Verdicts
 
@@ -33,7 +33,7 @@
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** pending GREEN or REFACTOR stage
+- **Result:** GREEN stage audit passed with 182 checks and 0 failed.
 
 ## RED Run Notes
 
