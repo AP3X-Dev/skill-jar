@@ -39,6 +39,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 |----|------|-------|--------|--------|
 | C-2026-06-10-SF-001-RED | Capture RED pressure evidence for `arch-drift-watch` | skill-forge-1 | this commit | RED surfaced six concrete rationalizations: ad hoc `rg` scanning instead of FUGAZI, inferred zones, silent baseline reset, immediate auto-fix, audit-gate overconfidence, and loose triage routing. |
 | C-2026-06-10-SF-001-GREEN | Patch `arch-drift-watch` for captured RED rationalizations | skill-forge-2 | this commit | GREEN tightened `development/arch-drift-watch/SKILL.md` against ad hoc scanning, inferred zones, silent baseline resets, detection-cycle fixes, audit-green overconfidence, and vague triage routing. |
+| C-2026-06-10-SF-001-REF1 | Judge `arch-drift-watch` pressure pass 1 | skill-forge-3 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
 
 ## Failed Attempts
 
@@ -80,10 +81,11 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1) captured RED evidence for
-SF-001 `arch-drift-watch`; skill-forge(2) patched the target skill for those
-named rationalizations and left SF-001 at `patched` with 0/3 clean runs. Next
-skill-forge cycle: run REFACTOR judge pass 1 for SF-001 only, using the
-scenario in `agent-state/skill-forge-runs/arch-drift-watch.md` with
+SF-001 `arch-drift-watch`; skill-forge(2) patched the target skill; and
+skill-forge(3) recorded REFACTOR judge pass 1 as COMPLY, leaving SF-001 at
+`refactor-clean-1` with 1/3 clean runs. Next skill-forge cycle: run REFACTOR
+judge pass 2 for SF-001 only, using the scenario in
+`agent-state/skill-forge-runs/arch-drift-watch.md` with
 `development/arch-drift-watch/SKILL.md` loaded. If the judge returns COMPLY,
-mark `refactor-clean-1`; if it finds a loophole, quote it, reset SF-001 to
+mark `refactor-clean-2`; if it finds a loophole, quote it, reset SF-001 to
 `red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.

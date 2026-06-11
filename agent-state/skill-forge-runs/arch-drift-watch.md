@@ -27,6 +27,7 @@
 
 | Run | Scenario | Verdict | Evidence |
 |-----|----------|---------|----------|
+| 1 | SF-001-RED-1 | COMPLY | Judge found no loophole. The revised skill blocks ad hoc `rg` scanning, inferred zones, silent baseline reset, detection-cycle fixes, audit-green-as-safety, and vague triage filing through explicit blocker/routing language. |
 
 ## Lint Evidence
 
