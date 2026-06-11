@@ -38,6 +38,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
 | C-2026-06-11-UNIT-TEST-QUALITY | Add unit-test-quality skill from research report | report-derived-skills-1 | this commit | Added `development/unit-test-quality` with a lean SKILL.md, report-derived reference playbook, generated index/plugin updates, and a pending Skillforge tracker row. |
+| C-2026-06-11-UNIT-TEST-SLOP-GATE | Tighten unit-test-quality around real tests and AI slop rejection | report-derived-skills-2 | this commit | Reframed `development/unit-test-quality` around building useful unit tests, auditing existing suites, and rejecting AI-generated tests that only execute code, assert tautologies, or chase coverage. |
 
 ## Failed Attempts
 
@@ -89,3 +90,9 @@ run `python scripts/audit-jar.py`; if green, preserve the generated
 `skills.json` and plugin manifest updates. Next skill-forge cycle: continue
 the existing queue order and eventually run RED for SF-021 using weak-assertion,
 coverage-chasing, mutation-skipping, and flaky-test pressure.
+
+report-derived-skills(2) tightened SF-021 from the user's concrete requirement:
+the skill must build real unit tests and audit or replace AI-generated slop
+tests. Next skill-forge cycle remains formal RED capture; SF-021 is still
+`pending-red`, with pressure expanded to AI slop tests, weak assertions, and
+coverage-metric shortcuts.

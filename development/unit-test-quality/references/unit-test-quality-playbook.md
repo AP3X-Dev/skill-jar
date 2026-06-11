@@ -16,6 +16,22 @@ Use this reference when a task needs details beyond the main `unit-test-quality`
 | Low internal coupling | Prefer state/output assertions; use interaction assertions only for required effects. |
 | Test data discipline | Keep input local and minimal. Version golden files and review them like code. |
 
+## AI Slop Test Audit
+
+Treat AI-generated tests as drafts until they prove one behavior. A test is not useful just because it compiles, raises coverage, or makes a mocked expectation pass.
+
+Use this audit before accepting new or existing unit tests:
+
+| Question | Useful answer | Slop answer |
+|---|---|---|
+| What behavior is proven? | Names one observable rule, state transition, output, or required effect. | "It covers the function" or "it calls the method." |
+| What regression would fail it? | A concrete production change would break the assertion. | Only deleting the test setup or mock expectation would fail it. |
+| What is asserted? | Returned value, persisted state, emitted event, thrown error, or required boundary interaction. | Only "does not throw", snapshot existence, object truthiness, or a mock call created by the test. |
+| What is controlled? | Clock, randomness, env, I/O, network, global state, and order dependence are injected, frozen, or avoided. | Real time, sleeps, hidden files, ambient env, shared DB, or network access. |
+| Can a reviewer inspect the case? | Minimal explicit input and expected output fit in the test or a named small fixture. | Broad fixture, giant snapshot, mystery file, or helper logic hides the behavior. |
+
+If a test fails this audit, replace it with a smaller behavior proof or delete it. Do not preserve a slop test only because it improves a coverage percentage.
+
 ## Metrics
 
 | Metric | What it tells you | What it misses | Best use |
@@ -61,6 +77,8 @@ Suggested starting thresholds are policy inputs, not universal truths:
 | Smell | Symptom | Fix |
 |---|---|---|
 | No assertion | Test only calls code. | Assert returned value, state, event, or required interaction. |
+| Mock tautology | Test configures a mock and only asserts the configured call happened. | Assert the externally visible effect, or keep the interaction assertion only if that call is the contract. |
+| Coverage-only test | Test exists only to execute lines and would pass after a semantic break. | Add a bite check: perturb the behavior and confirm the test fails. |
 | Mystery Guest | Important data comes from hidden files, DB, env, or global fixture. | Inline minimal data or name/version the artifact. |
 | General Fixture | Shared setup creates objects most tests ignore. | Local setup, builders, or narrower fixtures. |
 | Eager Test | One test validates a workflow of unrelated behaviors. | Split by behavior or move to integration suite. |

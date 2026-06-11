@@ -1,6 +1,6 @@
 ---
 name: unit-test-quality
-description: "Use when writing, reviewing, hardening, or setting CI standards for unit tests and test suites; when tests need to be fast, isolated, deterministic, behavior-focused, mutation-resistant, low-flake, or free of test smells; or when coverage numbers need interpretation instead of blind maximization. NOT for test-first feature work itself (use TDD), continuous coverage backfill (use test-backfill-loop), or broad multi-metric hardening (use optimization-loop)."
+description: "Use when building new unit tests, auditing or replacing AI-generated/slop tests, reviewing existing unit tests for usefulness, or setting CI standards so tests are fast, isolated, deterministic, behavior-focused, mutation-resistant, low-flake, and free of test smells. Use when coverage numbers need interpretation instead of blind maximization. NOT for broad coverage backfill (use test-backfill-loop) or broad multi-metric hardening (use optimization-loop)."
 tags:
   - testing
   - quality
@@ -12,11 +12,16 @@ maturity: linted
 
 Use this skill to make unit tests worth trusting. A high-quality unit test is fast, isolated, repeatable, self-checking, and focused on observable behavior. Coverage can show what executed; it does not prove the test would catch a regression.
 
-**Output:** a test-quality judgment or improvement plan with concrete file/test references, the commands that prove the suite ran, and the next smallest changes to improve diagnostic value, determinism, and defect-detection strength.
+This skill exists to prevent AI slop tests: tests that merely execute code, assert mocks, chase coverage, snapshot unreadable output, or pass without proving behavior.
+
+**Output:** new or revised unit tests plus a usefulness audit with concrete file/test references, the commands that prove the suite ran, and the next smallest changes to improve diagnostic value, determinism, and defect-detection strength.
 
 ## When to Use
 
-- Writing tests for code that already has a known behavior contract.
+- Building unit tests for code that already has a known behavior contract.
+- Auditing existing unit tests before trusting a suite or raising a quality gate.
+- Reviewing, repairing, or replacing AI-generated tests that look plausible but do not prove behavior.
+- Removing or rewriting tests that only raise coverage without increasing regression-detection strength.
 - Reviewing a PR that adds or changes unit tests.
 - Cleaning up brittle, slow, flaky, over-mocked, or low-signal tests.
 - Setting unit-test CI gates, changed-code coverage expectations, mutation-testing scope, or flaky-test handling.
@@ -24,7 +29,7 @@ Use this skill to make unit tests worth trusting. A high-quality unit test is fa
 
 ## When NOT to Use
 
-- New feature or bugfix implementation that needs test-first discipline — use TDD.
+- Designing and implementing new production behavior from tests in a red/green/refactor cycle -- use TDD, then use this skill as the unit-test quality gate if needed.
 - Raising coverage continuously across a legacy codebase — use [test-backfill-loop](../test-backfill-loop/SKILL.md).
 - Diagnosing one stubborn bug before writing the regression test — use [diagnose-loop](../diagnose-loop/SKILL.md).
 - Broad post-feature hardening across many dimensions — use [optimization-loop](../optimization-loop/SKILL.md).
@@ -45,11 +50,18 @@ Use this skill to make unit tests worth trusting. A high-quality unit test is fa
 
 1. **Classify the test.** Name whether it is a unit, sociable unit, integration, contract, snapshot/golden, property, or characterization test. If the label is dishonest, fix the label or move it to the right suite.
 2. **Check the behavior claim.** For each changed test, write the sentence: "This proves that `<unit>` does `<behavior>` when `<condition>`." If the sentence is vague, the test is vague.
-3. **Check isolation and determinism.** Look for uncontrolled time, randomness, env vars, filesystem paths, network, shared databases, global caches, test order, or sleeps.
-4. **Check assertion strength.** Prefer observable outputs and state. Use interaction assertions only when the interaction is part of the contract.
-5. **Check setup shape.** Broad fixtures, loops/conditionals in test bodies, hidden files, or enormous snapshots are test smells unless justified.
-6. **Run the right command.** The suite must execute and report real results. For changed tests, run the focused test command; for review completion, run the repo's declared gate.
-7. **Escalate weak confidence.** If coverage is high but assertion strength is unclear, add a mutation/bite check for the changed behavior or file a follow-up with exact scope.
+3. **Run the slop-test rejection gate.** Before accepting a test, answer:
+   - What behavior does this prove?
+   - What production change would make it fail?
+   - Does it assert an observable result, state transition, or required effect?
+   - Does it avoid uncontrolled time, randomness, I/O, network, shared state, and test order?
+   - Is setup explicit and minimal enough that a reviewer can see the case?
+   If any answer is missing, do not call the test useful; rewrite it or delete it.
+4. **Check isolation and determinism.** Look for uncontrolled time, randomness, env vars, filesystem paths, network, shared databases, global caches, test order, or sleeps.
+5. **Check assertion strength.** Prefer observable outputs and state. Use interaction assertions only when the interaction is part of the contract.
+6. **Check setup shape.** Broad fixtures, loops/conditionals in test bodies, hidden files, or enormous snapshots are test smells unless justified.
+7. **Run the right command.** The suite must execute and report real results. For changed tests, run the focused test command; for review completion, run the repo's declared gate.
+8. **Escalate weak confidence.** If coverage is high but assertion strength is unclear, add a mutation/bite check for the changed behavior or file a follow-up with exact scope.
 
 For metrics, language/tool examples, smell taxonomy, and CI lanes, read [references/unit-test-quality-playbook.md](references/unit-test-quality-playbook.md).
 
@@ -67,6 +79,7 @@ For metrics, language/tool examples, smell taxonomy, and CI lanes, read [referen
 
 ## Common Smells
 
+- **AI slop test:** plausible-looking test executes code, asserts that a mock was called because the test made it so, snapshots a huge artifact, or checks only "does not throw."
 - **No meaningful assertion:** code executed, but no behavior was checked.
 - **Mystery Guest:** important input hides in a file, DB row, env var, or global fixture.
 - **General Fixture:** shared setup creates far more than a test needs.

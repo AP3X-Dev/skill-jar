@@ -169,7 +169,7 @@
     {
       "name": "unit-test-quality",
       "category": "development",
-      "description": "Use when writing, reviewing, hardening, or setting CI standards for unit tests and test suites; when tests need to be fast, isolated, deterministic, behavior-focused, mutation-resistant, low-flake, or free of test smells; or when coverage numbers need interpretation instead of blind maximization. NOT for test-first feature work itself (use TDD), continuous coverage backfill (use test-backfill-loop), or broad multi-metric hardening (use optimization-loop).",
+      "description": "Use when building new unit tests, auditing or replacing AI-generated/slop tests, reviewing existing unit tests for usefulness, or setting CI standards so tests are fast, isolated, deterministic, behavior-focused, mutation-resistant, low-flake, and free of test smells. Use when coverage numbers need interpretation instead of blind maximization. NOT for broad coverage backfill (use test-backfill-loop) or broad multi-metric hardening (use optimization-loop).",
       "path": "development/unit-test-quality/SKILL.md",
       "tags": [
         "testing",
