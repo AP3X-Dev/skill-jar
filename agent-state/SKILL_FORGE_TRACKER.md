@@ -25,7 +25,7 @@ removed or renamed, mark the row `blocked` and record the decision in
 | SF-001 | arch-drift-watch | development | `development/arch-drift-watch/SKILL.md` | forged | 3/3 | scheduled drift triage pressure | `agent-state/skill-forge-runs/arch-drift-watch.md` | complete |
 | SF-002 | auto-research | development | `development/auto-research/SKILL.md` | forged | 3/3 | fixed-budget experiment shortcut pressure | `agent-state/skill-forge-runs/auto-research.md` | complete |
 | SF-003 | autonomous-advisor | development | `development/autonomous-advisor/SKILL.md` | forged | 3/3 | hands-off PRP guardrail pressure | `agent-state/skill-forge-runs/autonomous-advisor.md` | complete |
-| SF-004 | bug-pipeline | development | `development/bug-pipeline/SKILL.md` | pending-red | 0/3 | hunter/fixer/validator shortcut pressure | - | RED scenario |
+| SF-004 | bug-pipeline | development | `development/bug-pipeline/SKILL.md` | red-captured | 0/3 | hunter/fixer/validator shortcut pressure | `agent-state/skill-forge-runs/bug-pipeline.md` | GREEN patch captured rationalizations |
 | SF-005 | clean-room | development | `development/clean-room/SKILL.md` | pending-red | 0/3 | firewall and parity-mode pressure | - | RED scenario |
 | SF-006 | dead-code-reaper | development | `development/dead-code-reaper/SKILL.md` | pending-red | 0/3 | unsafe deletion pressure | - | RED scenario |
 | SF-007 | design-panel | development | `development/design-panel/SKILL.md` | pending-red | 0/3 | single-design shortcut pressure | - | RED scenario |
