@@ -59,6 +59,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-004-GREEN | Patch `bug-pipeline` for captured RED rationalizations | skill-forge-20 | this commit | GREEN added refusal rules and role-template reinforcements for evidence quality, maker-checker separation, one bug per cycle, gate integrity, and reopened bug durability. |
 | C-2026-06-10-SF-004-REF1 | Judge `bug-pipeline` pressure pass 1 | skill-forge-21 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured hunter/fixer/validator shortcut scenario. |
 | C-2026-06-10-SF-004-REF2 | Judge `bug-pipeline` pressure pass 2 | skill-forge-22 | this commit | Independent judge returned COMPLY and counted clean run 2/3 for the captured hunter/fixer/validator shortcut scenario. |
+| C-2026-06-10-SF-004-FORGED | Forge `bug-pipeline` | skill-forge-23 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-004 advanced to `forged` with 3/3 clean runs. |
 
 ## Failed Attempts
 
@@ -104,10 +105,12 @@ fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
 skill-forge(14-18) forged SF-003 `autonomous-advisor`. skill-forge(19)
 captured RED evidence for SF-004 `bug-pipeline`; skill-forge(20) patched the
 target skill for those named rationalizations; skill-forge(21) counted
-REFACTOR judge pass 1 clean; and skill-forge(22) counted REFACTOR judge pass 2
-clean, leaving SF-004 at `refactor-clean-2` with 2/3 clean runs. Next
-skill-forge cycle: run REFACTOR judge pass 3 plus final lint for SF-004
-only, using the scenario in `agent-state/skill-forge-runs/bug-pipeline.md` with
-`development/bug-pipeline/SKILL.md` loaded. If the judge returns COMPLY, mark
-`forged`; if it finds a loophole, quote it, reset SF-004 to
-`red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.
+REFACTOR judge pass 1 clean; skill-forge(22) counted REFACTOR judge pass 2
+clean; and skill-forge(23) forged SF-004 `bug-pipeline` after the third clean
+judge pass plus final lint. Next skill-forge cycle: run RED for SF-005
+`clean-room` only. Read `development/clean-room/SKILL.md`, create a pressure
+scenario for firewall/parity-mode shortcuts, dispatch a pressure tester without
+showing it the target skill, record the RED evidence in
+`agent-state/skill-forge-runs/clean-room.md`, update
+`agent-state/SKILL_FORGE_TRACKER.md`, run `python scripts/audit-jar.py`, commit
+state, and stop.
