@@ -21,9 +21,9 @@
 
 ## GREEN Patch
 
-- **Skill files changed:** pending
-- **Loopholes closed:** pending
-- **Rules added/tightened:** pending
+- **Skill files changed:** `development/autonomous-advisor/SKILL.md`
+- **Loopholes closed:** vague brief treated as PRP; "no questions" used to skip design/gates; chat memory as run-state substitute; self-review replacing verifier; smoke-only testing; production-ready redefined as presentable; direct main/deploy authorization bypassing release checkpoint; unattended optimization loop launch.
+- **Rules added/tightened:** Added a `Pressure shortcuts -- hard stops` table, clarified production-ready evidence requirements, tightened branch completion to pause on main/deploy requests, required PRP-tied acceptance/regression checks when no suite exists, clarified verifier ownership of design/spec approval, and constrained optimization to post-branch local governance rather than production launch.
 
 ## REFACTOR Verdicts
 
@@ -33,7 +33,7 @@
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** pending GREEN or REFACTOR stage
+- **Result:** GREEN stage audit passed with 182 checks and 0 failed.
 
 ## RED Run Notes
 

@@ -51,6 +51,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-002-REF2B | Judge `auto-research` pressure pass 2 after waiver patch | skill-forge-12 | this commit | Independent judge returned COMPLY and counted clean run 2/3 after the baseline-waiver patch. |
 | C-2026-06-10-SF-002-FORGED | Forge `auto-research` | skill-forge-13 | this commit | Third post-waiver judge returned COMPLY, final lint passed, and SF-002 advanced to `forged` with 3/3 clean runs. |
 | C-2026-06-10-SF-003-RED | Capture RED pressure evidence for `autonomous-advisor` | skill-forge-14 | this commit | RED surfaced eight rationalizations around missing PRPs, skipped phase gates, missing run state, self-review, weak tests, direct main push, production deploy, and unattended optimization. |
+| C-2026-06-10-SF-003-GREEN | Patch `autonomous-advisor` for captured RED rationalizations | skill-forge-15 | this commit | GREEN added hard stops and tightened gates for PRP validation, run state, verifier separation, PRP-tied tests, release checkpoints, and optimization governance. |
 
 ## Failed Attempts
 
@@ -93,11 +94,11 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
 `arch-drift-watch`. skill-forge(6-13) forged SF-002 `auto-research`.
-skill-forge(14) captured RED evidence for SF-003 `autonomous-advisor` under
-`agent-state/skill-forge-runs/autonomous-advisor.md`: the pressure led to
-invented requirements, skipped run state and phase gates, self-review, weak
-tests, direct main push, production deploy, and unattended optimization. Next
-skill-forge cycle: run GREEN for SF-003 only, patch
-`development/autonomous-advisor/SKILL.md` only as needed to close those named
-rationalizations, run `python scripts/audit-jar.py`, commit state and code
-together, and stop.
+skill-forge(14) captured RED evidence for SF-003 `autonomous-advisor`;
+skill-forge(15) patched the target skill for those named rationalizations and
+left SF-003 at `patched` with 0/3 clean runs. Next skill-forge cycle: run
+REFACTOR judge pass 1 for SF-003 only, using the scenario in
+`agent-state/skill-forge-runs/autonomous-advisor.md` with
+`development/autonomous-advisor/SKILL.md` loaded. If the judge returns COMPLY,
+mark `refactor-clean-1`; if it finds a loophole, quote it, reset SF-003 to
+`red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.
