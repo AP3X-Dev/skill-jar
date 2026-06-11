@@ -46,6 +46,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-002-GREEN | Patch `auto-research` for captured RED rationalizations | skill-forge-7 | this commit | GREEN added a pressure-rationalization table that closes deadline, weak-signal, multi-metric, baseline, budget, mutable-harness, auto-launch, and ledger-reconstruction dodges. |
 | C-2026-06-10-SF-002-REF1 | Judge `auto-research` pressure pass 1 | skill-forge-8 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
 | C-2026-06-10-SF-002-REF2-LOOPHOLE | Judge `auto-research` pressure pass 2 | skill-forge-9 | this commit | Independent judge found a loophole in the second-baseline exception and reset SF-002 to `red-captured` with 0/3 clean runs. |
+| C-2026-06-10-SF-002-GREEN2 | Patch `auto-research` second-baseline waiver | skill-forge-10 | this commit | GREEN tightened the second-baseline waiver so it requires concrete time/cost/quota justification plus explicit human consent before launch may proceed. |
 
 ## Failed Attempts
 
@@ -87,11 +88,11 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
-`arch-drift-watch`. skill-forge(6-8) advanced SF-002 `auto-research` through
-RED, GREEN, and one clean judge run. skill-forge(9) found a REFACTOR loophole:
-the second-baseline exception can be abused as "too expensive tonight" without
-a concrete cost threshold or explicit waiver, so SF-002 is back at
-`red-captured` with 0/3 clean runs. Next skill-forge cycle: run GREEN for
-SF-002 only and patch `development/auto-research/SKILL.md` to close that named
-baseline-exception loophole, run `python scripts/audit-jar.py`, commit state
-and code together, and stop.
+`arch-drift-watch`. skill-forge(6-10) advanced SF-002 `auto-research` through
+RED, GREEN, one clean judge run, a judge-found baseline-waiver loophole, and a
+second GREEN patch. SF-002 is now `patched` with 0/3 clean runs. Next
+skill-forge cycle: run REFACTOR judge pass 1 after the baseline-waiver patch,
+using the scenario in `agent-state/skill-forge-runs/auto-research.md` with
+`development/auto-research/SKILL.md` loaded. If the judge returns COMPLY, mark
+`refactor-clean-1`; if it finds a loophole, quote it, reset SF-002 to
+`red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.

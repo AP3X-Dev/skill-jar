@@ -22,8 +22,8 @@
 ## GREEN Patch
 
 - **Skill files changed:** `development/auto-research/SKILL.md`
-- **Loopholes closed:** deadline pressure over harness setup; weak tests/logs as directional signal; post-hoc metric choice; skipped second baseline; unpinned budget; mutable eval/scoring; implied auto-start; reconstructed ledger.
-- **Rules added/tightened:** Added a `Pressure Rationalizations` table under the operating contract that treats each captured dodge as a hard stop with the required response.
+- **Loopholes closed:** deadline pressure over harness setup; weak tests/logs as directional signal; post-hoc metric choice; skipped second baseline; unpinned budget; mutable eval/scoring; implied auto-start; reconstructed ledger; second-baseline waiver abuse.
+- **Rules added/tightened:** Added a `Pressure Rationalizations` table under the operating contract that treats each captured dodge as a hard stop with the required response. Tightened the Phase 4 second-baseline waiver so "too expensive" requires concrete time/cost/quota justification plus explicit human consent; without that consent, setup stops before launch.
 
 ## REFACTOR Verdicts
 
@@ -35,7 +35,7 @@
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** GREEN stage audit passed with 182 checks and 0 failed.
+- **Result:** Second GREEN stage audit passed with 182 checks and 0 failed.
 
 ## RED Run Notes
 
