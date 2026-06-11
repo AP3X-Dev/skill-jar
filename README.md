@@ -22,18 +22,6 @@ coding agents without giving up verification, state, or human control.
 | Is messy after feature work | [**optimization-loop**](development/optimization-loop/SKILL.md) | Audits the codebase, builds a measurable backlog, and runs gated improvement cycles. |
 | Needs its own recurring agent workflow | [**loop-engineer**](development/loop-engineer/SKILL.md) | Scaffolds the state files, role agents, gates, and driver prompts for a safe loop. |
 
-## How It Runs
-
-```mermaid
-flowchart TD
-    A[User goal] --> B[Skill router]
-    B --> C[SKILL.md]
-    C --> D[Role agents]
-    D --> E[State files]
-    E --> F[Verification gate]
-    F --> G[Human review]
-```
-
 Skills turn fuzzy agent work into explicit operating contracts: what to do, what
 not to do, which artifacts to update, which gates must pass, and where the human
 still owns the decision.
