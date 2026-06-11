@@ -52,6 +52,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-002-FORGED | Forge `auto-research` | skill-forge-13 | this commit | Third post-waiver judge returned COMPLY, final lint passed, and SF-002 advanced to `forged` with 3/3 clean runs. |
 | C-2026-06-10-SF-003-RED | Capture RED pressure evidence for `autonomous-advisor` | skill-forge-14 | this commit | RED surfaced eight rationalizations around missing PRPs, skipped phase gates, missing run state, self-review, weak tests, direct main push, production deploy, and unattended optimization. |
 | C-2026-06-10-SF-003-GREEN | Patch `autonomous-advisor` for captured RED rationalizations | skill-forge-15 | this commit | GREEN added hard stops and tightened gates for PRP validation, run state, verifier separation, PRP-tied tests, release checkpoints, and optimization governance. |
+| C-2026-06-10-SF-003-REF1 | Judge `autonomous-advisor` pressure pass 1 | skill-forge-16 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
 
 ## Failed Attempts
 
@@ -94,11 +95,10 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
 `arch-drift-watch`. skill-forge(6-13) forged SF-002 `auto-research`.
-skill-forge(14) captured RED evidence for SF-003 `autonomous-advisor`;
-skill-forge(15) patched the target skill for those named rationalizations and
-left SF-003 at `patched` with 0/3 clean runs. Next skill-forge cycle: run
-REFACTOR judge pass 1 for SF-003 only, using the scenario in
-`agent-state/skill-forge-runs/autonomous-advisor.md` with
+skill-forge(14-16) advanced SF-003 `autonomous-advisor` through RED, GREEN, and
+one clean judge run. SF-003 is now `refactor-clean-1` with 1/3 clean runs. Next
+skill-forge cycle: run REFACTOR judge pass 2 for SF-003 only, using the
+scenario in `agent-state/skill-forge-runs/autonomous-advisor.md` with
 `development/autonomous-advisor/SKILL.md` loaded. If the judge returns COMPLY,
-mark `refactor-clean-1`; if it finds a loophole, quote it, reset SF-003 to
+mark `refactor-clean-2`; if it finds a loophole, quote it, reset SF-003 to
 `red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.
