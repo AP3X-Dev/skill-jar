@@ -1,6 +1,12 @@
 ---
 name: review-panel
 description: "Adversarial multi-lens code review for a diff, branch, or PR: an optional FUGAZI pre-pass grounds the review in deterministic findings, then a panel of independent reviewers each works a distinct lens (correctness, security, simplicity/reuse) in parallel, findings are deduped and severity-ranked, and every finding is verified against the codebase before it is acted on — no performative agreement. Applies requesting/receiving-code-review discipline with bundled prompts, FUGAZI grounding, and optional MemBerry false-positive memory; Superpowers skills are optional accelerators, not prerequisites. Use when reviewing a branch/PR/diff and you want broad, adversarial, evidence-checked coverage rather than a single-reviewer pass — before a merge, or as a tougher gate on a risky change. NOT for a quick single-file glance (just review it) or a continuous defect pipeline (use bug-pipeline)."
+tags:
+  - meta
+  - review
+  - evaluator
+core: true
+maturity: linted
 ---
 
 # Review Panel

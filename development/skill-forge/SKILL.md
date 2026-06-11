@@ -1,6 +1,13 @@
 ---
 name: skill-forge
 description: "Loop that hardens an agent skill with pressure-test discipline. RED: run a pressure scenario against a fresh subagent WITHOUT the skill and record the rationalizations it invents; GREEN: draft or patch the SKILL.md to close them; REFACTOR: re-run, hunt new loopholes, repeat until K consecutive clean runs. Lints structure (frontmatter parses, description carries a trigger, links resolve, length) and grows a rationalization corpus in optional MemBerry; Superpowers writing-skills is optional lineage, not a prerequisite. Use when writing a new skill or hardening an existing one against the loopholes agents talk themselves into — especially behavioural/discipline skills. NOT for a one-line skill tweak (just edit it), authoring non-skill docs, or building a code loop (use loop-engineer)."
+tags:
+  - meta
+  - skill-improvement
+  - pressure-test
+core: true
+maturity: dry-run
+evidence: proof/skill-forge/README.md
 ---
 
 # Skill Forge

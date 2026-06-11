@@ -7,12 +7,15 @@ agent-state/loop-state.md) and that CI runs on every push. Checks, in order:
   1. Frontmatter   -- every SKILL.md (jar skills + bundled role-skill templates)
                       has frontmatter that parses as YAML with `name` and
                       `description`; description is non-empty and <= 1024 chars.
+                      Optional `tags`, `core`, `maturity`, and `evidence`
+                      metadata is type-checked when present.
   2. Triggers      -- every description carries a trigger phrase ("use when" /
                       "use during"), so an agent can route to the skill.
   3. Naming        -- a skill's `name` matches its directory name.
-  4. Links         -- every relative Markdown link in the jar's docs resolves to
-                      a real file/dir inside the repo (code fences and inline
-                      code are stripped first; http/mailto/#anchor links skipped).
+  4. Links         -- every relative Markdown link in the jar's README, docs,
+                      proof docs, and skill docs resolves to a real file/dir
+                      inside the repo (code fences and inline code are stripped
+                      first; http/mailto/#anchor links skipped).
   5. Scripts       -- every tracked .py compiles, and scaffold-loop.py stays
                       idempotent (second run into a temp dir creates 0 paths).
   6. Index         -- skills.json is in sync with the layout (gen-index.py --check).
@@ -57,6 +60,52 @@ def record(ok, label, detail):
 # Frontmatter / naming
 # ---------------------------------------------------------------------------
 
+def check_metadata(path, data):
+    rel = path.relative_to(ROOT).as_posix()
+
+    if "tags" in data:
+        tags = data.get("tags")
+        ok = isinstance(tags, list) and all(
+            isinstance(tag, str) and tag for tag in tags)
+        if ok:
+            record(True, "metadata", "%s tags valid" % rel)
+        else:
+            record(False, "metadata",
+                   "%s: `tags` must be a list of non-empty strings" % rel)
+
+    if "core" in data:
+        if isinstance(data.get("core"), bool):
+            record(True, "metadata", "%s core flag valid" % rel)
+        else:
+            record(False, "metadata", "%s: `core` must be true or false" % rel)
+
+    if "maturity" in data:
+        maturity = data.get("maturity")
+        if isinstance(maturity, str) and maturity in jarlib.ALLOWED_MATURITY:
+            record(True, "metadata", "%s maturity valid" % rel)
+        else:
+            allowed = ", ".join(sorted(jarlib.ALLOWED_MATURITY))
+            record(False, "metadata",
+                   "%s: `maturity` must be one of: %s" % (rel, allowed))
+
+    if "evidence" in data:
+        evidence = data.get("evidence")
+        if not isinstance(evidence, str) or not evidence:
+            record(False, "metadata",
+                   "%s: `evidence` must be a non-empty relative path" % rel)
+            return
+        if Path(evidence).is_absolute():
+            record(False, "metadata", "%s: `evidence` must be relative" % rel)
+            return
+        resolved = (ROOT / evidence).resolve()
+        inside = ROOT == resolved or ROOT in resolved.parents
+        if resolved.exists() and inside:
+            record(True, "metadata", "%s evidence path exists" % rel)
+        else:
+            record(False, "metadata",
+                   "%s: evidence path does not exist: %s" % (rel, evidence))
+
+
 def check_frontmatter(path, expected_dir_name=None):
     """Validate one SKILL.md. If expected_dir_name is given, also check naming."""
     rel = path.relative_to(ROOT).as_posix()
@@ -81,6 +130,8 @@ def check_frontmatter(path, expected_dir_name=None):
     else:
         record(False, "trigger",
                "%s: description lacks 'Use when/during' trigger" % rel)
+
+    check_metadata(path, data)
 
     if expected_dir_name is not None:
         if name == expected_dir_name:
@@ -110,9 +161,13 @@ def strip_code(text):
 
 def md_files_for_link_audit():
     files = [ROOT / "README.md"]
+    for rel in ("docs", "proof"):
+        base = ROOT / rel
+        if base.exists():
+            files += sorted(base.rglob("*.md"))
     for s in jarlib.discover_skills(ROOT):
         files += sorted(s["skill_dir"].rglob("*.md"))
-    return [f for f in files if f.exists()]
+    return sorted({f for f in files if f.exists()})
 
 
 def check_links(path):

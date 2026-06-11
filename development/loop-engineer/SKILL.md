@@ -1,6 +1,12 @@
 ---
 name: loop-engineer
 description: "Use when the user wants to BUILD an agent loop or loop system — a self-running pipeline where automation discovers work, an agent executes it, a separate verifier checks it, state is recorded, and the loop decides what runs next — instead of hand-prompting every step. Scaffolds the loop into a repo: state files, maker≠checker subagents, automation/trigger and driver prompts, verification gates, safety rules, and worktree isolation. Agent-agnostic (Claude Code, Codex, or generic). NOT for running a single one-off task, fixing one bug (use bugfix), or an audit→fix hardening pass on an existing codebase (use optimization-loop — a specialized loop this skill can scaffold)."
+tags:
+  - meta
+  - loop-builder
+  - agent-workflow
+core: true
+maturity: dogfooded
 ---
 
 # Loop Engineer

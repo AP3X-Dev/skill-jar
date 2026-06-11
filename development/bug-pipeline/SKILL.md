@@ -1,6 +1,13 @@
 ---
 name: bug-pipeline
 description: "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use optimization-loop). Composes with loop-engineer, which scaffolds the loop infrastructure this pipeline runs on."
+tags:
+  - meta
+  - repair-loop
+  - validation
+core: true
+maturity: dogfooded
+evidence: proof/bug-pipeline/README.md
 ---
 
 # Bug Pipeline (Hunter → Fixer → Validator)

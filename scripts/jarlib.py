@@ -15,8 +15,17 @@ from pathlib import Path
 # Top-level directories that are infrastructure/assets, never a skill category.
 SKIP_DIR_NAMES = {
     ".git", ".github", ".claude", ".codex", ".claude-plugin",
-    "agent-state", "docs", "scripts", "assets",
+    "agent-state", "docs", "scripts", "assets", "proof",
     "node_modules", "__pycache__", ".venv", "venv",
+}
+
+ALLOWED_MATURITY = {
+    "draft",
+    "linted",
+    "dry-run",
+    "dogfooded",
+    "external-tested",
+    "battle-tested",
 }
 
 
@@ -58,6 +67,51 @@ def role_skill_templates(root):
     return sorted(root.glob("*/*/references/role-skills/*.SKILL.md"))
 
 
+def _minimal_yaml_scalar(value):
+    value = value.strip()
+    if value.lower() == "true":
+        return True
+    if value.lower() == "false":
+        return False
+    return value.strip("\"'")
+
+
+def _parse_minimal_frontmatter(fm):
+    data = {}
+    lines = fm.strip().splitlines()
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        m = re.match(r"^([A-Za-z_][\w-]*):\s*(.*)$", line)
+        if not m:
+            i += 1
+            continue
+        key, val = m.group(1), m.group(2)
+        if val and val[0] not in "\"'" and ": " in val:
+            return None, ("unquoted '%s' value contains ': ' -- "
+                          "YAML 'mapping values are not allowed here'" % key)
+        if val:
+            data[key] = _minimal_yaml_scalar(val)
+            i += 1
+            continue
+
+        items = []
+        j = i + 1
+        while j < len(lines):
+            item = re.match(r"^\s*-\s+(.+)$", lines[j])
+            if not item:
+                break
+            items.append(_minimal_yaml_scalar(item.group(1)))
+            j += 1
+        if items:
+            data[key] = items
+            i = j
+        else:
+            data[key] = ""
+            i += 1
+    return data, None
+
+
 def parse_frontmatter(text):
     """Return (dict, None) on success or (None, error-string) on failure.
 
@@ -74,17 +128,7 @@ def parse_frontmatter(text):
     try:
         import yaml  # type: ignore
     except ImportError:
-        data = {}
-        for line in fm.strip().splitlines():
-            m = re.match(r"^([A-Za-z_][\w-]*):\s*(.*)$", line)
-            if not m:
-                continue
-            key, val = m.group(1), m.group(2)
-            if val and val[0] not in "\"'" and ": " in val:
-                return None, ("unquoted '%s' value contains ': ' -- "
-                              "YAML 'mapping values are not allowed here'" % key)
-            data[key] = val.strip("\"'")
-        return data, None
+        return _parse_minimal_frontmatter(fm)
     try:
         data = yaml.safe_load(fm)
     except Exception as e:  # noqa: BLE001 - report any parse failure
@@ -100,3 +144,27 @@ def skill_meta(skill):
     if not data:
         return skill["dir_name"], ""
     return data.get("name") or skill["dir_name"], data.get("description") or ""
+
+
+def skill_index_entry(skill, root):
+    """Machine-readable index entry for one installable skill."""
+    data, _err = parse_frontmatter(skill["path"].read_text(encoding="utf-8"))
+    data = data or {}
+    tags = data.get("tags")
+    if not isinstance(tags, list) or not all(isinstance(tag, str) for tag in tags):
+        tags = []
+    entry = {
+        "name": data.get("name") or skill["dir_name"],
+        "category": skill["category"],
+        "description": data.get("description") or "",
+        "path": skill["path"].relative_to(root).as_posix(),
+        "tags": tags,
+        "core": data.get("core") if isinstance(data.get("core"), bool) else False,
+    }
+    maturity = data.get("maturity")
+    if isinstance(maturity, str) and maturity:
+        entry["maturity"] = maturity
+    evidence = data.get("evidence")
+    if isinstance(evidence, str) and evidence:
+        entry["evidence"] = evidence
+    return entry

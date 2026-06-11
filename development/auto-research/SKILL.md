@@ -1,6 +1,12 @@
 ---
 name: auto-research
 description: "Use when the user wants a Karpathy-style auto-research loop — an agent autonomously running fixed-budget experiments against a frozen evaluation harness to optimize ONE scalar metric: hypothesize → mutate the experiment surface → run → keep or discard by the metric → log → repeat until interrupted. Generalizes the autoresearch/nanochat pattern to any domain with a runnable metric (model training, prompt optimization, algorithm performance, compression, benchmark scores). Builds the harness if the repo lacks one, scaffolds the loop on loop-engineer conventions, runs the real baseline, then OFFERS launch — never auto-launches. Triggers: 'karpathy loop', 'autoresearch', 'overnight experiments', 'let it experiment while I sleep', 'optimize this metric autonomously'. NOT for correctness/quality hardening (use optimization-loop), defect repair (use bug-pipeline), or non-experiment loops (use loop-engineer)."
+tags:
+  - meta
+  - experiment-loop
+  - evaluation
+core: true
+maturity: linted
 ---
 
 # Auto-Research

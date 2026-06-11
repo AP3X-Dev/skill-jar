@@ -5,121 +5,198 @@
       "name": "arch-drift-watch",
       "category": "development",
       "description": "A scheduled detection loop that guards architecture against drift: each run executes FUGAZI boundaries / circular-deps / complexity (and dupes) read-only, diffs the findings against a committed baseline, and files only the NEW violations to a triage inbox — routing structural-judgment items to improve-architecture (human-owned) and offering small, safe auto-fixes only at higher autonomy. Detection-only by default (Level 1, no code writes). Builds the baseline and dry-runs one cycle, then offers the schedule. Use when you want continuous early warning on architecture entropy / AI-driven drift between periodic reviews. Requires FUGAZI. NOT for the judgment call of what to refactor (use improve-architecture), dead-code removal (use dead-code-reaper), or general hardening (use optimization-loop).",
-      "path": "development/arch-drift-watch/SKILL.md"
+      "path": "development/arch-drift-watch/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "auto-research",
       "category": "development",
       "description": "Use when the user wants a Karpathy-style auto-research loop — an agent autonomously running fixed-budget experiments against a frozen evaluation harness to optimize ONE scalar metric: hypothesize → mutate the experiment surface → run → keep or discard by the metric → log → repeat until interrupted. Generalizes the autoresearch/nanochat pattern to any domain with a runnable metric (model training, prompt optimization, algorithm performance, compression, benchmark scores). Builds the harness if the repo lacks one, scaffolds the loop on loop-engineer conventions, runs the real baseline, then OFFERS launch — never auto-launches. Triggers: 'karpathy loop', 'autoresearch', 'overnight experiments', 'let it experiment while I sleep', 'optimize this metric autonomously'. NOT for correctness/quality hardening (use optimization-loop), defect repair (use bug-pipeline), or non-experiment loops (use loop-engineer).",
-      "path": "development/auto-research/SKILL.md"
+      "path": "development/auto-research/SKILL.md",
+      "tags": [
+        "meta",
+        "experiment-loop",
+        "evaluation"
+      ],
+      "core": true,
+      "maturity": "linted"
     },
     {
       "name": "autonomous-advisor",
       "category": "development",
       "description": "Full autonomous execution mode. Given a PRP (Product Requirements Plan), runs the entire pipeline — design, planning, implementation, optimization — with zero human input. An advisor sub-agent replaces the human at direction decisions; a separate verifier sub-agent gates work products (maker≠checker). Runs host-neutrally from PRP, run-state files, subagents, and runnable gates; Superpowers skills are optional accelerators, not prerequisites. Use when the user provides a PRP for hands-off execution, says 'run this autonomously', or another skill (e.g. clean-room) hands off a PRP for implementation. NOT for projects without a PRP (create one with the human first).",
-      "path": "development/autonomous-advisor/SKILL.md"
+      "path": "development/autonomous-advisor/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "bug-pipeline",
       "category": "development",
       "description": "Autonomous three-agent bug repair pipeline for any codebase: a Hunter sweeps and files evidence-backed defects to a shared BUG_TRACKER.md, a Fixer repairs one bug per cycle, and an independent Validator (ideally a different model) verifies or reopens. Use when the user wants an automated bug-fixing loop, continuous find→fix→verify cycles, or mentions 'bug pipeline', 'hunter fixer validator', or 'auto-repair loop'. NOT for a single known bug (just fix it) or a metrics-driven hardening pass (use optimization-loop). Composes with loop-engineer, which scaffolds the loop infrastructure this pipeline runs on.",
-      "path": "development/bug-pipeline/SKILL.md"
+      "path": "development/bug-pipeline/SKILL.md",
+      "tags": [
+        "meta",
+        "repair-loop",
+        "validation"
+      ],
+      "core": true,
+      "maturity": "dogfooded",
+      "evidence": "proof/bug-pipeline/README.md"
     },
     {
       "name": "clean-room",
       "category": "development",
       "description": "Use when reimplementing, porting, or cloning an existing codebase/repo — produces an exhaustive design doc via multi-pass analysis, proposes improvements over the original, then hands off to autonomous implementation (the autonomous-advisor skill). Supports three modes: full clean-room (firewalled, IP-safe), Parity Mode (close gaps against an original), and Transparent Mode (no firewall, for code you own). Triggers include 'clean room rewrite', 'port this repo', 'reimplement X in Y', 'clone without copying code', 'rewrite from scratch based on the original', 'transparent rewrite', 'rewrite without firewall'.",
-      "path": "development/clean-room/SKILL.md"
+      "path": "development/clean-room/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "dead-code-reaper",
       "category": "development",
       "description": "FUGAZI-native loop that safely removes confirmed-dead code — one trace-verified cluster per cycle, suite- and build-gated, with an independent verifier and a finding-count/LOC ratchet. A Scout runs FUGAZI's dead-code family and proves zero reachability with trace before filing a candidate; a Reaper removes exactly one cluster with the smallest diff; a Validator re-runs FUGAZI plus the repo gate and promotes or reopens. Builds and dry-runs the loop, then OFFERS launch — never auto-removes. Use when a codebase has accumulated dead code, unused exports/files/deps, or duplication to prune continuously and safely. NOT for a single obvious unused symbol (just delete it), live-but-ugly code (use improve-architecture), or defect repair (use bug-pipeline). Requires FUGAZI (CLI fugazi or fugazi-mcp) or an equivalent reachability analyzer.",
-      "path": "development/dead-code-reaper/SKILL.md"
+      "path": "development/dead-code-reaper/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "design-panel",
       "category": "development",
       "description": "Upgraded brainstorming for any non-trivial design: parallel exploration agents map the codebase/domain fast, optional MemBerry recalls prior designs and rejected approaches, then a design-it-twice rule forces at least two genuinely different shapes which an independent judge panel scores against named criteria — the human picks, a skeptic agent adversarially grills the winner (failure modes, scale, edge cases), and only then is the spec written and handed to planning. Use when designing a feature, component, or refactor before implementation and one-shot brainstorming isn't enough — when the user wants design alternatives compared, a design stress-tested, or says 'design it twice'. NOT for trivial changes (just build), full system/architecture intake with SLOs and topology (use systems-design skills), or when a PRP already exists (use autonomous-advisor).",
-      "path": "development/design-panel/SKILL.md"
+      "path": "development/design-panel/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "diagnose-loop",
       "category": "development",
       "description": "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Uses systematic-debugging discipline with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause); Superpowers skills are optional accelerators, not prerequisites. Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop).",
-      "path": "development/diagnose-loop/SKILL.md"
+      "path": "development/diagnose-loop/SKILL.md",
+      "tags": [
+        "meta",
+        "diagnosis",
+        "bounded-loop"
+      ],
+      "core": true,
+      "maturity": "linted"
     },
     {
       "name": "improve-architecture",
       "category": "development",
       "description": "Find — then ship — deepening opportunities in a codebase: refactors that turn shallow modules into deep ones for testability, locality, and AI-navigability. Human-in-the-loop by design (a strategic human picks direction; the AI explores, drafts, and migrates): explore for friction, present candidates as a visual HTML report, grill the chosen one into a module shape, then convert the approved design into an issue and a careful migration. Informed by the domain language in CONTEXT.md and decisions in docs/adr/. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, reduce AI-driven architecture drift/entropy, make a codebase more testable, or wants a periodic architecture review. NOT for autonomous metric-driven hardening (use optimization-loop), defect repair (use bug-pipeline), or reimplementing a codebase from scratch (use clean-room).",
-      "path": "development/improve-architecture/SKILL.md"
+      "path": "development/improve-architecture/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "loop-engineer",
       "category": "development",
       "description": "Use when the user wants to BUILD an agent loop or loop system — a self-running pipeline where automation discovers work, an agent executes it, a separate verifier checks it, state is recorded, and the loop decides what runs next — instead of hand-prompting every step. Scaffolds the loop into a repo: state files, maker≠checker subagents, automation/trigger and driver prompts, verification gates, safety rules, and worktree isolation. Agent-agnostic (Claude Code, Codex, or generic). NOT for running a single one-off task, fixing one bug (use bugfix), or an audit→fix hardening pass on an existing codebase (use optimization-loop — a specialized loop this skill can scaffold).",
-      "path": "development/loop-engineer/SKILL.md"
+      "path": "development/loop-engineer/SKILL.md",
+      "tags": [
+        "meta",
+        "loop-builder",
+        "agent-workflow"
+      ],
+      "core": true,
+      "maturity": "dogfooded"
     },
     {
       "name": "optimization-loop",
       "category": "development",
       "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (do design/planning first), building a non-optimization loop (use loop-engineer directly), single-metric experimentation on a frozen harness (use auto-research), or judgment-driven architecture / deep-module refactoring (use improve-architecture).",
-      "path": "development/optimization-loop/SKILL.md"
+      "path": "development/optimization-loop/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "plan-prune",
       "category": "development",
       "description": "Use when a repo has fragmented, stale, duplicated, or conflicting planning documentation and needs one current plan grounded in the live codebase, git history, tests, and existing docs. Use for roadmap reconciliation, PRP/spec/handoff cleanup, plan updates after development drift, reducing outdated docs, or when agents are unsure which plan is authoritative. NOT for creating a brand-new plan from no prior docs, architecture redesign (use improve-architecture), or quality hardening loops (use optimization-loop).",
-      "path": "development/plan-prune/SKILL.md"
+      "path": "development/plan-prune/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "review-panel",
       "category": "development",
       "description": "Adversarial multi-lens code review for a diff, branch, or PR: an optional FUGAZI pre-pass grounds the review in deterministic findings, then a panel of independent reviewers each works a distinct lens (correctness, security, simplicity/reuse) in parallel, findings are deduped and severity-ranked, and every finding is verified against the codebase before it is acted on — no performative agreement. Applies requesting/receiving-code-review discipline with bundled prompts, FUGAZI grounding, and optional MemBerry false-positive memory; Superpowers skills are optional accelerators, not prerequisites. Use when reviewing a branch/PR/diff and you want broad, adversarial, evidence-checked coverage rather than a single-reviewer pass — before a merge, or as a tougher gate on a risky change. NOT for a quick single-file glance (just review it) or a continuous defect pipeline (use bug-pipeline).",
-      "path": "development/review-panel/SKILL.md"
+      "path": "development/review-panel/SKILL.md",
+      "tags": [
+        "meta",
+        "review",
+        "evaluator"
+      ],
+      "core": true,
+      "maturity": "linted"
     },
     {
       "name": "skill-forge",
       "category": "development",
       "description": "Loop that hardens an agent skill with pressure-test discipline. RED: run a pressure scenario against a fresh subagent WITHOUT the skill and record the rationalizations it invents; GREEN: draft or patch the SKILL.md to close them; REFACTOR: re-run, hunt new loopholes, repeat until K consecutive clean runs. Lints structure (frontmatter parses, description carries a trigger, links resolve, length) and grows a rationalization corpus in optional MemBerry; Superpowers writing-skills is optional lineage, not a prerequisite. Use when writing a new skill or hardening an existing one against the loopholes agents talk themselves into — especially behavioural/discipline skills. NOT for a one-line skill tweak (just edit it), authoring non-skill docs, or building a code loop (use loop-engineer).",
-      "path": "development/skill-forge/SKILL.md"
+      "path": "development/skill-forge/SKILL.md",
+      "tags": [
+        "meta",
+        "skill-improvement",
+        "pressure-test"
+      ],
+      "core": true,
+      "maturity": "dry-run",
+      "evidence": "proof/skill-forge/README.md"
     },
     {
       "name": "sprint-ticket-runner",
       "category": "development",
       "description": "Use when running a long development sprint, autonomous coding cycle, or multi-ticket implementation push that needs a local Linear-style board, durable ticket state, worktree isolation, maker-checker verification, and first-class parallelism detection. Turns PRPs/PRDs/plans/user requests into executable tickets, keeps `agent-state/sprint/` current across restarts, classifies what can run in parallel, and prevents agents from drifting during multi-hour or multi-day work. NOT for a single bug, one-off edit, plan cleanup (use plan-prune), or generic quality loop (use optimization-loop).",
-      "path": "development/sprint-ticket-runner/SKILL.md"
+      "path": "development/sprint-ticket-runner/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "test-backfill-loop",
       "category": "development",
       "description": "A loop-engineer loop that raises test coverage on an existing codebase one module per cycle: discovery finds the highest-value uncovered code (optional FUGAZI cold-code plus coverage gaps), a maker writes characterization tests that pin current behaviour (TDD discipline), and a separate verifier confirms the tests actually bite — they fail when behaviour changes — and that coverage ratchets up, never down. Builds and dry-runs the loop, then offers launch. Use when an existing codebase is under-tested and you want coverage raised safely and continuously, especially before a refactor. NOT for greenfield TDD on new features (just write tests first), a single missing test (just add it), or general multi-dimension hardening (use optimization-loop).",
-      "path": "development/test-backfill-loop/SKILL.md"
+      "path": "development/test-backfill-loop/SKILL.md",
+      "tags": [
+        "meta",
+        "test-generation",
+        "validation"
+      ],
+      "core": true,
+      "maturity": "linted"
     },
     {
       "name": "api-design",
       "category": "systems-design",
       "description": "Design an API surface that survives production: choose the protocol by consumer shape (HTTP+OpenAPI default for public/partner APIs, gRPC for latency-sensitive internal RPC, GraphQL only for governed graph-shaped client reads, async events when decoupling in time beats a synchronous answer), then pin the contract — safety and idempotency semantics, cursor pagination, deadlines and retry budgets, additive versioning, error schema, auth, rate limits, cacheability — and gate releases on backward compatibility. Use when designing or reviewing an API, choosing REST vs gRPC vs GraphQL vs events, making endpoints safe to retry, or planning schema evolution. NOT for the whole system topology (use design-system), store selection (use data-store-selection), or implementing handlers (just build them).",
-      "path": "systems-design/api-design/SKILL.md"
+      "path": "systems-design/api-design/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "data-store-selection",
       "category": "systems-design",
       "description": "Choose and shape the data layer from access patterns, not brand loyalty: write the dominant read/write patterns first, name the required consistency model, then pick relational (joins, transactions, multi-row invariants — the default), document, key-value/wide-column (keyed access at scale), or Spanner-class global SQL — plus the cache layer (cache-aside vs write-through, explicit invalidation, stampede protection) and queue/stream choice (Kafka-style log vs RabbitMQ-style broker) with outbox wiring. Hard release gates: reject any design whose partition/shard key isn't justified against the dominant query path, or whose consistency expectations are unnamed. Use when choosing a database, designing a schema/partition strategy, adding a cache, picking a queue, or debugging hot partitions and invalidation. NOT for system topology (use design-system) or API contracts (use api-design).",
-      "path": "systems-design/data-store-selection/SKILL.md"
+      "path": "systems-design/data-store-selection/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "design-system",
       "category": "systems-design",
       "description": "Front-door for designing a software system or major subsystem: translate product requirements into SLOs and a capacity envelope (Little's Law, tail latency), then choose the SIMPLEST topology that meets the SLO with headroom — request path, data path, and failure path made explicit — and emit the operational artifact set (diagram, component list, risk register, dashboards/alerts, canary plan, runbook references, cost notes). Hard stop-conditions block premature complexity: no multi-region, service mesh, sharding, or polyglot persistence without a named requirement simpler options can't satisfy. Use when designing a new system/service, doing systems-design intake, sizing an architecture, choosing a topology, or reviewing a proposed architecture for over-engineering. NOT for one feature inside an existing design (use design-panel), API surface detail (use api-design), store choice detail (use data-store-selection), or launch gating (use production-readiness).",
-      "path": "systems-design/design-system/SKILL.md"
+      "path": "systems-design/design-system/SKILL.md",
+      "tags": [],
+      "core": false
     },
     {
       "name": "production-readiness",
       "category": "systems-design",
       "description": "The launch gate that turns a design into an operable service: define SLIs/SLOs and an error-budget policy, build golden-signal dashboards and symptom-based alerts (bounded cardinality, no PII labels), wire liveness/readiness/startup probes correctly, write runbooks for the five standard failures (dependency outage, database failover, cache failure, queue backlog, bad deploy), set the progressive-delivery path (canary, health gates, rollback command), define incident response (roles, safest-reversible-mitigation-first, blameless postmortem), and check cost as a first-class property. No launch without dashboard URLs, alert routes, a rollback command, and one tested failure drill. Use when preparing a service for production, writing SLOs or runbooks, designing alerts/observability, setting up canary deploys, or asking 'is this ready to launch?'. NOT for designing the system itself (use design-system) or diagnosing a live incident's root cause (use diagnose-loop).",
-      "path": "systems-design/production-readiness/SKILL.md"
+      "path": "systems-design/production-readiness/SKILL.md",
+      "tags": [],
+      "core": false
     }
   ]
 }

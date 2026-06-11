@@ -62,6 +62,22 @@ load on demand — the agent only reads one when the task actually matches, so t
 jar can grow without bloating context. The format is portable across any agent
 that supports skills.
 
+## Core/meta skills
+
+Most skills do a domain job. A smaller set helps maintain and improve the jar
+itself.
+
+These skills are tagged with `meta` and may use `core: true` in frontmatter.
+They are still installed through normal categories, but the metadata lets agents
+and maintainers identify the self-improvement substrate.
+
+For most forks, keep the core skills and add your own domain skills on top. That
+preserves the jar's ability to audit, test, review, and improve its own contents
+over time. Evidence will grow as real proof packets are added; see
+[`docs/evidence-model.md`](docs/evidence-model.md),
+[`docs/core-skills.md`](docs/core-skills.md), and
+[`proof/README.md`](proof/README.md).
+
 ## Using a skill
 
 Skills are grouped into **categories**, and each category installs as its own Claude Code plugin — so you pull in just the categories you want.
@@ -121,7 +137,7 @@ Then invoke it by name (`/<skill-name>`) or just describe your task — a capabl
 
 ## For agents
 
-Reading this repo programmatically? Route from [`skills.json`](skills.json) — a generated index of every skill's `name`, routing `description`, and `path` (one fetch, no directory crawl; it's gate-checked against the frontmatter, so it can't drift). Install via the plugin marketplace above (Claude Code) or copy a skill's folder (any host). Every push is verified by `python scripts/audit-jar.py` — the badge above is that gate. If you *operate* in this repo (run a loop cycle, fix a bug), the rules in [`AGENTS.md`](AGENTS.md) bind you.
+Reading this repo programmatically? Route from [`skills.json`](skills.json) — a generated index of every skill's `name`, routing `description`, `path`, `tags`, `core`, and optional maturity/evidence fields (one fetch, no directory crawl; it's gate-checked against the frontmatter, so it can't drift). Install via the plugin marketplace above (Claude Code) or copy a skill's folder (any host). Every push is verified by `python scripts/audit-jar.py` — the badge above is that gate. If you *operate* in this repo (run a loop cycle, fix a bug), the rules in [`AGENTS.md`](AGENTS.md) bind you.
 
 Development and systems-design skills also ship generated sub-agent packs in [`development/agents/`](development/agents/README.md) and [`systems-design/agents/`](systems-design/agents/README.md). Each pack's `manifest.json` is the source of truth; `python scripts/gen-agent-packs.py` renders copy-ready Claude Code and Codex agent files, and the audit gate verifies they stay in sync. Install only the roles a loop, panel, or design review actually needs.
 

@@ -1,6 +1,12 @@
 ---
 name: diagnose-loop
 description: "Bounded diagnosis loop for ONE hard bug or performance regression: reproduce → seed suspects → fan out parallel hypotheses (each made to refute itself) → converge on the root cause → lock a regression test → fix → independently verify. Uses systematic-debugging discipline with parallel hypothesis testing, optional FUGAZI suspect seeding, optional MemBerry root-cause memory, and maker≠checker (the fixer never certifies its own root cause); Superpowers skills are optional accelerators, not prerequisites. Use when diagnosing a single stubborn bug, a flaky failure, or a perf regression whose cause is unknown and where earlier fixes bounced. NOT for a known one-line fix (just fix it), a continuous find→fix→verify backlog (use bug-pipeline), or a metric-driven hardening pass (use optimization-loop)."
+tags:
+  - meta
+  - diagnosis
+  - bounded-loop
+core: true
+maturity: linted
 ---
 
 # Diagnose Loop

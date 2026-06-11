@@ -1,6 +1,12 @@
 ---
 name: test-backfill-loop
 description: "A loop-engineer loop that raises test coverage on an existing codebase one module per cycle: discovery finds the highest-value uncovered code (optional FUGAZI cold-code plus coverage gaps), a maker writes characterization tests that pin current behaviour (TDD discipline), and a separate verifier confirms the tests actually bite — they fail when behaviour changes — and that coverage ratchets up, never down. Builds and dry-runs the loop, then offers launch. Use when an existing codebase is under-tested and you want coverage raised safely and continuously, especially before a refactor. NOT for greenfield TDD on new features (just write tests first), a single missing test (just add it), or general multi-dimension hardening (use optimization-loop)."
+tags:
+  - meta
+  - test-generation
+  - validation
+core: true
+maturity: linted
 ---
 
 # Test Backfill Loop
