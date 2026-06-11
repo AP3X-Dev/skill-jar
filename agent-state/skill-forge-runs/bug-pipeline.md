@@ -20,9 +20,9 @@
 
 ## GREEN Patch
 
-- **Skill files changed:** pending
-- **Loopholes closed:** pending
-- **Rules added/tightened:** pending
+- **Skill files changed:** `development/bug-pipeline/SKILL.md`
+- **Loopholes closed:** linter/static output as sufficient evidence; internal style smells as bugs; fixer self-verification; skipped validator; batched pending fixes; flaky-gate weakening; reopened bug deletion.
+- **Rules added/tightened:** Added a `Pressure shortcuts to refuse` table and reinforced Hunter/Fixer templates so static findings are leads only, internal code still needs observable bugs, one assigned bug is fixed per cycle, validators cannot be skipped, gates cannot be weakened, and reopened entries remain durable.
 
 ## REFACTOR Verdicts
 
@@ -32,7 +32,7 @@
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** pending GREEN or REFACTOR stage
+- **Result:** GREEN stage audit passed with 182 checks and 0 failed.
 
 ## RED Run Notes
 

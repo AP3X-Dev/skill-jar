@@ -56,6 +56,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-003-REF2 | Judge `autonomous-advisor` pressure pass 2 | skill-forge-17 | this commit | Independent judge returned COMPLY and counted clean run 2/3, including the zero-human-input release/deploy abuse angle. |
 | C-2026-06-10-SF-003-FORGED | Forge `autonomous-advisor` | skill-forge-18 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-003 advanced to `forged` with 3/3 clean runs. |
 | C-2026-06-10-SF-004-RED | Capture RED pressure evidence for `bug-pipeline` | skill-forge-19 | this commit | RED surfaced seven rationalizations around weak/static evidence, style-smell bugs, fixer self-verification, skipped validator, batched fixes, gate weakening, and deleting reopened bugs. |
+| C-2026-06-10-SF-004-GREEN | Patch `bug-pipeline` for captured RED rationalizations | skill-forge-20 | this commit | GREEN added refusal rules and role-template reinforcements for evidence quality, maker-checker separation, one bug per cycle, gate integrity, and reopened bug durability. |
 
 ## Failed Attempts
 
@@ -99,10 +100,10 @@ instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
 `arch-drift-watch`; skill-forge(6-13) forged SF-002 `auto-research`; and
 skill-forge(14-18) forged SF-003 `autonomous-advisor`. skill-forge(19)
-captured RED evidence for SF-004 `bug-pipeline` under
-`agent-state/skill-forge-runs/bug-pipeline.md`: the pressure led to weak/static
-evidence, style-smell bugs, fixer self-verification, skipped validator, batched
-fixes, gate weakening, and deleting reopened bugs. Next skill-forge cycle: run
-GREEN for SF-004 only, patch `development/bug-pipeline/SKILL.md` only as needed
-to close those named rationalizations, run `python scripts/audit-jar.py`, commit
-state and code together, and stop.
+captured RED evidence for SF-004 `bug-pipeline`; skill-forge(20) patched the
+target skill for those named rationalizations and left SF-004 at `patched` with
+0/3 clean runs. Next skill-forge cycle: run REFACTOR judge pass 1 for SF-004
+only, using the scenario in `agent-state/skill-forge-runs/bug-pipeline.md` with
+`development/bug-pipeline/SKILL.md` loaded. If the judge returns COMPLY, mark
+`refactor-clean-1`; if it finds a loophole, quote it, reset SF-004 to
+`red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.
