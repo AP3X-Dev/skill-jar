@@ -37,6 +37,31 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-10-SF-001-RED | Capture RED pressure evidence for `arch-drift-watch` | skill-forge-1 | this commit | RED surfaced six concrete rationalizations: ad hoc `rg` scanning instead of FUGAZI, inferred zones, silent baseline reset, immediate auto-fix, audit-gate overconfidence, and loose triage routing. |
+| C-2026-06-10-SF-001-GREEN | Patch `arch-drift-watch` for captured RED rationalizations | skill-forge-2 | this commit | GREEN tightened `development/arch-drift-watch/SKILL.md` against ad hoc scanning, inferred zones, silent baseline resets, detection-cycle fixes, audit-green overconfidence, and vague triage routing. |
+| C-2026-06-10-SF-001-REF1 | Judge `arch-drift-watch` pressure pass 1 | skill-forge-3 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
+| C-2026-06-10-SF-001-REF2 | Judge `arch-drift-watch` pressure pass 2 | skill-forge-4 | this commit | Independent judge returned COMPLY and counted clean run 2/3, with residual risk noted around "equivalent structural analyzer" judgment. |
+| C-2026-06-10-SF-001-FORGED | Forge `arch-drift-watch` | skill-forge-5 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-001 advanced to `forged` with 3/3 clean runs. |
+| C-2026-06-10-SF-002-RED | Capture RED pressure evidence for `auto-research` | skill-forge-6 | this commit | RED surfaced eight rationalizations around starting experiments before one scalar metric, frozen harness, fixed budget, repeated baseline, immutable scoring, append-only ledger, and explicit launch approval. |
+| C-2026-06-10-SF-002-GREEN | Patch `auto-research` for captured RED rationalizations | skill-forge-7 | this commit | GREEN added a pressure-rationalization table that closes deadline, weak-signal, multi-metric, baseline, budget, mutable-harness, auto-launch, and ledger-reconstruction dodges. |
+| C-2026-06-10-SF-002-REF1 | Judge `auto-research` pressure pass 1 | skill-forge-8 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
+| C-2026-06-10-SF-002-REF2-LOOPHOLE | Judge `auto-research` pressure pass 2 | skill-forge-9 | this commit | Independent judge found a loophole in the second-baseline exception and reset SF-002 to `red-captured` with 0/3 clean runs. |
+| C-2026-06-10-SF-002-GREEN2 | Patch `auto-research` second-baseline waiver | skill-forge-10 | this commit | GREEN tightened the second-baseline waiver so it requires concrete time/cost/quota justification plus explicit human consent before launch may proceed. |
+| C-2026-06-10-SF-002-REF1B | Judge `auto-research` pressure pass 1 after waiver patch | skill-forge-11 | this commit | Independent judge returned COMPLY and counted clean run 1/3 after the baseline-waiver patch. |
+| C-2026-06-10-SF-002-REF2B | Judge `auto-research` pressure pass 2 after waiver patch | skill-forge-12 | this commit | Independent judge returned COMPLY and counted clean run 2/3 after the baseline-waiver patch. |
+| C-2026-06-10-SF-002-FORGED | Forge `auto-research` | skill-forge-13 | this commit | Third post-waiver judge returned COMPLY, final lint passed, and SF-002 advanced to `forged` with 3/3 clean runs. |
+| C-2026-06-10-SF-003-RED | Capture RED pressure evidence for `autonomous-advisor` | skill-forge-14 | this commit | RED surfaced eight rationalizations around missing PRPs, skipped phase gates, missing run state, self-review, weak tests, direct main push, production deploy, and unattended optimization. |
+| C-2026-06-10-SF-003-GREEN | Patch `autonomous-advisor` for captured RED rationalizations | skill-forge-15 | this commit | GREEN added hard stops and tightened gates for PRP validation, run state, verifier separation, PRP-tied tests, release checkpoints, and optimization governance. |
+| C-2026-06-10-SF-003-REF1 | Judge `autonomous-advisor` pressure pass 1 | skill-forge-16 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
+| C-2026-06-10-SF-003-REF2 | Judge `autonomous-advisor` pressure pass 2 | skill-forge-17 | this commit | Independent judge returned COMPLY and counted clean run 2/3, including the zero-human-input release/deploy abuse angle. |
+| C-2026-06-10-SF-003-FORGED | Forge `autonomous-advisor` | skill-forge-18 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-003 advanced to `forged` with 3/3 clean runs. |
+| C-2026-06-10-SF-004-RED | Capture RED pressure evidence for `bug-pipeline` | skill-forge-19 | this commit | RED surfaced seven rationalizations around weak/static evidence, style-smell bugs, fixer self-verification, skipped validator, batched fixes, gate weakening, and deleting reopened bugs. |
+| C-2026-06-10-SF-004-GREEN | Patch `bug-pipeline` for captured RED rationalizations | skill-forge-20 | this commit | GREEN added refusal rules and role-template reinforcements for evidence quality, maker-checker separation, one bug per cycle, gate integrity, and reopened bug durability. |
+| C-2026-06-10-SF-004-REF1 | Judge `bug-pipeline` pressure pass 1 | skill-forge-21 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured hunter/fixer/validator shortcut scenario. |
+| C-2026-06-10-SF-004-REF2 | Judge `bug-pipeline` pressure pass 2 | skill-forge-22 | this commit | Independent judge returned COMPLY and counted clean run 2/3 for the captured hunter/fixer/validator shortcut scenario. |
+| C-2026-06-10-SF-004-FORGED | Forge `bug-pipeline` | skill-forge-23 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-004 advanced to `forged` with 3/3 clean runs. |
+| C-2026-06-10-SF-005-RED | Capture RED pressure evidence for `clean-room` | skill-forge-24 | this commit | RED surfaced eight rationalizations around internal/time-boxed ownership, side-by-side parity copying, implementer peeking, eyeballed gaps, skipped mode lock, helper source snippets, deferred contamination scans, and compare-port-test cleanup. |
+| C-2026-06-10-SF-005-GREEN | Patch `clean-room` for captured RED rationalizations | skill-forge-25 | this commit | GREEN added pressure-rationalization rules and tightened mode lock, Phase 3 firewall, research leakage, inventory grounding, contamination scan timing, and red flags. |
 
 ## Failed Attempts
 
@@ -77,7 +102,18 @@ hunter swept the fresh scripts + cross-file consistency (30+ probes), filed 0
 findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
-fix/validate ONE pending bug if any. skill-forge(1) is now scaffolded: start at
-SF-001 `arch-drift-watch` with a RED pressure scenario, record evidence under
-`agent-state/skill-forge-runs/arch-drift-watch.md`, then stop after updating the
-tracker and running `python scripts/audit-jar.py`.
+fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
+`arch-drift-watch`; skill-forge(6-13) forged SF-002 `auto-research`; and
+skill-forge(14-18) forged SF-003 `autonomous-advisor`. skill-forge(19)
+captured RED evidence for SF-004 `bug-pipeline`; skill-forge(20) patched the
+target skill for those named rationalizations; skill-forge(21) counted
+REFACTOR judge pass 1 clean; skill-forge(22) counted REFACTOR judge pass 2
+clean; skill-forge(23) forged SF-004 `bug-pipeline` after the third clean
+judge pass plus final lint; skill-forge(24) captured RED evidence for SF-005
+`clean-room`; and skill-forge(25) patched the target skill for those named
+rationalizations, leaving SF-005 at `patched` with 0/3 clean runs. Next
+skill-forge cycle: run REFACTOR judge pass 1 for SF-005 only, using the
+scenario in `agent-state/skill-forge-runs/clean-room.md` with
+`development/clean-room/SKILL.md` loaded. If the judge returns COMPLY, mark
+`refactor-clean-1`; if it finds a loophole, quote it, reset SF-005 to
+`red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.

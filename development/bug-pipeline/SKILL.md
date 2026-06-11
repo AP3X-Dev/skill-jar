@@ -38,6 +38,18 @@ A three-agent repair loop over a shared markdown tracker. The **Hunter** (produc
 
 Run the validator on a **different model or provider** than the fixer where the host allows it — cross-brain checking catches what self-review can't.
 
+## Pressure shortcuts to refuse
+
+| Shortcut | Required response |
+|---|---|
+| "We already have linter output." | Treat static/linter findings as leads only. File a bug only after `file:line` evidence plus an observable symptom or repro. |
+| "This is internal." | Internal code does not lower the bar. Style nits, smells, and taste-only cleanup are not bug-pipeline findings. |
+| "The fixer can tell when it's done." | The fixer may mark `fixed`, never `verified`; maker≠checker is non-negotiable. |
+| "The validator slows us down." | Waiting for the validator is the loop. Without validator evidence, the cycle is incomplete. |
+| "Fix them all together." | One assigned pending bug per cycle, even when several bugs look related. |
+| "The gate is flaky." | A bad or flaky gate is a blocked human-decision item. Never loosen, skip, delete, or edit a gate to pass. |
+| "Reopened bugs are clutter." | Reopened entries stay in the tracker and failed-attempts log so the next cycle does not repeat the rejected path. |
+
 ## The tracker — `BUG_TRACKER.md`
 
 The pipeline's shared state. Default location: `agent-state/BUG_TRACKER.md` (repo root works too — pin one path in the driver). Append-only in spirit: statuses change, entries are never deleted.
@@ -91,6 +103,7 @@ You are the hunter — the producer in this repo's Hunter → Fixer → Validato
 - ONE bounded sweep per dispatch over the focus area you were given (rotate focus across cycles).
 - File at most 3 findings to <tracker path>, each: BUG-<n>, title, severity, file:line evidence, symptom or one-line repro, status `pending`.
 - Real defects only — a concrete failure mode you can articulate. No style nits, no hypotheses, no speculative hardening. Verify each candidate (run the code path or trace it) before filing.
+- Linter/static-analysis output is a lead, not evidence by itself; internal-only code still needs an observable bug, not a smell.
 - No duplicates: check the tracker (all statuses) and the failed-attempts log first; dedupe by file:line.
 - Deliberate choices are not bugs — templates, suppressions, and documented conventions are design.
 - Read-only except the tracker. A sweep that files nothing is a valid success.
@@ -108,6 +121,7 @@ You are the fixer — the maker in this repo's bug pipeline.
 - Run the gate after the fix: <gate command> must exit 0. A fix that breaks the gate is not a fix.
 - Mark the bug `fixed` with root-cause notes. You never mark anything `verified` (maker≠checker).
 - Never weaken the gate or a test to pass. A wrong check is a human-decision item, not a silent edit.
+- Do not batch adjacent pending bugs or waive the validator for speed. Stop after the assigned bug is `fixed` and ready for independent verification.
 - If your approach fails: revert, log it to the failed-attempts log, stop — do not thrash.
 Return: bug fixed, root cause (one line), files changed + why each, gate result, tracker updates.
 ```

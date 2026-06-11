@@ -7,7 +7,7 @@ description: "Full autonomous execution mode. Given a PRP (Product Requirements 
 
 ## Overview
 
-Run an entire project from PRP to production-ready code with zero human input.
+Run an entire project from PRP to production-ready code with zero human input. "Production-ready" means every PRP success criterion, phase gate, verification check, and required hardening item has evidence; it does not mean merely demoable, deployable, or presentable.
 
 The human writes the PRP (Product Requirements Plan). They hand it off. From that point forward, an **advisor sub-agent** stands in for the human at every decision point across every skill in the entire pipeline — design, planning, implementation, branch completion, AND optimization hardening. The advisor explores the project, loads MemBerry memory for project history, internalizes the PRP, and makes informed decisions as if it were the product owner.
 
@@ -32,6 +32,21 @@ This skill does not require the Superpowers plugin. If Superpowers skills are in
 - No PRP exists (create one through a human-guided design/planning pass first)
 - The PRP is vague or incomplete (send it back to the human)
 - The project involves irreversible external actions (deploying to production, publishing packages, sending emails)
+
+## Pressure shortcuts -- hard stops
+
+Autonomous pressure never relaxes the controls. If any of these thoughts appear, follow the required action instead of continuing:
+
+| Pressure thought | Required action |
+|------------------|-----------------|
+| "The goal is obvious enough; infer the portal requirements." | Stop before autonomous mode. Require a complete PRP or run a human-guided PRP/design pass; never invent customer requirements. |
+| "No more questions means skip design docs or phase gates." | Honor "no more questions" only after PRP validation passes. Required artifacts, gates, and blockers are not optional questions. |
+| "Run-state is overhead; keep it in chat." | Create and update the run-state file. Conversation memory is not restart state and cannot satisfy a phase gate. |
+| "Self-review is faster than a verifier." | Keep maker != checker. A deadline does not permit advisor/verifier collapse or artifact approval by its author. |
+| "No tests exist, so smoke the happy path." | A smoke test can supplement evidence, never replace it. Add/run a PRP-tied runnable acceptance or regression check, or stop. |
+| "Tomorrow's production-ready means presentable." | Do not redefine production-ready under deadline pressure. Meet the PRP gates and hardening criteria or record the blocker. |
+| "The user authorized pushing main or deploying." | Treat direct main push, production deploy, package publish, email send, or other external side effect as a separate release checkpoint after local gates; pause for the human. |
+| "Wire an optimization loop after launch and let it run." | Optimization starts only after the branch gate, verifier approval, cycle-1 green evidence, cadence, guardrails, and termination conditions are recorded. |
 
 ## Activation
 
@@ -64,7 +79,7 @@ Starting execution.
    1. Design phase — use brainstorming/design-panel if installed; otherwise write the spec directly from the PRP and repo context.
    2. Planning phase — use writing-plans if installed; otherwise write an implementation plan with files, tasks, and acceptance commands.
    3. Implementation phase — use host-native subagents where available; otherwise execute tasks inline with a separate verifier.
-   4. Branch completion — use the repo's normal PR/merge workflow; never push directly unless the PRP explicitly allows it.
+   4. Branch completion — use the repo's normal PR/merge workflow; never push directly to main/master or deploy; if the PRP asks for that, pause at a release checkpoint after local gates.
    5. Optimization loop — generate optimizer + launch loop through [optimization-loop](../optimization-loop/SKILL.md).
 
 **The advisor does NOT skip any phase.** It follows the same workflow a human would — it just answers faster and never stops to wait. **And no phase advances on say-so alone** — each phase ends at a gate (see Phase Gates below).
@@ -107,7 +122,7 @@ Each phase ends at a gate. **Advisor or verifier approval supplements a gate; it
 |------------|------|
 | **1 — Design** | Spec file exists in `docs/agent-runs/specs/` or the repo's design-doc convention AND the **verifier** (not the advisor) returns PASS on it against the PRP |
 | **2 — Plan** | Plan file exists; every task names its files and a runnable acceptance check; verifier PASS |
-| **3 — Implementation** | The project's full suite runs and exits 0 AND reports a real test count (a suite that runs zero tests is a STOP-and-report, never a pass); lint/typecheck clean if the project has them |
+| **3 — Implementation** | The project's full suite runs and exits 0 AND reports a real test count (a suite that runs zero tests is a STOP-and-report, never a pass); lint/typecheck clean if the project has them; if no suite exists, create or run a PRP-tied acceptance/regression check before claiming the phase green |
 | **4 — Branch** | PR URL or merge SHA recorded in run-state |
 | **5 — Optimization** | The optimization loop's own termination conditions (its progress log + metric ratchet — see optimization-loop) |
 
@@ -403,8 +418,8 @@ During the design phase, the advisor changes the process:
    - Extract requirements directly from the PRP sections
    - Only dispatch advisor if a genuine ambiguity exists in the PRP (not a gap — ambiguity)
 3. **Approach selection:** Present approaches to advisor, advisor picks based on PRP constraints
-4. **Design approval:** Advisor approves section-by-section, checking against PRP requirements
-5. **Spec review:** Advisor reviews for PRP alignment, not style preferences
+4. **Design approval:** The verifier approves or rejects the design sections against PRP requirements
+5. **Spec review:** The verifier reviews for PRP alignment, not style preferences; the advisor can resolve direction questions but cannot approve the artifact it helped produce
 
 ## Implementation Phase Adaptations
 
@@ -421,7 +436,7 @@ During implementation:
 
 ## Phase 5: Optimization Loop
 
-After the branch is finished (PR created or merged), the pipeline continues automatically into optimization.
+After the branch is finished (PR created or merged, not production launched), the pipeline continues automatically into optimization.
 
 ### Transition to Optimization
 

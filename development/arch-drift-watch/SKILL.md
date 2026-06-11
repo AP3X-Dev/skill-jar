@@ -25,11 +25,15 @@ Architecture entropy compounds quietly — each AI-assisted change can add a lit
 
 This loop is the scheduled, baseline-diffed front-end to [FUGAZI](https://github.com/AP3X-Dev/FUGAZI)'s structural rules. It needs `fugazi boundaries`, `circular-deps`, `health` (complexity), and `dupes` — with a `.fugazirc.json` declaring the architecture `zones` so `boundary-violations` means something. Without FUGAZI (or an equivalent structural analyzer + zone config) there's nothing to baseline.
 
+No substitutes: if FUGAZI/equivalent is missing, or zones are not configured with the user, stop setup and record the blocker. Do not replace the watch with `rg`, guessed directory boundaries, or "suspicious" text matches.
+
 ## The baseline — why drift, not findings
 
 The core idea: **report the delta, not the backlog.** A first run on a real codebase finds dozens of pre-existing violations; re-reporting them every cycle is noise that trains everyone to ignore the loop. Instead, snapshot the current findings once as the **baseline**, commit it, and each cycle file only what's *new since the baseline*.
 
 `agent-state/ARCH_BASELINE.json` — per-kind finding fingerprints (file + symbol + kind), committed. `drift = current_findings − baseline`. The baseline advances **only when a human accepts** the new state (after a review fixes or knowingly accepts a violation) — never silently, or the watch goes blind.
+
+"Baseline today's state" is not permission to overwrite an existing baseline or launder unknown drift. If a baseline already exists, advance it only after explicit human acceptance tied to a review/ADR.
 
 ## The cycle (detection, Level 1 default)
 
@@ -41,14 +45,17 @@ Runs on a schedule; reads, never writes code.
 4. **Route + file** — write each new violation to `agent-state/triage-inbox.md` with `kind`, `file:line`, "new since `<baseline-SHA>`", and a suggested owner:
    - `boundary-violations` / `circular-dependencies` / `complexity-hotspot` → **improve-architecture candidate** (human-judged refactor).
    - `code-duplication` → **dead-code-reaper** / consolidation candidate.
+   - If the analyzer output cannot produce a concrete kind, location, baseline SHA, and owner, record a blocker instead of filing a vague triage row.
 5. **Report** — a clean cycle (no new drift) files a one-line "no drift since `<SHA>`" note and stops. Drift found → the inbox carries it to the next review.
 
 No code changes, no baseline changes — detection only. The human runs improve-architecture on what the inbox surfaced, and *then* accepts a new baseline.
 
+The repo audit gate is still required for this jar, but green audit output does not make a drift run safe. Safety requires the structural analyzer, configured zones, baseline diff, exact routing, and (for any later fix) maker-checker separation.
+
 ## Autonomy — detection earns auto-fix
 
 - **Level 1 (default): detection-only.** Watch, diff, file to the inbox. Zero code writes. This is the safe, correct default — structural fixes are judgment calls.
-- **Level 2+ (earned): trivial auto-fix.** Only the narrow, mechanical, reversible drift — a newly-introduced import cycle a single move breaks, an obvious duplicate — may be handed to a maker→verifier pair (loop-engineer's split) behind the full gate. Anything requiring a *design decision* stays in the inbox for a human. Raise the level only after cycles show the inbox routing is trustworthy.
+- **Level 2+ (earned): separate trivial auto-fix.** The watcher still does not fix during the detection cycle. Only the narrow, mechanical, reversible drift — a newly-introduced import cycle a single move breaks, an obvious duplicate — may be handed to a separate maker→verifier pair (loop-engineer's split) behind the full gate. Anything requiring a *design decision* stays in the inbox for a human. Raise the level only after cycles show the inbox routing is trustworthy.
 
 ## Optional: MemBerry
 
@@ -68,6 +75,7 @@ Copy-ready generated agents live in [../agents/README.md](../agents/README.md) a
 - **Auto-fixing structural judgment.** Breaking a cycle can mean a real design decision. Detection routes to a human; it doesn't refactor on its own.
 - **Letting the baseline drift silently.** If the baseline advances without a human accepting the new state, accumulating drift becomes the new "normal" and the watch is blind. Advance it only on acceptance.
 - **No zones configured.** `boundary-violations` is meaningless without `.fugazirc.json` zones declaring the intended architecture. Configure them first.
+- **Treating audit green as enough.** The jar gate proves the skill pack is structurally valid; it does not replace FUGAZI, zones, baseline diffing, or exact routing.
 
 ---
 

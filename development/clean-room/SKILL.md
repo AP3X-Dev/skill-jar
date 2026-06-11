@@ -13,7 +13,7 @@ A **clean room rewrite** produces a new implementation of an existing system wit
 
 ## Modes
 
-This skill has three modes. Pick one at the start — mixing them mid-project is what causes contamination incidents.
+This skill has three modes. Pick one at the start — mixing them mid-project is what causes contamination incidents. Lock the mode before source analysis; "internal", "time-boxed", or "both repos are already on disk" are not modes.
 
 | Mode | Firewall? | Use when |
 |------|-----------|----------|
@@ -21,7 +21,7 @@ This skill has three modes. Pick one at the start — mixing them mid-project is
 | **Parity Mode** | Yes (for the original) | A rewrite already exists and needs gap-closing against its source |
 | **Transparent Mode** | **No** — implementer reads the original freely | You own both codebases; no IP concerns; want the multi-pass rigor without the subagent overhead |
 
-**Default assumption:** if the user hasn't specified, ask. Don't silently pick Transparent just because it's easier — a clean-room run that should have been firewalled can't be retroactively cleaned.
+**Default assumption:** if the user hasn't specified, ask. Don't silently pick Transparent just because it's easier — a clean-room run that should have been firewalled can't be retroactively cleaned. Until the human explicitly clears Transparent Mode, default to full clean-room.
 
 See the **Transparent Mode** and **Parity Mode** sections below for the deltas from the default flow.
 
@@ -33,7 +33,7 @@ See the **Transparent Mode** and **Parity Mode** sections below for the deltas f
 | **2. Improve** | Architect + Human | Design doc | `IMPROVEMENTS.md` + `PRP.md` |
 | **3. Implement** | autonomous-advisor or host-neutral implementation stack | PRP only (no original source) | New codebase |
 
-**Hard rule:** The Phase 3 implementer MUST NOT read the original source. Start a fresh session between Phase 2 and Phase 3. Do not paste original code into the implementation session. If any detail is missing from the doc, either (a) return to Phase 1 or 2 to fix it, or (b) use the **Research Subagent Escape Hatch** below — the implementer itself never peeks.
+**Hard rule:** The Phase 3 implementer MUST NOT read the original source. Start a fresh session between Phase 2 and Phase 3. Do not paste original code into the implementation session. If any detail is missing from the doc, either (a) return to Phase 1 or 2 to fix it, or (b) use the **Research Subagent Escape Hatch** below — the implementer itself never peeks. "Just one function", "just one test", or "just the exact error string" is still a direct read.
 
 ### Research Subagent Escape Hatch
 
@@ -48,18 +48,33 @@ If Phase 3 hits a gap, the implementer may dispatch a **fresh research subagent*
 - Recommendations / "watch out for X"
 
 **What the research subagent MUST NOT return:**
-- Verbatim code, comments, or string literals from the original
+- Verbatim source or test code, comments, or string literals from the original, even short snippets
 - File-by-file code snippets
 - Direct translation that reads like a line-by-line port
+- Exact internal function names or error strings unless they're part of the public contract already in the PRP
 - Identifiers invented by the original author unless they're part of the public contract already in the PRP
 
 **Protocol:**
 1. Implementer formulates a precise question (e.g., "How does module X handle concurrent writes to Y?" — not "show me module X").
 2. Implementer dispatches a research subagent with: the question, a copy-ban reminder, and instruction to return findings only.
-3. Subagent returns findings. Implementer uses them directly AND appends them as a new entry in `DESIGN_DOC.md` so the knowledge is durable for future questions.
-4. If the same question recurs, consult the updated doc first — don't re-dispatch.
+3. Subagent returns findings. If the response contains banned source/test code, exact internal names, or exact non-public error text, discard it instead of salvaging useful pieces; record the failed dispatch and re-run with stricter instructions.
+4. Implementer uses clean findings directly AND appends them as a new entry in `DESIGN_DOC.md` so the knowledge is durable for future questions.
+5. If the same question recurs, consult the updated doc first — don't re-dispatch.
 
 This preserves the clean-room firewall: the *implementer's context* is never contaminated with original source. Only the *research subagent's* throwaway context sees it, and only abstracted findings cross the boundary.
+
+### Known pressure rationalizations
+
+| Rationalization | Required response |
+|-----------------|-------------------|
+| "This is internal and time-boxed, so the legal/IP posture can be documented later." | Stop and lock the mode first; default to full clean-room until Transparent is explicitly cleared. |
+| "Function names and exact error strings are parity markers, not meaningful copied implementation." | Treat non-public names/error text as contamination-sensitive; capture behavior in prose or fingerprints, not implementation text. |
+| "Letting the implementer peek at the original for small gaps is lower risk than guessing behavior." | Never let the implementer peek; use doc repair, a clean research subagent, or a targeted Phase 1 pass. |
+| "The gap list is already known from eyeballing the app, so AST inventory is redundant." | Eyeballing can add notes only after the mechanical inventory/diff has grounded the gap list. |
+| "A mode-lock file is process overhead when both repos are already on disk." | `RUN_STATE.md` is the firewall state; write/read it before opening both repos side by side. |
+| "If the research helper returns a little source or test code, using it saves time and improves fidelity." | Reject the response wholesale; re-dispatch for prose, invariants, or pseudocode only. |
+| "A contamination scan can wait until before merge, once there is code worth scanning." | Build the fingerprint before Phase 3 and scan after the first code-producing milestone, each major milestone, and final merge. |
+| "The practical plan is to compare, port, test, and tighten afterward." | That is direct porting, not clean-room; complete Phase 1/2 gates before implementation. |
 
 ## Repository Roles — the firewall applies to ONE repo
 
@@ -119,7 +134,7 @@ Use this mode when a rewrite/port already exists but is missing features, edge c
 
 **Workflow:**
 
-1. **Phase 1 (parity variant) — gap inventory.** Instead of a full design doc from scratch, run multi-pass analysis focused on *differences*. Passes A, B, and C are mechanical — run the AST extractor and differ first, then let Passes D/E work against the grounded diff:
+1. **Phase 1 (parity variant) — gap inventory.** Instead of a full design doc from scratch, run multi-pass analysis focused on *differences*. Passes A, B, and C are mechanical — run the AST extractor and differ first, then let Passes D/E work against the grounded diff. A gap list from eyeballing, screenshots, or manual app use can supplement `PARITY_GAPS.md`; it cannot replace the AST-backed inventory/diff.
 
    ```bash
    python "<skill-dir>/scripts/extract-inventory.py" <original-repo>  -o clean-room/inventory.json
@@ -142,6 +157,7 @@ Use this mode when a rewrite/port already exists but is missing features, edge c
 
 **Rules specific to Parity Mode:**
 - Gaps are closed one at a time, each with its own acceptance test (often ported from the original's test suite via the research subagent — pseudocode of the assertion, not the verbatim test code).
+- Function names, internal identifiers, and exact error strings are not copied as "parity markers" unless they are public contract terms already recorded in the PRP.
 - If the rewrite has diverged *intentionally* from the original, classify that divergence: `preserved-divergence` (keep it) vs `regression` (parity-close it). Log in `PARITY_GAPS.md`.
 - Don't let Parity Mode silently turn into "make the rewrite match the original byte-for-byte" — the PRP still decides what "parity" means for this project.
 
@@ -254,7 +270,7 @@ If the user explicitly asks to commit some artifact (e.g., a sanitized PRP for t
 
 ### `RUN_STATE.md` — mode lock + restart memory
 
-A clean-room run is multi-pass, multi-session, and crash-expensive. `RUN_STATE.md` is what makes it **restartable** — and, more importantly, what makes the firewall survive a restart. The mode is the one fact a resumed session cannot afford to guess: a session that assumes Transparent on a run that was firewalled reads the original source into the implementer's context, and the contamination cannot be undone. The mode lives in this file, written once, never edited mid-run.
+A clean-room run is multi-pass, multi-session, and crash-expensive. `RUN_STATE.md` is what makes it **restartable** — and, more importantly, what makes the firewall survive a restart. Write it before opening the original and rewrite side by side. The mode is the one fact a resumed session cannot afford to guess: a session that assumes Transparent on a run that was firewalled reads the original source into the implementer's context, and the contamination cannot be undone. The mode lives in this file, written once, never edited mid-run.
 
 ```markdown
 # Clean-Room Run State — <target>
@@ -405,7 +421,7 @@ Output section: **"Repository Map"** with a tree and one-line purpose per direct
 
 ### Pass 1b — Inventory Extraction (AST, schema v2)
 
-Goal: build a deterministic, exhaustive inventory — the structural skeleton that every later pass is anchored to. LLM passes miss things; AST extraction doesn't.
+Goal: build a deterministic, exhaustive inventory — the structural skeleton that every later pass is anchored to. LLM passes miss things; AST extraction doesn't. Do not mark Pass 1b done from manual review or a known gap list; if extraction is unsupported or fails, record the limitation as a gate issue instead of pretending the inventory exists.
 
 **Schema v2** runs three structured passes over each file:
 
@@ -755,9 +771,9 @@ Fallback order:
 2. A separate execution session that follows the plan with explicit phase gates.
 3. Manual implementation — still from PRP only, still no peeking at original, still verified by a separate checker.
 
-### Reverse-Contamination Scan (merge gate)
+### Reverse-Contamination Scan (Phase 3 + merge gate)
 
-Before the rewrite merges to its main branch, run an automated firewall audit to prove no verbatim material from the original leaked through.
+Before Phase 3 writes implementation code in full clean-room or Parity Mode, build the fingerprint. Run the scanner after the first code-producing milestone, again before each major milestone, and before the rewrite merges to its main branch. Waiting until final merge lets leaked terms spread through the rewrite before detection.
 
 **Process:**
 
@@ -783,7 +799,7 @@ Before the rewrite merges to its main branch, run an automated firewall audit to
 
 4. **Regenerate periodically.** The fingerprint grows stale as the rewrite evolves. Regenerate it before each major milestone and before final merge.
 
-**Gate rule:** final merge is blocked until the scanner exits 0 on the current HEAD. Record the clean-scan commit SHA in the PR description for provenance.
+**Gate rule:** Phase 3 may not proceed past its first code-producing milestone until the scanner has run once against the current rewrite, and final merge is blocked until the scanner exits 0 on the current HEAD. Record the clean-scan commit SHA in the PR description for provenance.
 
 ### Ambiguity protocol
 
@@ -826,8 +842,13 @@ A gate is runnable where possible — a command whose exit code decides, recorde
 ## Red Flags — STOP and Fix
 
 - Resuming a run without reading `RUN_STATE.md` first — or with the mode unknown → assume full clean-room (firewalled), reconstruct the state file from artifacts, and only then touch anything else. Guessing Transparent on a firewalled run is unfixable.
+- Treating "internal", "time-boxed", or "both repos are local" as permission to document the legal/IP posture later → lock the mode first.
 - Implementer directly reads the original source → contamination; use a research subagent instead and throw away the implementer's current context
-- Research subagent returns verbatim code / identifiers / comments → reject its output, re-dispatch with stricter instructions
+- Research subagent returns verbatim source/test code, exact internal identifiers, exact non-public error strings, or comments → reject its output wholesale, re-dispatch with stricter instructions
+- Calling function names or exact error strings "parity markers" when they are not public contract terms → contamination-sensitive material, not implementation guidance
+- Skipping AST inventory/diff because the gaps are "already known" → the gap list is ungrounded
+- Deferring contamination scan until final merge → too late; fingerprint before Phase 3 and scan after the first code-producing milestone
+- "Compare, port, test, tighten afterward" → direct porting, not clean-room
 - Design doc has "TODO" or "see source" → not done; run more passes
 - A module's §4 entry is <3 sentences → shallow; re-read that module
 - Skipping Pass 10 because "the doc looks complete" → it isn't; verify
