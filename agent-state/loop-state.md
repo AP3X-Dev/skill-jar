@@ -44,6 +44,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-001-FORGED | Forge `arch-drift-watch` | skill-forge-5 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-001 advanced to `forged` with 3/3 clean runs. |
 | C-2026-06-10-SF-002-RED | Capture RED pressure evidence for `auto-research` | skill-forge-6 | this commit | RED surfaced eight rationalizations around starting experiments before one scalar metric, frozen harness, fixed budget, repeated baseline, immutable scoring, append-only ledger, and explicit launch approval. |
 | C-2026-06-10-SF-002-GREEN | Patch `auto-research` for captured RED rationalizations | skill-forge-7 | this commit | GREEN added a pressure-rationalization table that closes deadline, weak-signal, multi-metric, baseline, budget, mutable-harness, auto-launch, and ledger-reconstruction dodges. |
+| C-2026-06-10-SF-002-REF1 | Judge `auto-research` pressure pass 1 | skill-forge-8 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
 
 ## Failed Attempts
 
@@ -86,10 +87,11 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
 `arch-drift-watch`. skill-forge(6) captured RED evidence for SF-002
-`auto-research`; skill-forge(7) patched `development/auto-research/SKILL.md`
-for the named rationalizations and left SF-002 at `patched` with 0/3 clean
-runs. Next skill-forge cycle: run REFACTOR judge pass 1 for SF-002 only, using
-the scenario in `agent-state/skill-forge-runs/auto-research.md` with
+`auto-research`; skill-forge(7) patched the target skill; and skill-forge(8)
+recorded REFACTOR judge pass 1 as COMPLY, leaving SF-002 at
+`refactor-clean-1` with 1/3 clean runs. Next skill-forge cycle: run REFACTOR
+judge pass 2 for SF-002 only, using the scenario in
+`agent-state/skill-forge-runs/auto-research.md` with
 `development/auto-research/SKILL.md` loaded. If the judge returns COMPLY, mark
-`refactor-clean-1`; if it finds a loophole, quote it, reset SF-002 to
+`refactor-clean-2`; if it finds a loophole, quote it, reset SF-002 to
 `red-captured`, run `python scripts/audit-jar.py`, commit state, and stop.
