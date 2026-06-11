@@ -22,7 +22,7 @@ removed or renamed, mark the row `blocked` and record the decision in
 
 | ID | Skill | Category | Path | Status | Clean Runs | Pressure Focus | Last Evidence | Next Action |
 |----|-------|----------|------|--------|------------|----------------|---------------|-------------|
-| SF-001 | arch-drift-watch | development | `development/arch-drift-watch/SKILL.md` | red-captured | 0/3 | scheduled drift triage pressure | `agent-state/skill-forge-runs/arch-drift-watch.md` | GREEN patch captured rationalizations |
+| SF-001 | arch-drift-watch | development | `development/arch-drift-watch/SKILL.md` | patched | 0/3 | scheduled drift triage pressure | `agent-state/skill-forge-runs/arch-drift-watch.md` | REFACTOR judge run 1 |
 | SF-002 | auto-research | development | `development/auto-research/SKILL.md` | pending-red | 0/3 | fixed-budget experiment shortcut pressure | - | RED scenario |
 | SF-003 | autonomous-advisor | development | `development/autonomous-advisor/SKILL.md` | pending-red | 0/3 | hands-off PRP guardrail pressure | - | RED scenario |
 | SF-004 | bug-pipeline | development | `development/bug-pipeline/SKILL.md` | pending-red | 0/3 | hunter/fixer/validator shortcut pressure | - | RED scenario |

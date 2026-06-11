@@ -19,9 +19,9 @@
 
 ## GREEN Patch
 
-- **Skill files changed:** pending
-- **Loopholes closed:** pending
-- **Rules added/tightened:** pending
+- **Skill files changed:** `development/arch-drift-watch/SKILL.md`
+- **Loopholes closed:** ad hoc `rg` substitute for FUGAZI; inferred directory zones; "baseline today" as silent reset permission; fixing code during detection; treating repo audit green as drift safety; filing vague suspicious findings to triage.
+- **Rules added/tightened:** Missing FUGAZI/equivalent or zones is now a blocker; existing baseline advancement requires explicit human acceptance tied to review/ADR; triage rows require kind, location, baseline SHA, and owner; drift-run safety requires analyzer + zones + baseline diff + routing, not only jar audit; Level 2+ fixes are separate maker-checker work, never watcher edits during detection.
 
 ## REFACTOR Verdicts
 
@@ -31,7 +31,7 @@
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** pending GREEN or REFACTOR stage
+- **Result:** GREEN stage audit passed with 182 checks and 0 failed.
 
 ## RED Run Notes
 
