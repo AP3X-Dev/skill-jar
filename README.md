@@ -6,11 +6,58 @@
 
 [![audit](https://github.com/AP3X-Dev/skill-jar/actions/workflows/audit.yml/badge.svg)](https://github.com/AP3X-Dev/skill-jar/actions/workflows/audit.yml)
 
-A growing collection of **Agent Skills** — drop-in capabilities that teach an AI agent how to do a specific job well. Reach into the jar when you need one.
+Skill Jar is an **agent skill operating system**: an installable library of
+production-grade **Agent Skills** that teach coding agents how to debug,
+review, refactor, test, research, and run safe autonomous loops.
+
+Not just reusable prompts. Not just Claude skills. It is an agent operations
+layer: a growing set of executable disciplines for getting useful work out of
+coding agents without giving up verification, state, or human control.
+
+## Start Here
+
+| If your repo... | Start with | Why |
+|---|---|---|
+| Is buggy | [**bug-pipeline**](development/bug-pipeline/SKILL.md) | Runs a Hunter -> Fixer -> Validator repair loop over evidence-backed defects. |
+| Is messy after feature work | [**optimization-loop**](development/optimization-loop/SKILL.md) | Audits the codebase, builds a measurable backlog, and runs gated improvement cycles. |
+| Needs its own recurring agent workflow | [**loop-engineer**](development/loop-engineer/SKILL.md) | Scaffolds the state files, role agents, gates, and driver prompts for a safe loop. |
+
+## How It Runs
+
+```mermaid
+flowchart TD
+    A[User goal] --> B[Skill router]
+    B --> C[SKILL.md]
+    C --> D[Role agents]
+    D --> E[State files]
+    E --> F[Verification gate]
+    F --> G[Human review]
+```
+
+Skills turn fuzzy agent work into explicit operating contracts: what to do, what
+not to do, which artifacts to update, which gates must pass, and where the human
+still owns the decision.
+
+## Self-Hardening by Design
+
+Skill Jar contains the skill that improves Skill Jar.
+
+[**skill-forge**](development/skill-forge/SKILL.md) pressure-tests skills by
+watching fresh agents fail, patching the loopholes they found, and re-running
+until the behavior holds. This repo also dogfoods its own loop machinery:
+`jar-audit` runs the deterministic gate, records state under `agent-state/`,
+and requires a separate checker before work is marked complete.
+
+That makes the jar a self-hardening skill library: the operating procedures, the
+role agents, the state files, and the audit gate all reinforce each other.
 
 ## What's an Agent Skill?
 
-Each skill is a self-contained `SKILL.md` (plus any bundled resources) with frontmatter describing **when** to use it and instructions for **how**. Skills load on demand — the agent only reads one when the task actually matches, so the jar can grow without bloating context. The format is portable across any agent that supports skills.
+Each skill is a self-contained `SKILL.md` (plus any bundled resources) with
+frontmatter describing **when** to use it and instructions for **how**. Skills
+load on demand — the agent only reads one when the task actually matches, so the
+jar can grow without bloating context. The format is portable across any agent
+that supports skills.
 
 ## Using a skill
 
@@ -75,9 +122,9 @@ Reading this repo programmatically? Route from [`skills.json`](skills.json) — 
 
 Development and systems-design skills also ship generated sub-agent packs in [`development/agents/`](development/agents/README.md) and [`systems-design/agents/`](systems-design/agents/README.md). Each pack's `manifest.json` is the source of truth; `python scripts/gen-agent-packs.py` renders copy-ready Claude Code and Codex agent files, and the audit gate verifies they stay in sync. Install only the roles a loop, panel, or design review actually needs.
 
-## Self-hosted loop
+## Self-Hosted Loop Details
 
-The jar takes its own medicine. [loop-engineer](development/loop-engineer/SKILL.md) scaffolded a loop system into this very repo (state spine in `agent-state/`, role agents in `.claude/agents/`, drivers in `docs/prompts/`):
+[loop-engineer](development/loop-engineer/SKILL.md) scaffolded a loop system into this very repo (state spine in `agent-state/`, role agents in `.claude/agents/`, drivers in `docs/prompts/`):
 
 - **jar-audit** — keeps the jar publish-ready. Discovery is a deterministic gate, `python scripts/audit-jar.py`: frontmatter parses, descriptions carry triggers, names match directories, every relative link resolves, scripts compile, the scaffolder stays idempotent. Red check → one fix per cycle, verified by a separate agent.
 - The repo also dogfoods the [**bug-pipeline**](development/bug-pipeline/SKILL.md) skill on itself — its instance lives in `.claude/agents/` + `docs/prompts/bug-pipeline-driver.md`, tracking to `agent-state/BUG_TRACKER.md`.
