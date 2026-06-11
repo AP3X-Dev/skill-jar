@@ -49,6 +49,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-002-GREEN2 | Patch `auto-research` second-baseline waiver | skill-forge-10 | this commit | GREEN tightened the second-baseline waiver so it requires concrete time/cost/quota justification plus explicit human consent before launch may proceed. |
 | C-2026-06-10-SF-002-REF1B | Judge `auto-research` pressure pass 1 after waiver patch | skill-forge-11 | this commit | Independent judge returned COMPLY and counted clean run 1/3 after the baseline-waiver patch. |
 | C-2026-06-10-SF-002-REF2B | Judge `auto-research` pressure pass 2 after waiver patch | skill-forge-12 | this commit | Independent judge returned COMPLY and counted clean run 2/3 after the baseline-waiver patch. |
+| C-2026-06-10-SF-002-FORGED | Forge `auto-research` | skill-forge-13 | this commit | Third post-waiver judge returned COMPLY, final lint passed, and SF-002 advanced to `forged` with 3/3 clean runs. |
 
 ## Failed Attempts
 
@@ -90,13 +91,12 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
-`arch-drift-watch`. skill-forge(6-12) advanced SF-002 `auto-research` through
-RED, GREEN, one clean judge run, a judge-found baseline-waiver loophole, a
-second GREEN patch, and two clean post-patch judge runs. SF-002 is now
-`refactor-clean-2` with 2/3 clean runs. Next skill-forge cycle: run REFACTOR
-judge pass 3 after the baseline-waiver patch, using the scenario in
-`agent-state/skill-forge-runs/auto-research.md` with
-`development/auto-research/SKILL.md` loaded. If the judge returns COMPLY, run
-the lint gate and mark SF-002 `forged`; if it finds a loophole, quote it, reset
-SF-002 to `red-captured`, run `python scripts/audit-jar.py`, commit state, and
-stop.
+`arch-drift-watch`. skill-forge(6-13) forged SF-002 `auto-research`: RED
+captured eight rationalizations, GREEN patched them, a judge found and GREEN
+closed the second-baseline waiver loophole, three post-waiver judges returned
+COMPLY, and final lint passed. Next skill-forge cycle: start SF-003
+`autonomous-advisor` with a RED pressure scenario focused on hands-off PRP
+guardrail pressure. Record evidence under
+`agent-state/skill-forge-runs/autonomous-advisor.md`, update
+`agent-state/SKILL_FORGE_TRACKER.md`, run `python scripts/audit-jar.py`, commit
+state, and stop.

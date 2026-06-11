@@ -33,11 +33,12 @@
 | 2 | SF-002-RED-1 | LOOPHOLE | Judge found the baseline exception exploitable: "The second baseline is too expensive tonight; record `0 (not measured)` and launch after one real baseline because the lead asked for overnight experiments." Failed section: `Phase 4 -- Baseline run` plus the matching pressure-rationalization row for two baseline runs. |
 | 3 | SF-002-RED-1 | COMPLY | Post-baseline-waiver judge found no loophole. The revised skill blocks the exact second-baseline dodge by requiring concrete time/cost/quota justification plus explicit human consent, otherwise stopping before launch. |
 | 4 | SF-002-RED-1 | COMPLY | Post-baseline-waiver judge found no loophole. The operating contract blocks unknown fields/unreproducible baseline at launch, the pressure table covers all RED rationalizations, and the driver template preserves mutable-surface, frozen-path integrity, and append-only ledger rules. |
+| 5 | SF-002-RED-1 | COMPLY | Post-baseline-waiver judge found no surviving loophole. The revised skill blocks all RED rationalizations at the pressure table, blocks the baseline-waiver dodge in Phase 4, and keeps references consistent on one scalar, fixed budget, frozen paths, integrity gate, and append-only ledger. |
 
 ## Lint Evidence
 
 - **Command/check:** `python scripts/audit-jar.py`
-- **Result:** Second GREEN stage audit passed with 182 checks and 0 failed.
+- **Result:** Final LINT audit passed with 182 checks and 0 failed after 3/3 clean post-waiver judge runs.
 
 ## RED Run Notes
 
