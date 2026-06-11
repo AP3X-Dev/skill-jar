@@ -42,6 +42,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 | C-2026-06-10-SF-001-REF1 | Judge `arch-drift-watch` pressure pass 1 | skill-forge-3 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
 | C-2026-06-10-SF-001-REF2 | Judge `arch-drift-watch` pressure pass 2 | skill-forge-4 | this commit | Independent judge returned COMPLY and counted clean run 2/3, with residual risk noted around "equivalent structural analyzer" judgment. |
 | C-2026-06-10-SF-001-FORGED | Forge `arch-drift-watch` | skill-forge-5 | this commit | Third independent judge returned COMPLY, final lint passed, and SF-001 advanced to `forged` with 3/3 clean runs. |
+| C-2026-06-10-SF-002-RED | Capture RED pressure evidence for `auto-research` | skill-forge-6 | this commit | RED surfaced eight rationalizations around starting experiments before one scalar metric, frozen harness, fixed budget, repeated baseline, immutable scoring, append-only ledger, and explicit launch approval. |
 
 ## Failed Attempts
 
@@ -83,10 +84,11 @@ findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
 fix/validate ONE pending bug if any. skill-forge(1-5) forged SF-001
-`arch-drift-watch`: RED captured six rationalizations, GREEN patched the target
-skill, three independent REFACTOR judges returned COMPLY, and final lint passed.
-Next skill-forge cycle: start SF-002 `auto-research` with a RED pressure
-scenario focused on fixed-budget experiment shortcut pressure. Record evidence
-under `agent-state/skill-forge-runs/auto-research.md`, update
-`agent-state/SKILL_FORGE_TRACKER.md`, run `python scripts/audit-jar.py`, commit
-state, and stop.
+`arch-drift-watch`. skill-forge(6) captured RED evidence for SF-002
+`auto-research` under `agent-state/skill-forge-runs/auto-research.md`: deadline
+pressure led to mutable eval/scoring, multi-metric drift, skipped baselines,
+variable budgets, auto-launch, and reconstructing the ledger later. Next
+skill-forge cycle: run GREEN for SF-002 only, patch
+`development/auto-research/SKILL.md` only as needed to close those named
+rationalizations, run `python scripts/audit-jar.py`, commit state and code
+together, and stop.
