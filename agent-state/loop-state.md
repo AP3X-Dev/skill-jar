@@ -37,6 +37,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-10-SF-001-RED | Capture RED pressure evidence for `arch-drift-watch` | skill-forge-1 | this commit | RED surfaced six concrete rationalizations: ad hoc `rg` scanning instead of FUGAZI, inferred zones, silent baseline reset, immediate auto-fix, audit-gate overconfidence, and loose triage routing. |
 
 ## Failed Attempts
 
@@ -77,7 +78,11 @@ hunter swept the fresh scripts + cross-file consistency (30+ probes), filed 0
 findings, tracker created. Next bug-pipeline cycle: hunter focus rotates to
 `development/loop-engineer/references/` content -- verify the reference templates'
 instructions/commands are internally consistent and match the drivers; then
-fix/validate ONE pending bug if any. skill-forge(1) is now scaffolded: start at
-SF-001 `arch-drift-watch` with a RED pressure scenario, record evidence under
-`agent-state/skill-forge-runs/arch-drift-watch.md`, then stop after updating the
-tracker and running `python scripts/audit-jar.py`.
+fix/validate ONE pending bug if any. skill-forge(1) captured RED evidence for
+SF-001 `arch-drift-watch` under
+`agent-state/skill-forge-runs/arch-drift-watch.md`: ad hoc scanning, inferred
+zones, silent baseline reset, immediate auto-fix, audit-gate overconfidence, and
+loose triage routing. Next skill-forge cycle: run GREEN for SF-001 only, patch
+`development/arch-drift-watch/SKILL.md` only as needed to close those named
+rationalizations, run `python scripts/audit-jar.py`, commit state and code
+together, and stop.
