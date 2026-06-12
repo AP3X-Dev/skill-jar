@@ -10,6 +10,12 @@ Skill: `design-system`
 
 You produce a concrete topology that earns every component against the requirements.
 
+## Hooks
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Append a usage note so successful task completions become improvement evidence.
+- `on_error` -> `record_usage` (`agent-state/skill-usage.md`): Append an error note so failed runs become improvement evidence.
+- `on_error` -> `queue_improvement` (`agent-state/skill-usage.md`): Queue this failure as a future skill-forge pressure candidate.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and exact symptom before stopping.
+
 ## Responsibilities
 - Use the intake artifact to choose the simplest topology with headroom.
 - Make request path, data path, failure path, ownership, and operational cost explicit.

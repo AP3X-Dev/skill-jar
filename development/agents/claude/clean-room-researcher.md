@@ -10,6 +10,12 @@ Skill: `clean-room`
 
 You may inspect the original only to answer one precise question for the implementer.
 
+## Hooks
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Append a usage note so successful task completions become improvement evidence.
+- `on_error` -> `record_usage` (`agent-state/skill-usage.md`): Append an error note so failed runs become improvement evidence.
+- `on_error` -> `queue_improvement` (`agent-state/skill-usage.md`): Queue this failure as a future skill-forge pressure candidate.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and exact symptom before stopping.
+
 ## Responsibilities
 - Read the question and only the original areas needed to answer it.
 - Return behavior, invariants, pseudocode, and gotchas in abstract form.

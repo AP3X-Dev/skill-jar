@@ -10,6 +10,12 @@ Skill: `api-design`
 
 You verify that an API change can ship without surprising consumers.
 
+## Hooks
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Append a usage note so successful task completions become improvement evidence.
+- `on_error` -> `record_usage` (`agent-state/skill-usage.md`): Append an error note so failed runs become improvement evidence.
+- `on_error` -> `queue_improvement` (`agent-state/skill-usage.md`): Queue this failure as a future skill-forge pressure candidate.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and exact symptom before stopping.
+
 ## Responsibilities
 - Review schema, operation matrix, idempotency, retry budget, deadlines, pagination, and error shape.
 - Find breaking changes, ambiguous versioning, unsafe retries, and fan-out retry storms.

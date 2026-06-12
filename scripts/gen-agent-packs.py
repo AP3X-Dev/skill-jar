@@ -21,6 +21,52 @@ import jarlib
 
 ROOT = jarlib.repo_root()
 NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+HOOK_EVENTS = (
+    "after_task",
+    "on_error",
+    "on_reject",
+    "on_no_failure",
+    "on_loophole",
+    "on_fail",
+)
+HOOK_ACTIONS = (
+    "record_usage",
+    "queue_improvement",
+    "log_failed_attempt",
+    "append_note",
+    "update_tracker",
+    "append_red_package",
+    "strengthen_scenario",
+    "advance_or_reopen",
+    "record_verdict",
+    "record_structure_result",
+)
+DEFAULT_HOOKS = [
+    {
+        "event": "after_task",
+        "action": "record_usage",
+        "target": "agent-state/skill-usage.md",
+        "instructions": "Append a usage note so successful task completions become improvement evidence.",
+    },
+    {
+        "event": "on_error",
+        "action": "record_usage",
+        "target": "agent-state/skill-usage.md",
+        "instructions": "Append an error note so failed runs become improvement evidence.",
+    },
+    {
+        "event": "on_error",
+        "action": "queue_improvement",
+        "target": "agent-state/skill-usage.md",
+        "instructions": "Queue this failure as a future skill-forge pressure candidate.",
+    },
+    {
+        "event": "on_error",
+        "action": "log_failed_attempt",
+        "target": "agent-state/failed-attempts.md",
+        "instructions": "Record the failed approach and exact symptom before stopping.",
+    },
+]
 
 
 def manifest_paths():
@@ -57,6 +103,27 @@ def require_list(agent, key):
     return val
 
 
+def require_hooks(agent):
+    hooks = agent.get("hooks")
+    if hooks is None:
+        return []
+    if not isinstance(hooks, list) or not hooks:
+        raise ValueError("%s: hooks must be a non-empty list of objects" % agent.get("name"))
+    for hook in hooks:
+        if not isinstance(hook, dict):
+            raise ValueError("%s: each hook must be an object" % agent.get("name"))
+        for key in ("event", "action", "instructions"):
+            if not isinstance(hook.get(key), str) or not hook[key].strip():
+                raise ValueError("%s: hook %s must be a non-empty string" % (agent.get("name"), key))
+        if hook["event"] not in HOOK_EVENTS:
+            raise ValueError("%s: unsupported hook event: %s" % (agent.get("name"), hook["event"]))
+        if hook["action"] not in HOOK_ACTIONS:
+            raise ValueError("%s: unsupported hook action: %s" % (agent.get("name"), hook["action"]))
+        if "target" in hook and (not isinstance(hook["target"], str) or not hook["target"].strip()):
+            raise ValueError("%s: hook target must be a non-empty string" % agent.get("name"))
+    return hooks
+
+
 def validate_agents(data, category):
     known_skills = skill_names(category)
     seen = set()
@@ -80,6 +147,7 @@ def validate_agents(data, category):
         require_list(agent, "responsibilities")
         require_list(agent, "rules")
         require_list(agent, "output")
+        require_hooks(agent)
         if agent.get("claude_model") not in ("sonnet", "opus"):
             raise ValueError("%s: claude_model must be sonnet or opus" % name)
         if agent.get("codex_reasoning_effort") not in ("low", "medium", "high"):
@@ -109,12 +177,24 @@ def check_skill_references(category, agents):
 
 
 def body(agent):
+    hooks = DEFAULT_HOOKS + (agent.get("hooks") or [])
     lines = [
         "# %s" % agent["title"],
         "",
         "Skill: `%s`" % agent["skill"],
         "",
         agent["mission"].strip(),
+        "",
+        "## Hooks",
+    ]
+    for hook in hooks:
+        if hook.get("target"):
+            lines.append("- `%s` -> `%s` (`%s`): %s" %
+                         (hook["event"], hook["action"], hook["target"], hook["instructions"]))
+        else:
+            lines.append("- `%s` -> `%s`: %s" %
+                         (hook["event"], hook["action"], hook["instructions"]))
+    lines += [
         "",
         "## Responsibilities",
     ]

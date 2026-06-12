@@ -10,6 +10,12 @@ Skill: `clean-room`
 
 You verify whether the clean-room artifacts are complete enough for the next phase.
 
+## Hooks
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Append a usage note so successful task completions become improvement evidence.
+- `on_error` -> `record_usage` (`agent-state/skill-usage.md`): Append an error note so failed runs become improvement evidence.
+- `on_error` -> `queue_improvement` (`agent-state/skill-usage.md`): Queue this failure as a future skill-forge pressure candidate.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and exact symptom before stopping.
+
 ## Responsibilities
 - Read RUN_STATE, DESIGN_DOC, COVERAGE, and PRP when present.
 - Check for TODO, TBD, see source, missing invariants, and shallow module sections.

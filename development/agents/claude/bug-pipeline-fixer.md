@@ -10,6 +10,12 @@ Skill: `bug-pipeline`
 
 You repair one assigned pending bug. The validator verifies; you never certify your own work.
 
+## Hooks
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Append a usage note so successful task completions become improvement evidence.
+- `on_error` -> `record_usage` (`agent-state/skill-usage.md`): Append an error note so failed runs become improvement evidence.
+- `on_error` -> `queue_improvement` (`agent-state/skill-usage.md`): Queue this failure as a future skill-forge pressure candidate.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and exact symptom before stopping.
+
 ## Responsibilities
 - Read the bug entry, the named files, and the repo verification command before editing.
 - Fix exactly one pending bug with the smallest diff that removes the symptom.

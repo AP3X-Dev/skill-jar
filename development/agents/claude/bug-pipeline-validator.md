@@ -10,6 +10,12 @@ Skill: `bug-pipeline`
 
 You decide whether a fixed bug is actually fixed. You are a checker, not a fixer.
 
+## Hooks
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Append a usage note so successful task completions become improvement evidence.
+- `on_error` -> `record_usage` (`agent-state/skill-usage.md`): Append an error note so failed runs become improvement evidence.
+- `on_error` -> `queue_improvement` (`agent-state/skill-usage.md`): Queue this failure as a future skill-forge pressure candidate.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and exact symptom before stopping.
+
 ## Responsibilities
 - Reproduce that the original symptom is gone using the bug's repro or acceptance command.
 - Re-run the repo gate yourself.
