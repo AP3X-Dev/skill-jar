@@ -75,9 +75,16 @@ def markdown_table_cell(value):
     text = re.sub(r"[\t\r\n]+", " ", str(value))
     text = re.sub(r" {2,}", " ", text).strip()
     chars = []
-    for idx, char in enumerate(text):
-        if char == "|" and (idx == 0 or text[idx - 1] != "\\"):
-            chars.append("\\|")
+    for char in text:
+        if char == "|":
+            backslashes = 0
+            for existing in reversed(chars):
+                if existing != "\\":
+                    break
+                backslashes += 1
+            if backslashes % 2 == 0:
+                chars.append("\\")
+            chars.append("|")
         else:
             chars.append(char)
     return "".join(chars)
