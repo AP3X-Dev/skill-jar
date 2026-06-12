@@ -71,6 +71,38 @@ def write_text(path, text):
     path.write_text(text, encoding="utf-8")
 
 
+def markdown_table_cell(value):
+    text = re.sub(r"[\t\r\n]+", " ", str(value))
+    text = re.sub(r" {2,}", " ", text).strip()
+    chars = []
+    for idx, char in enumerate(text):
+        if char == "|" and (idx == 0 or text[idx - 1] != "\\"):
+            chars.append("\\|")
+        else:
+            chars.append(char)
+    return "".join(chars)
+
+
+def split_markdown_table_row(row):
+    cells = []
+    current = []
+    escaped = False
+    for char in row.strip():
+        if escaped:
+            current.append(char)
+            escaped = False
+        elif char == "\\":
+            current.append(char)
+            escaped = True
+        elif char == "|":
+            cells.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+    cells.append("".join(current).strip())
+    return cells[1:-1]
+
+
 def load_hooks(root, agent_name):
     text = read_text(find_agent_file(root, agent_name))
     match = HOOK_SECTION_RE.search(text)
@@ -144,6 +176,9 @@ def append_section_item(path, heading, item):
 def append_failed_attempt(root, task, what_failed, lesson):
     path = Path(root) / "agent-state" / "failed-attempts.md"
     text = read_text(path, FAILED_ATTEMPTS_TEMPLATE)
+    task = markdown_table_cell(task)
+    what_failed = markdown_table_cell(what_failed)
+    lesson = markdown_table_cell(lesson)
     comparable = "| %s | %s | %s |" % (task, what_failed, lesson)
     if comparable in text:
         return
@@ -191,12 +226,12 @@ def update_tracker(root, skill_name, status, clean_runs, evidence, next_action):
     for idx, line in enumerate(lines):
         if not line.startswith("| SF-"):
             continue
-        cells = [cell.strip() for cell in line.split("|")[1:-1]]
+        cells = split_markdown_table_row(line)
         if len(cells) >= 9 and cells[1] == skill_name:
-            cells[4] = status
-            cells[5] = clean_runs
-            cells[7] = evidence
-            cells[8] = next_action
+            cells[4] = markdown_table_cell(status)
+            cells[5] = markdown_table_cell(clean_runs)
+            cells[7] = markdown_table_cell(evidence)
+            cells[8] = markdown_table_cell(next_action)
             lines[idx] = "| " + " | ".join(cells) + " |"
             write_text(tracker, "\n".join(lines) + "\n")
             return

@@ -6,6 +6,26 @@ from pathlib import Path
 from scripts import hooklib
 
 
+def split_markdown_row(row):
+    cells = []
+    current = []
+    escaped = False
+    for char in row.strip():
+        if escaped:
+            current.append(char)
+            escaped = False
+        elif char == "\\":
+            current.append(char)
+            escaped = True
+        elif char == "|":
+            cells.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+    cells.append("".join(current).strip())
+    return cells[1:-1]
+
+
 class HooklibTests(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="hooklib_test_"))
@@ -85,6 +105,54 @@ class HooklibTests(unittest.TestCase):
         )
         usage_again = (self.tmp / "agent-state" / "skill-usage.md").read_text(encoding="utf-8")
         self.assertEqual(usage_again.count("fixed one bug"), 1)
+
+    def test_failed_attempt_cells_escape_pipes_and_normalize_newlines(self):
+        hooklib.append_failed_attempt(
+            self.tmp,
+            "bug | fix\ncycle",
+            "gate\tfailed | badly",
+            "rerun\naudit | before marking fixed",
+        )
+
+        rows = (self.tmp / "agent-state" / "failed-attempts.md").read_text(encoding="utf-8").splitlines()
+        attempt_row = next(row for row in rows if row.startswith("| FA-"))
+        cells = split_markdown_row(attempt_row)
+        self.assertEqual(len(cells), 4)
+        self.assertEqual(cells[1], "bug \\| fix cycle")
+        self.assertEqual(cells[2], "gate failed \\| badly")
+        self.assertEqual(cells[3], "rerun audit \\| before marking fixed")
+
+    def test_update_tracker_escapes_payload_cells_and_preserves_existing_escaped_pipes(self):
+        tracker = self.tmp / "agent-state" / "SKILL_FORGE_TRACKER.md"
+        tracker.write_text(
+            "# Skill Forge Tracker -- skill-jar\n\n"
+            "## Queue\n\n"
+            "| ID | Skill | Category | Path | Status | Clean Runs | Pressure Focus | Last Evidence | Next Action |\n"
+            "|----|-------|----------|------|--------|------------|----------------|---------------|-------------|\n"
+            "| SF-001 | bug-pipeline | development | `development/bug-pipeline/SKILL.md` | pending-red | 0/3 | pressure \\| focus | old evidence | RED scenario |\n",
+            encoding="utf-8",
+        )
+
+        hooklib.update_tracker(
+            self.tmp,
+            "bug-pipeline",
+            "pending | review\nblocked",
+            "1/3",
+            "validator | failed\nrerun",
+            "write RED | package\tfirst",
+        )
+
+        row = next(
+            line
+            for line in tracker.read_text(encoding="utf-8").splitlines()
+            if line.startswith("| SF-001")
+        )
+        cells = split_markdown_row(row)
+        self.assertEqual(len(cells), 9)
+        self.assertEqual(cells[4], "pending \\| review blocked")
+        self.assertEqual(cells[6], "pressure \\| focus")
+        self.assertEqual(cells[7], "validator \\| failed rerun")
+        self.assertEqual(cells[8], "write RED \\| package first")
 
     def test_unsupported_action_fails_closed(self):
         (self.tmp / ".claude" / "agents" / "bad.md").write_text(
