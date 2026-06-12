@@ -5,3 +5,4 @@
 
 | Decision | Rationale | Cycle |
 |----------|-----------|-------|
+| Hook declarations live in role files and generated agent packs | Keeps hook behavior attached to the agent roles that produce evidence while `skill-forge` remains the only path that edits skills | hook-runtime-drop-in |

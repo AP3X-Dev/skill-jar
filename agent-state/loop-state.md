@@ -92,6 +92,13 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
   defect, or a concrete user requirement. No taste-only skill rewrites.
 - A skill is not `forged` until it has RED evidence, 3/3 clean judge runs, and
   `python scripts/audit-jar.py` exits 0.
+- Dropped-in skills are reconciled with `python scripts/sync-jar.py`, which
+  updates generated metadata, preserves tracker history, creates missing
+  skill-forge rows, and ensures hook evidence state exists.
+- Hooks record usage, failure, and improvement candidates only; they do not
+  edit `SKILL.md` files directly.
+- Generated agent packs inject default usage/failure hooks into every generated
+  role, and repo-local loop roles declare their own hook sections.
 - Loops commit locally only. Pushing to the remote is the human's call.
 - `assets/` and git history are off-limits to all loops.
 
@@ -132,3 +139,8 @@ the skill must build real unit tests and audit or replace AI-generated slop
 tests. Next skill-forge cycle remains formal RED capture; SF-021 is still
 `pending-red`, with pressure expanded to AI slop tests, weak assertions, and
 coverage-metric shortcuts.
+
+For future drop-in skills, run `python scripts/sync-jar.py` before
+`python scripts/audit-jar.py`; missing skill-forge rows should appear as
+`pending-red`, and hook evidence should accumulate in
+`agent-state/skill-usage.md`.
