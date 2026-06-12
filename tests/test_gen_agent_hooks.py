@@ -73,6 +73,7 @@ class GeneratedAgentHooksTests(unittest.TestCase):
                 {
                     "event": "on_no_failure",
                     "action": "record_verdict",
+                    "target": "agent-state/verdicts.md",
                     "instructions": "Record the clean verdict for loop progress.",
                 },
             ]
@@ -87,7 +88,8 @@ class GeneratedAgentHooksTests(unittest.TestCase):
             text,
         )
         self.assertIn(
-            "- `on_no_failure` -> `record_verdict`: Record the clean verdict for loop progress.",
+            "- `on_no_failure` -> `record_verdict` (`agent-state/verdicts.md`): "
+            "Record the clean verdict for loop progress.",
             text,
         )
 
@@ -103,6 +105,50 @@ class GeneratedAgentHooksTests(unittest.TestCase):
         )
 
         with self.assertRaisesRegex(ValueError, "unsupported hook action"):
+            self.gen.require_hooks(agent)
+
+    def test_unsafe_optional_hook_target_raises_value_error(self):
+        agent = sample_agent(
+            hooks=[
+                {
+                    "event": "on_reject",
+                    "action": "append_note",
+                    "target": "development/foo/SKILL.md",
+                    "instructions": "Capture the rejection reason.",
+                }
+            ]
+        )
+
+        with self.assertRaisesRegex(ValueError, "hook target outside agent-state"):
+            self.gen.require_hooks(agent)
+
+    def test_multiline_hook_instruction_raises_value_error(self):
+        agent = sample_agent(
+            hooks=[
+                {
+                    "event": "on_reject",
+                    "action": "append_note",
+                    "target": "agent-state/rejections.md",
+                    "instructions": "Capture the rejection.\n- Inject another hook line.",
+                }
+            ]
+        )
+
+        with self.assertRaisesRegex(ValueError, "hook instructions must be single-line"):
+            self.gen.require_hooks(agent)
+
+    def test_target_append_action_without_target_raises_value_error(self):
+        agent = sample_agent(
+            hooks=[
+                {
+                    "event": "on_no_failure",
+                    "action": "record_verdict",
+                    "instructions": "Record the clean verdict for loop progress.",
+                }
+            ]
+        )
+
+        with self.assertRaisesRegex(ValueError, "requires explicit hook target"):
             self.gen.require_hooks(agent)
 
 

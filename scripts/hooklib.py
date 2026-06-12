@@ -90,6 +90,11 @@ def markdown_table_cell(value):
     return "".join(chars)
 
 
+def markdown_bullet_text(value):
+    text = re.sub(r"[\t\r\n]+", " ", str(value))
+    return re.sub(r" {2,}", " ", text).strip()
+
+
 def split_markdown_table_row(row):
     cells = []
     current = []
@@ -170,7 +175,7 @@ def append_section_item(path, heading, item):
         body = tail[:next_heading]
         suffix = tail[next_heading:]
 
-    row = "- %s" % item
+    row = "- %s" % markdown_bullet_text(item)
     if row in body.splitlines():
         return
     body = body.rstrip("\n")
@@ -218,12 +223,13 @@ def queue_improvement(root, skill_name, agent_name, event, note):
 
 def resolve_target(root, target):
     root = Path(root).resolve()
+    state_root = (root / "agent-state").resolve()
     path = Path(target)
     if not path.is_absolute():
         path = root / path
     path = path.resolve()
-    if root != path and root not in path.parents:
-        raise ValueError("hook target outside repo: %s" % path)
+    if state_root != path and state_root not in path.parents:
+        raise ValueError("hook target outside agent-state: %s" % path)
     return path
 
 
@@ -251,7 +257,9 @@ def _payload_note(payload, hook):
 
 def _append_hook_event(root, hook, action, note):
     target = hook.get("target")
-    path = resolve_target(root, target) if target else ensure_usage_file(root)
+    if not target:
+        raise ValueError("%s requires explicit hook target" % action)
+    path = resolve_target(root, target)
     append_section_item(path, "Hook Events", "[%s] %s" % (action, note))
 
 

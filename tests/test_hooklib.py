@@ -211,6 +211,57 @@ class HooklibTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unsupported hook action"):
             hooklib.apply_hooks(self.tmp, "bad", "after_task", {"skill": "bad-skill", "note": "x"})
 
+    def test_hook_target_outside_agent_state_is_rejected(self):
+        (self.tmp / ".claude" / "agents" / "unsafe-target.md").write_text(
+            "# Unsafe Target\n\nSkill: `unsafe-skill`\n\n## Hooks\n"
+            "- `after_task` -> `append_note` (`development/unit-test-quality/SKILL.md`): Unsafe.\n",
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(ValueError, "hook target outside agent-state"):
+            hooklib.apply_hooks(
+                self.tmp,
+                "unsafe-target",
+                "after_task",
+                {"skill": "unsafe-skill", "note": "should not write"},
+            )
+
+        self.assertFalse((self.tmp / "development" / "unit-test-quality" / "SKILL.md").exists())
+
+    def test_append_section_item_normalizes_multiline_notes_to_one_bullet(self):
+        path = self.tmp / "agent-state" / "hook-events.md"
+        hooklib.append_section_item(
+            path,
+            "Hook Events",
+            "first line\r\n## Injected Section\n- injected item\twith spacing",
+        )
+
+        lines = path.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(lines.count("## Hook Events"), 1)
+        self.assertNotIn("## Injected Section", lines)
+        self.assertNotIn("- injected item with spacing", lines)
+        self.assertIn(
+            "- first line ## Injected Section - injected item with spacing",
+            lines,
+        )
+
+    def test_target_append_actions_without_target_fail_closed(self):
+        for action in sorted(hooklib.TARGET_APPEND_ACTIONS):
+            with self.subTest(action=action):
+                (self.tmp / ".claude" / "agents" / ("missing-target-%s.md" % action)).write_text(
+                    "# Missing Target\n\nSkill: `missing-target`\n\n## Hooks\n"
+                    "- `after_task` -> `%s`: Needs explicit target.\n" % action,
+                    encoding="utf-8",
+                )
+
+                with self.assertRaisesRegex(ValueError, "requires explicit hook target"):
+                    hooklib.apply_hooks(
+                        self.tmp,
+                        "missing-target-%s" % action,
+                        "after_task",
+                        {"skill": "missing-target", "note": "should not write"},
+                    )
+
 
 if __name__ == "__main__":
     unittest.main()

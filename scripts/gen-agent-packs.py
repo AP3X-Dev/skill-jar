@@ -15,7 +15,7 @@ import argparse
 import json
 import re
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 import jarlib
 
@@ -38,6 +38,13 @@ HOOK_ACTIONS = (
     "append_red_package",
     "strengthen_scenario",
     "advance_or_reopen",
+    "record_verdict",
+    "record_structure_result",
+)
+TARGET_APPEND_ACTIONS = (
+    "append_note",
+    "append_red_package",
+    "strengthen_scenario",
     "record_verdict",
     "record_structure_result",
 )
@@ -103,6 +110,28 @@ def require_list(agent, key):
     return val
 
 
+def require_single_line(agent_name, key, value):
+    if "\r" in value or "\n" in value:
+        raise ValueError("%s: hook %s must be single-line" % (agent_name, key))
+
+
+def require_hook_target(agent_name, target):
+    require_single_line(agent_name, "target", target)
+    if "`" in target:
+        raise ValueError("%s: hook target must not contain backticks" % agent_name)
+    if "\\" in target:
+        raise ValueError("%s: hook target must use agent-state/ paths" % agent_name)
+
+    posix_path = PurePosixPath(target)
+    windows_path = PureWindowsPath(target)
+    if posix_path.is_absolute() or windows_path.is_absolute() or windows_path.drive:
+        raise ValueError("%s: hook target outside agent-state: %s" % (agent_name, target))
+    if not posix_path.parts or posix_path.parts[0] != "agent-state" or ".." in posix_path.parts:
+        raise ValueError("%s: hook target outside agent-state: %s" % (agent_name, target))
+    if posix_path.name == "SKILL.md":
+        raise ValueError("%s: hook target cannot be SKILL.md: %s" % (agent_name, target))
+
+
 def require_hooks(agent):
     hooks = agent.get("hooks")
     if hooks is None:
@@ -115,12 +144,17 @@ def require_hooks(agent):
         for key in ("event", "action", "instructions"):
             if not isinstance(hook.get(key), str) or not hook[key].strip():
                 raise ValueError("%s: hook %s must be a non-empty string" % (agent.get("name"), key))
+            require_single_line(agent.get("name"), key, hook[key])
         if hook["event"] not in HOOK_EVENTS:
             raise ValueError("%s: unsupported hook event: %s" % (agent.get("name"), hook["event"]))
         if hook["action"] not in HOOK_ACTIONS:
             raise ValueError("%s: unsupported hook action: %s" % (agent.get("name"), hook["action"]))
         if "target" in hook and (not isinstance(hook["target"], str) or not hook["target"].strip()):
             raise ValueError("%s: hook target must be a non-empty string" % agent.get("name"))
+        if hook["action"] in TARGET_APPEND_ACTIONS and not hook.get("target"):
+            raise ValueError("%s: %s requires explicit hook target" % (agent.get("name"), hook["action"]))
+        if "target" in hook:
+            require_hook_target(agent.get("name"), hook["target"])
     return hooks
 
 
