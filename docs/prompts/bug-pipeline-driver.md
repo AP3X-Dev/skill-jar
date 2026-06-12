@@ -11,6 +11,15 @@ fixes one per cycle, and independently validates the fix. Tracker:
 `agent-state/BUG_TRACKER.md`. Operate only inside `agent-state/` and the files
 the chosen bug names.
 
+## Hook dispatch
+
+After each stage updates `agent-state/BUG_TRACKER.md`, run the hook dispatcher:
+
+- `python scripts/dispatch-agent-hooks.py --agent hunter --event after_task --skill bug-pipeline --note "<sweep summary>"`
+- `python scripts/dispatch-agent-hooks.py --agent fixer --event after_task --skill bug-pipeline --note "<bug title / root cause / gate result>"`
+- `python scripts/dispatch-agent-hooks.py --agent validator --event after_task --skill bug-pipeline --note "<verdict / evidence / next status>"`
+- On a rejected or failed stage, also run `--event on_error` or `--event on_reject` with `--failure-task`, `--failure-what`, and `--lesson`.
+
 ## 0. Preflight
 
 Same as jar-audit: `git status` clean-or-recover, then read

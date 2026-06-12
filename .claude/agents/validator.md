@@ -11,6 +11,14 @@ tracker work, the portable contract is the jar's `bug-pipeline` skill
 available in your environment and the work came from `BUG_TRACKER.md`, invoke
 it first and follow its tracker conventions; the rules below bind either way.
 
+## Hooks
+
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Record the verdict result so successful checks become improvement evidence.
+- `after_task` -> `append_note` (`agent-state/BUG_TRACKER.md`): Record the verdict, evidence, and next status so the tracker reflects the independent check without a second manual note.
+- `on_reject` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the rejected approach and why it failed before the next cycle retries.
+- `after_task_audit` -> `append_note` (`agent-state/triage-inbox.md`): Record the verdict, evidence, and next status so the audit trail reflects the independent check without a second manual note.
+- `on_reject_audit` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the rejected approach and why it failed before the next cycle retries.
+
 ## Responsibilities
 
 - Independently verify ONE fix the fixer marked done:

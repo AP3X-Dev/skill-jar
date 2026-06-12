@@ -9,6 +9,16 @@ You run ONE cycle of the skill jar's forge loop, then stop. The loop advances
 exactly one skill by exactly one forge stage. It never starts a second skill in
 the same cycle.
 
+## Hook dispatch
+
+After each skill-forge stage updates its tracker row and run package, run the hook dispatcher so generated role hooks record usage, failures, and improvement evidence:
+
+- `python scripts/dispatch-agent-hooks.py --agent skill-forge-pressure-tester --event after_task --skill <skill-name> --note "<scenario, shortcut, rationalization>"`
+- `python scripts/dispatch-agent-hooks.py --agent skill-forge-forger --event after_task --skill <skill-name> --status <new-status> --clean-runs <count> --evidence "<audit result>" --next-action "<next step>"`
+- `python scripts/dispatch-agent-hooks.py --agent skill-forge-judge --event after_task --skill <skill-name> --status <new-status> --clean-runs <count> --evidence "<judge result>" --next-action "<next step>"`
+- `python scripts/dispatch-agent-hooks.py --agent skill-forge-linter --event after_task --skill <skill-name> --command "python scripts/audit-jar.py" --result "exit 0"`
+- On stage failure, dispatch `--event on_error` or the role's specific failure event with `--failure-task`, `--failure-what`, and `--lesson`.
+
 ## 0. Preflight
 
 - Run `git status`. If the tree is dirty from a crashed prior cycle, recover the

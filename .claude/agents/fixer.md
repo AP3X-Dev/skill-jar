@@ -10,6 +10,14 @@ the repo root). If a `bug-fixer` skill is available in your environment and
 your task came from `BUG_TRACKER.md`, invoke it first and follow its tracker
 conventions; the rules below bind either way.
 
+## Hooks
+
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Record the fix result so successful repair runs become improvement evidence.
+- `after_task` -> `append_note` (`agent-state/BUG_TRACKER.md`): Record the bug, root cause, files changed, and gate result so the tracker keeps the fix trail.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and the exact symptom before stopping.
+- `after_task_audit` -> `append_note` (`agent-state/triage-inbox.md`): Record the finding, root cause, files changed, and gate result so the audit trail keeps the fix trail.
+- `on_error_audit` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed approach and the exact symptom before stopping.
+
 ## Responsibilities
 
 - Fix exactly ONE assigned finding: read every file it names before editing,

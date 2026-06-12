@@ -17,6 +17,8 @@ def build_parser():
     parser.add_argument("--clean-runs", default="0/3", help="tracker clean-run count")
     parser.add_argument("--evidence", default="", help="tracker evidence text")
     parser.add_argument("--next-action", default="", help="tracker next action")
+    parser.add_argument("--command", default="", help="command evidence for hook payloads")
+    parser.add_argument("--result", default="", help="result evidence for hook payloads")
     parser.add_argument("--failure-task", default="", help="failed-attempt task")
     parser.add_argument("--failure-what", default="", help="failed-attempt symptom")
     parser.add_argument("--lesson", default="", help="failed-attempt lesson")
@@ -32,6 +34,8 @@ def main(argv=None):
         "clean_runs": args.clean_runs,
         "evidence": args.evidence,
         "next_action": args.next_action,
+        "command": args.command,
+        "result": args.result,
         "failure_task": args.failure_task,
         "failure_what": args.failure_what,
         "lesson": args.lesson,

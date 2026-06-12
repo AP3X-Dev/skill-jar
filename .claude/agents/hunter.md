@@ -10,6 +10,12 @@ Validator pipeline. The portable contract is the jar's `bug-pipeline` skill
 available in your environment, invoke it first and follow its tracker
 conventions; the rules below bind either way.
 
+## Hooks
+
+- `after_task` -> `record_usage` (`agent-state/skill-usage.md`): Record the sweep result so successful discovery runs become improvement evidence.
+- `after_task` -> `append_note` (`agent-state/BUG_TRACKER.md`): Record the sweep focus, findings count, and next focus area so the tracker captures the run without a separate manual note.
+- `on_error` -> `log_failed_attempt` (`agent-state/failed-attempts.md`): Record the failed sweep path and the lesson before the next run tries again.
+
 ## Responsibilities
 
 - Run ONE bounded sweep per dispatch over the focus area you were given

@@ -30,6 +30,15 @@ python scripts/audit-jar.py
   Verification command. Skip failures already in `completed.md` or matching a
   `failed-attempts.md` row.
 
+## Hook dispatch
+
+After the fixer or validator stage updates its source-of-truth state, run the hook dispatcher:
+
+- `python scripts/dispatch-agent-hooks.py --agent fixer --event after_task_audit --skill jar-audit --note "<finding title / root cause / gate result>"`
+- `python scripts/dispatch-agent-hooks.py --agent fixer --event on_error_audit --skill jar-audit --failure-task "<task>" --failure-what "<what failed>" --lesson "<lesson>"`
+- `python scripts/dispatch-agent-hooks.py --agent validator --event after_task_audit --skill jar-audit --note "<verdict / evidence / next status>"`
+- `python scripts/dispatch-agent-hooks.py --agent validator --event on_reject_audit --skill jar-audit --failure-task "<task>" --failure-what "<what failed>" --lesson "<lesson>"`
+
 ## 2. Planning -- pick ONE finding
 
 Choose the single highest-priority finding from `agent-state/triage-inbox.md`.
