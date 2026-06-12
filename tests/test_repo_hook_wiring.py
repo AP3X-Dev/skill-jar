@@ -52,6 +52,32 @@ class RepoHookWiringTests(unittest.TestCase):
                 text = (REPO / rel).read_text(encoding="utf-8")
                 self.assertIn("scripts/dispatch-agent-hooks.py", text, rel)
 
+    def test_skill_forge_success_dispatch_examples_include_runtime_notes(self):
+        text = (REPO / "docs/prompts/skill-forge-driver.md").read_text(encoding="utf-8")
+
+        for agent in (
+            "skill-forge-forger",
+            "skill-forge-judge",
+            "skill-forge-linter",
+        ):
+            with self.subTest(agent=agent):
+                command = next(
+                    line for line in text.splitlines()
+                    if "--agent %s --event after_task" % agent in line
+                )
+                self.assertIn("--note", command)
+
+    def test_bug_pipeline_failure_dispatch_examples_are_explicit(self):
+        text = (REPO / "docs/prompts/bug-pipeline-driver.md").read_text(encoding="utf-8")
+        expected = (
+            "--agent hunter --event on_error --skill bug-pipeline --failure-task",
+            "--agent fixer --event on_error --skill bug-pipeline --failure-task",
+            "--agent validator --event on_reject --skill bug-pipeline --failure-task",
+        )
+        for command in expected:
+            with self.subTest(command=command):
+                self.assertIn(command, text)
+
 
 if __name__ == "__main__":
     unittest.main()

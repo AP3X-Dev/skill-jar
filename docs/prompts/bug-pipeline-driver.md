@@ -18,7 +18,9 @@ After each stage updates `agent-state/BUG_TRACKER.md`, run the hook dispatcher:
 - `python scripts/dispatch-agent-hooks.py --agent hunter --event after_task --skill bug-pipeline --note "<sweep summary>"`
 - `python scripts/dispatch-agent-hooks.py --agent fixer --event after_task --skill bug-pipeline --note "<bug title / root cause / gate result>"`
 - `python scripts/dispatch-agent-hooks.py --agent validator --event after_task --skill bug-pipeline --note "<verdict / evidence / next status>"`
-- On a rejected or failed stage, also run `--event on_error` or `--event on_reject` with `--failure-task`, `--failure-what`, and `--lesson`.
+- On a hunter failure, run `python scripts/dispatch-agent-hooks.py --agent hunter --event on_error --skill bug-pipeline --failure-task "<sweep focus>" --failure-what "<what failed>" --lesson "<lesson>"`
+- On a fixer failure, run `python scripts/dispatch-agent-hooks.py --agent fixer --event on_error --skill bug-pipeline --failure-task "<bug title>" --failure-what "<what failed>" --lesson "<lesson>"`
+- On a validator rejection, run `python scripts/dispatch-agent-hooks.py --agent validator --event on_reject --skill bug-pipeline --failure-task "<bug title>" --failure-what "<why rejected>" --lesson "<lesson>"`
 
 ## 0. Preflight
 
