@@ -6,6 +6,7 @@
     "name": "AP3X"
   },
   "skills": [
+    "./add-to-jar",
     "./arch-drift-watch",
     "./auto-research",
     "./autonomous-advisor",

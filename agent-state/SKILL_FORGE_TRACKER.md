@@ -53,3 +53,4 @@ removed or renamed, mark the row `blocked` and record the decision in
   `python scripts/audit-jar.py` exiting 0.
 - If a public skill contract change is required, mark `blocked` and write the
   decision row before editing.
+| SF-022 | add-to-jar | development | `development/add-to-jar/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |

@@ -2,6 +2,14 @@
   "_generated": "by scripts/gen-index.py -- do not edit by hand; the audit gate fails if this file is stale",
   "skills": [
     {
+      "name": "add-to-jar",
+      "category": "development",
+      "description": "Use when adding, importing, or reconciling a Codex skill inside this skill jar, including when a user drops a SKILL.md folder into development/ or systems-design/ and expects generated indexes, plugin manifests, Skill Forge tracker, and hook evidence state to include it.",
+      "path": "development/add-to-jar/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "arch-drift-watch",
       "category": "development",
       "description": "A scheduled detection loop that guards architecture against drift: each run executes FUGAZI boundaries / circular-deps / complexity (and dupes) read-only, diffs the findings against a committed baseline, and files only the NEW violations to a triage inbox — routing structural-judgment items to improve-architecture (human-owned) and offering small, safe auto-fixes only at higher autonomy. Detection-only by default (Level 1, no code writes). Builds the baseline and dry-runs one cycle, then offers the schedule. Use when you want continuous early warning on architecture entropy / AI-driven drift between periodic reviews. Requires FUGAZI. NOT for the judgment call of what to refactor (use improve-architecture), dead-code removal (use dead-code-reaper), or general hardening (use optimization-loop).",
