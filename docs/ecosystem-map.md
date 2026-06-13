@@ -136,7 +136,7 @@ must still work.
 | Dependency | Status | Used by (referenced) | Posture |
 |---|---|---|---|
 | FUGAZI (`fugazi` / `fugazi-mcp`) | external static-analysis CLI/MCP | dead-code-reaper, arch-drift-watch (required for the loop), diagnose-loop, review-panel, auto-research, test-backfill-loop (optional) | if present, use; never run `fugazi fix` unattended |
-| MemBerry + `memberry-setup` | external user-global MCP + skill, NOT bundled | optimization-loop (optional), autonomous-advisor & clean-room (should be optional — see open findings) | optional persistence adapter; absent = files-only |
+| MemBerry + `memberry-setup` | external user-global MCP + skill, NOT bundled | optimization-loop, autonomous-advisor, clean-room (all optional) | optional persistence adapter; absent = files-only |
 | Superpowers suite | external skills | design-panel, diagnose-loop, review-panel, autonomous-advisor (all bundle a standalone fallback) | optional lineage/accelerators |
 | `bugfix`, `tdd`, `to-issues`, `triage`, `writing-plans` | external/global skills, NOT in the jar | named as redirects by loop-engineer, optimization-loop, improve-architecture, unit-test-quality, design-system | should be marked external + carry a plain fallback |
 
