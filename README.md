@@ -110,18 +110,6 @@ new skill folder here.
 That is the drop-in path: a new skill becomes visible to the plugin manifests,
 the generated index, Skill Forge, and the repo's hook evidence flow.
 
-## Repository Hygiene
-
-Track files that are part of the installable product: skill folders,
-references, scripts, assets, generated indexes, plugin manifests, proof packets,
-generated role packs, driver prompts, and state ledgers that make the jar's
-self-hosted loops reproducible.
-
-Do not track local planning drafts. Draft plans and specs under
-`docs/*/plans/` or `docs/*/specs/` are ignored and should stay local unless a
-document is intentionally promoted into a product-facing guide, reference,
-proof packet, or run package.
-
 ## Skills in the jar
 
 ### development
