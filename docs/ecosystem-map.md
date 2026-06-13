@@ -118,9 +118,8 @@ any irreversible external action (deploys, publishes, emails). See
 | Posture | Meaning | Example skills |
 |---|---|---|
 | detection-only | reads + reports, writes no code | arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
-| offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, optimization-loop, auto-research, test-backfill-loop, loop-engineer |
+| offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, optimization-loop, auto-research, test-backfill-loop, loop-engineer, sprint-ticket-runner |
 | fully-autonomous (gated) | runs the whole pipeline, but behind hard phase gates, a 50-cycle cap, maker≠checker, and no irreversible actions | autonomous-advisor |
-| **offers-launch (after fix)** | sprint-ticket-runner now carries an explicit launch gate + stop condition (see its Operating Contract) so it offers launch rather than auto-launching | sprint-ticket-runner |
 
 `offers-launch` skills MUST present the plan/baseline and wait for a human yes;
 they MUST define a stop condition (converged / stalled / budget exhausted / no
@@ -202,13 +201,14 @@ cross-file (jar-audit findings ≠ bug-pipeline defects ≠ forge results).
 
 ## 7. Core / self-improvement substrate
 
-The 7 `core: true` skills ([core-skills.md](core-skills.md)) form the jar's
-maintenance system and relate as: **loop-engineer** is the loop spine the loop
-family builds on; **skill-forge** hardens any skill against rationalizations;
-**add-to-jar** is the intake path (drop a skill → `sync-jar.py` → `audit-jar.py`);
-**bug-pipeline** / **diagnose-loop** / **review-panel** / **test-backfill-loop** /
-**auto-research** are the dogfooded/linted exemplars. Keep these on a fork to
-retain the jar's ability to audit, test, review, and improve itself.
+The 7 `core: true` skills form the jar's maintenance system: **loop-engineer**
+is the loop spine the loop family builds on; **skill-forge** hardens any skill
+against rationalizations; and **bug-pipeline**, **diagnose-loop**, **review-panel**,
+**test-backfill-loop**, and **auto-research** are the dogfooded/linted exemplars.
+(**add-to-jar** is the *non-core* intake path — drop a skill → `sync-jar.py` →
+`audit-jar.py`.) [core-skills.md](core-skills.md) is the authoritative list, with
+maturity and evidence. Keep the core set on a fork to retain the jar's ability to
+audit, test, review, and improve itself.
 
 ## 8. Gates — how the jar verifies itself
 
