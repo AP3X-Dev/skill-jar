@@ -1,6 +1,6 @@
 ---
 name: instrument-observability
-description: "Adds production-grade application observability instrumentation with Sentry by default: error tracking, crash reporting, tracing, release health, workflow breadcrumbs, user/agent attribution, privacy filtering, cost/usage tracking, and real-runtime verification. Use when adding Sentry, telemetry, tracking, monitoring, crash reporting, performance tracing, session replay, workflow failure monitoring, agent cost/usage monitoring, frontend/backend correlation, Electron crash capture, or production debugging; use existing OpenTelemetry, Datadog, New Relic, Honeycomb, LogRocket, Highlight, or structured-log standards only when the repo or user requires them."
+description: "Adds production-grade application observability instrumentation with Sentry by default: error tracking, crash reporting, tracing, release health, workflow breadcrumbs, user/agent attribution, privacy filtering, cost/usage tracking, and real-runtime verification. Use when adding Sentry, telemetry, tracking, monitoring, crash reporting, performance tracing, session replay, workflow failure monitoring, agent cost/usage monitoring, frontend/backend correlation, Electron crash capture, or production debugging; use existing OpenTelemetry, Datadog, New Relic, Honeycomb, LogRocket, Highlight, or structured-log standards only when the repo or user requires them. NOT for diagnosing one live incident (use diagnose-loop), a general quality/hardening pass (use optimization-loop), or fixing one known bug (use the host bugfix skill) — this skill adds instrumentation, it does not run the debugging loop."
 ---
 
 # Instrument Observability
@@ -15,6 +15,18 @@ module, privacy filters before capture, release/environment metadata, identity
 set only after sign-in/profile fetch, critical workflows wrapped with spans and
 breadcrumbs, handled failures captured without swallowing errors, tests/smoke
 checks run, and dashboards/alerts recommended.
+
+## When NOT to use
+
+This skill **adds instrumentation; it does not run the debugging loop.**
+
+- Diagnosing a single live incident → diagnose-loop.
+- A general quality/hardening pass → optimization-loop.
+- Fixing one known bug → the host bugfix skill (external).
+
+The telemetry, dashboards, and alerts produced here are the input
+[production-readiness](../../systems-design/production-readiness/SKILL.md)
+consumes at its launch gate.
 
 ## Operating Contract
 

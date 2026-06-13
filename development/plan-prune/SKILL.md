@@ -48,6 +48,8 @@ Also inspect project conventions: README, AGENTS/CLAUDE/GEMINI files, `.github/`
 
 Check git state first. If the tree is dirty, list the changed files and decide whether they are part of the planning consolidation. Do not overwrite uncommitted user edits. If code is dirty, account for it separately as "uncommitted current state" instead of treating it as verified shipped work.
 
+**Delete precondition:** a planning doc may be DELETED only if git already holds its content — it is tracked and committed clean (no unstaged or staged changes for that path). For any planning doc that is untracked, staged-but-uncommitted, or dirty, git history is not yet the archive, so ARCHIVE it (move under the archive convention) or BLOCK it for a human decision instead. Never delete content git does not yet hold.
+
 ### 2. Build the Source Inventory
 
 For every planning-like document, record:
@@ -112,7 +114,7 @@ Do not leave stale docs in active locations. After useful claims are folded into
 
 - **Canonical doc:** update in place.
 - **Supporting reference:** keep only when it provides durable design detail that would bloat the canonical plan; list exactly why it remains.
-- **Obsolete planning fragment:** delete it after its useful claims are represented in the canonical plan. Git history is the archive.
+- **Obsolete planning fragment:** delete it after its useful claims are represented in the canonical plan, and only once git already holds it (tracked and committed clean). Git history is the archive only for content git has. If the fragment is untracked, staged-but-uncommitted, or dirty, archive or block it instead of deleting — never delete content git does not yet hold.
 - **Historical but useful fragment:** move it under the repo's archive convention, or `docs/archive/plans/` if no convention exists.
 - **Externally linked or high-traffic path:** replace it with a tiny pointer stub only when deleting/moving would break expected links.
 - **Ambiguous or expensive-to-reverse removal:** add it to Blocked with the proposed retirement action and ask.

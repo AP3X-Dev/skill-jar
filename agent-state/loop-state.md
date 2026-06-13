@@ -30,20 +30,22 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 ## Open Tasks
 
-> Promoted from triage-inbox.md by ecosystem-audit-1. One task per cycle, maker
-> then a separate checker. Full evidence in `agent-state/triage-inbox.md`.
+> ecosystem-audit-1 promoted T-ECO-1..4 here; jar-audit-eco-1 closed all four
+> (see Completed Tasks below). Remaining findings F-4..F-11 stay in
+> `agent-state/triage-inbox.md` until a future cycle promotes one. One task per
+> cycle, maker then a separate checker.
 
 | ID | Task | Owner | Status | Files | Acceptance (exits 0) |
 |----|------|-------|--------|-------|----------------------|
-| T-ECO-1 | Add NOT-for boundary to instrument-observability (F-3) | implementer | pending | development/instrument-observability/SKILL.md, skills.json | `grep -iE "not for\|when not to use" development/instrument-observability/SKILL.md && python scripts/audit-jar.py` |
-| T-ECO-2 | Reframe MemBerry/memberry-setup as optional adapter in autonomous-advisor + clean-room (F-1, F-2, HD-5) | implementer | pending | development/autonomous-advisor/SKILL.md, development/clean-room/SKILL.md | `! grep -n "surface the error and halt" development/autonomous-advisor/SKILL.md && python scripts/audit-jar.py` |
-| T-ECO-3 | Wire reciprocal handoffs incl. test-backfill suspected-bug -> BUG_TRACKER.md (F-7, F-8) | implementer | pending | development/{instrument-observability,improve-architecture,dead-code-reaper,test-backfill-loop}/SKILL.md | `grep -n "BUG_TRACKER" development/test-backfill-loop/SKILL.md && python scripts/audit-jar.py` |
-| T-ECO-4 | Add committed-clean precondition before plan-prune deletes a doc (F-10) | implementer | pending | development/plan-prune/SKILL.md | `grep -in "committed\|untracked" development/plan-prune/SKILL.md && python scripts/audit-jar.py` |
 
 ## Completed Tasks
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-12-T-ECO-1 | instrument-observability NOT-for + production-readiness handoff (F-3) | jar-audit-eco-1 | this commit | Added a "When NOT to use" boundary (diagnose-loop / optimization-loop / host bugfix) + description NOT-for clause (900 chars) + a handoff sentence to production-readiness. Maker + independent checker PASS. |
+| C-2026-06-12-T-ECO-2 | MemBerry reframed optional in autonomous-advisor + clean-room (F-1, F-2, F-12; HD-5) | jar-audit-eco-1 | this commit | Removed the "surface the error and halt" mandatory framing; MemBerry/memberry-setup is now an optional adapter (clean skip on absence), consistent across both skills; fixed duplicate list numbering. Checker rejected one inaccurate "FUGAZI above" cross-ref; reworded and re-verified PASS. |
+| C-2026-06-12-T-ECO-3 | Reciprocal handoffs: arch-drift-watch upstream + BUG_TRACKER.md sink (F-7 partial, F-8) | jar-audit-eco-1 | this commit | improve-architecture and dead-code-reaper now name arch-drift-watch as upstream detector; test-backfill-loop names agent-state/BUG_TRACKER.md as the suspected-bug sink. Maker + independent checker PASS. |
+| C-2026-06-12-T-ECO-4 | plan-prune delete precondition: committed-clean only (F-10) | jar-audit-eco-1 | this commit | Delete allowed only when git already holds the doc (tracked + committed clean); untracked/dirty docs are archived or blocked. Maker + independent checker PASS. |
 | C-2026-06-12-ECO-MAP | Add docs/ecosystem-map.md | ecosystem-audit-1 | this commit | Edges-between-skills map: routing table, two pipeline backbones, autonomy ladder + human gate, dependency matrix, 23-skill relationship table, state-files map, gates note. |
 | C-2026-06-12-ECO-KIT-NAMES | Align bundled kit template names with manifest roles | ecosystem-audit-1 | this commit | Renamed fenced `name:` in reaper/backfill/drift kits to dead-code-reaper-*/test-backfill-*/arch-drift-watcher; closes gate-invisible drift; independent checker verified. |
 | C-2026-06-12-ECO-SPRINT-GATE | Add launch gate + stop condition to sprint-ticket-runner | ecosystem-audit-1 | this commit | The lone auto-launch/no-stop loop skill now offers launch and defines a stop condition; aligns with the "ask before launching loops" rule; independent checker verified. |
@@ -169,3 +171,16 @@ code + state together, stop. The proposed new gates (HD-1..HD-3) are audit-polic
 changes that need explicit human approval before a maker implements them — do not
 add them silently. Note: prior "27 checks"/"182 checks" narration in this file is
 stale; the current count is 208.
+
+jar-audit-eco-1 (user-authorized autonomous run, all-three-loops rotation, until
+done/blocked) closed all four Open Tasks T-ECO-1..4 via a maker->checker workflow
+(8 agents): T-ECO-1/3/4 passed first try; T-ECO-2 was rejected by its checker for
+one inaccurate "FUGAZI above" cross-reference, corrected, and re-verified PASS by
+an independent validator. skills.json was regenerated for the instrument-
+observability description change. Gate green (208 checks, 0 failed). Closed
+findings F-1, F-2, F-3, F-8, F-10, F-12 and the arch-drift/instrument edges of
+F-7; remaining open findings F-4, F-5, F-6, F-7 (partial), F-9, F-11 stay in
+triage-inbox. Next in the authorized rotation: bug-pipeline hunter sweep (focus
+the files changed this run + cross-file consistency), then skill-forge on the
+queue (SF-005 clean-room needs REFACTOR judge runs; SF-023 instrument-
+observability re-baselines after this run's edits; SF-006..022 pending-red).

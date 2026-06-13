@@ -29,7 +29,7 @@ A specialized [loop-engineer](../loop-engineer/SKILL.md) loop that builds a **sa
 
 ## Characterization tests — read this first
 
-These tests pin **current** behaviour so a later refactor can't change it unnoticed. That means they can also pin a **bug** in place. The rule: when a test would have to assert obviously-wrong behaviour, that's not a test to write — it's a **defect to file** (to a tracker, or hand it to [diagnose-loop](../diagnose-loop/SKILL.md)). Never encode a known bug as "expected" just to get the line green. The loop builds a net under *intended* behaviour; suspected wrong behaviour is escalated, not cemented.
+These tests pin **current** behaviour so a later refactor can't change it unnoticed. That means they can also pin a **bug** in place. The rule: when a test would have to assert obviously-wrong behaviour, that's not a test to write — it's a **defect to file**: the writer's `blocked-suspected-bug` entries go to the canonical sink `agent-state/BUG_TRACKER.md` (or hand it to [diagnose-loop](../diagnose-loop/SKILL.md)). Never encode a known bug as "expected" just to get the line green. The loop builds a net under *intended* behaviour; suspected wrong behaviour is escalated, not cemented.
 
 ## The three roles (maker ≠ checker)
 

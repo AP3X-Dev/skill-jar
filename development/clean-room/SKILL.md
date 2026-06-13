@@ -259,10 +259,11 @@ At the start of Phase 1, before writing any doc, the analyzer:
    clean-room/
    ```
 3. Verifies the directory is ignored (`git check-ignore -v clean-room/DESIGN_DOC.md` should match the rule).
-4. **Ensures MemBerry Memory is set up for the rewrite workspace.** Check the workspace's `CLAUDE.md` for an `## MemBerry Memory` section.
-   - If **missing**, invoke the `memberry-setup` skill to bootstrap MemBerry (project tag, entities, domain tags, seed priors, default memory blocks) before proceeding to Pass 1. A clean-room rewrite generates high-value persistent knowledge — Phase 2 triage decisions, research-subagent findings, rejected improvements, parity-close rationale, per-module gotchas — that must live in MemBerry so future sessions and Phase 3 agents can build on it instead of re-deriving it.
+4. **(MemBerry, optional) Set up MemBerry Memory for the rewrite workspace if available.** Like the optional FUGAZI integration used elsewhere in this skill, MemBerry is an optional persistence adapter — its absence is a clean skip, not a blocker. Check the workspace's `CLAUDE.md` for an `## MemBerry Memory` section.
+   - If **missing** and the `memberry-setup` skill is available, invoke it to bootstrap MemBerry (project tag, entities, domain tags, seed priors, default memory blocks) before proceeding to Pass 1. A clean-room rewrite generates high-value persistent knowledge — Phase 2 triage decisions, research-subagent findings, rejected improvements, parity-close rationale, per-module gotchas — that lives in MemBerry so future sessions and Phase 3 agents build on it instead of re-deriving it.
+   - If **missing** and `memberry-setup` is **not** available (it is a user-global skill, not bundled in this jar), skip MemBerry and proceed to Pass 1. Note the skip in `DESIGN_DOC.md` §0 ("MemBerry unavailable for this workspace") so later sessions don't re-offer setup.
    - If **present**, confirm the project tag and entity list still reflect the current workspace; update via `berry_bootstrap` if stale.
-   - Verify MemBerry is reachable with `berry_tools(action: "list")`. If the call fails, surface the error to the user before proceeding — do **not** silently skip MemBerry setup.
+   - Verify MemBerry is reachable with `berry_tools(action: "list")`. If the call fails, proceed without persistence — do not block the rewrite on it.
    - If the user explicitly opts out for this repo, record that decision in `DESIGN_DOC.md` §0 ("MemBerry disabled for this workspace — reason: …") so later sessions don't re-offer setup.
 5. Loads prior context: call `berry_load(task: "clean-room rewrite of <target>", tags: ["project:<tag>"])` so any pre-existing knowledge about the target or workspace informs Phase 1 from the first pass.
 
@@ -731,7 +732,7 @@ In **Transparent Mode**, the items marked *(firewall)* below are skipped. All ot
 
 - [ ] `clean-room/` directory exists at rewrite workspace root and is gitignored
 - [ ] `clean-room/RUN_STATE.md` exists, mode locked, Phase & Pass Status current, gate results recorded with evidence
-- [ ] MemBerry Memory is configured for the rewrite workspace (`## MemBerry Memory` section in `CLAUDE.md`, `berry_tools(action: "list")` succeeds) — if not, run `memberry-setup` before proceeding; record an opt-out in `DESIGN_DOC.md` §0 if the user explicitly declines
+- [ ] (Optional) MemBerry Memory configured for the rewrite workspace if available (`## MemBerry Memory` section in `CLAUDE.md`, `berry_tools(action: "list")` succeeds) — if `memberry-setup` is available and not yet run, run it; otherwise note the skip (or an explicit opt-out) in `DESIGN_DOC.md` §0 and proceed. Not a blocker.
 - [ ] `inventory.json` generated (Pass 1b, **schema v2** — `symbols[]`, `call_edges[]`, `field_io[]`) and Tier-2 enrichment applied
 - [ ] Every `exported` + `location: source` symbol in `inventory.json` is either covered by the PRP or explicitly marked out-of-scope
 - [ ] `clean-room/wires.json` generated (Pass 4.5); `DESIGN_DOC.md` §4.5 populated with prose per wire

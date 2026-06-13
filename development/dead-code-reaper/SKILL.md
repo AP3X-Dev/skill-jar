@@ -14,6 +14,8 @@ A specialized [loop-engineer](../loop-engineer/SKILL.md) loop whose discovery en
 - A codebase has accumulated dead weight — orphan files, unused exports, dead deps, leaked private types, duplicate definitions — and you want it pruned *continuously and safely*, not in one risky sweep.
 - You want every removal backed by a reachability proof and a green suite, in a reviewable ledger.
 
+[arch-drift-watch](../arch-drift-watch/SKILL.md) is the upstream detector that routes duplication / dead-code drift into this removal loop; this loop is the safe-removal sink for those findings.
+
 ## When NOT to Use
 
 - One obvious unused symbol — just delete it and run the tests.

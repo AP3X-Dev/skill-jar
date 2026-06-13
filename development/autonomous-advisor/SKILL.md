@@ -54,7 +54,7 @@ When a PRP is provided for autonomous execution:
 
 1. Read the PRP completely
 2. Validate PRP completeness (see PRP Validation below)
-3. **Ensure MemBerry memory is set up, then load it** (see MemBerry Memory Integration below). If the project has no `## MemBerry Memory` section in its `CLAUDE.md`, invoke the `memberry-setup` skill to bootstrap before continuing. An autonomous run generates a large volume of decisions, trade-offs, and surprises that must be persisted — running autonomously without MemBerry wastes the most valuable output of the pipeline.
+3. **Load MemBerry memory if available** (see MemBerry Memory Integration below). MemBerry is an optional persistence adapter, not a prerequisite — if the `memberry-setup` skill is available and the project lacks a `## MemBerry Memory` section in its `CLAUDE.md`, invoke it to bootstrap; otherwise treat MemBerry as unavailable, record that in the run announcement, and proceed. An autonomous run that *can* persist its decisions, trade-offs, and surprises should — but its absence is a clean skip, never a halt.
 4. Explore the project (structure, conventions, existing code, test patterns, git state)
 5. Announce autonomous mode:
 
@@ -136,11 +136,12 @@ The advisor sub-agent has access to the project's MemBerry memory system. This g
 
 ### At Activation
 
-**Step 1 — Ensure MemBerry is bootstrapped for this project.** Check the project's `CLAUDE.md` for an `## MemBerry Memory` section.
+**Step 1 — Bootstrap MemBerry for this project if available.** MemBerry is an optional persistence adapter; its absence is a clean skip, not a blocker. Check the project's `CLAUDE.md` for an `## MemBerry Memory` section.
 
-- If **missing**, invoke the `memberry-setup` skill. It analyzes the repo, discovers entities and domain tags, writes the `## MemBerry Memory` config to `CLAUDE.md`, and calls `berry_bootstrap` to scaffold the knowledge graph. Do this before dispatching any advisor — otherwise decisions made during autonomous execution have nowhere to land.
-- If **present**, verify MemBerry is reachable via `berry_tools(action: "list")`. If the call fails, surface the error and halt — do **not** silently run the pipeline without persistence.
-- If the user has explicitly opted this project out of MemBerry, record that in the run-start announcement (`MemBerry context: opted out`) and skip the load step below. This is rare; the default for autonomous runs is MemBerry on.
+- If **missing** and the `memberry-setup` skill is available, invoke it. It analyzes the repo, discovers entities and domain tags, writes the `## MemBerry Memory` config to `CLAUDE.md`, and calls `berry_bootstrap` to scaffold the knowledge graph — giving decisions made during autonomous execution somewhere to land.
+- If **missing** and `memberry-setup` is **not** available (it is a user-global skill, not bundled in this jar), treat MemBerry as unavailable: record `MemBerry context: not available` in the run announcement and skip the load step below. Proceed with the pipeline — do **not** surface an error or halt.
+- If **present**, verify MemBerry is reachable via `berry_tools(action: "list")`. If the call fails, record `MemBerry context: not available` in the run announcement and proceed without persistence — the pipeline does not depend on it.
+- If the user has explicitly opted this project out of MemBerry, record that in the run-start announcement (`MemBerry context: opted out`) and skip the load step below.
 
 **Step 2 — Load MemBerry context.** Before the first advisor dispatch:
 
@@ -475,12 +476,12 @@ optimization-loop wires the trigger and closes cycle 1 itself (its Phase 5). The
    - A separate verifier re-runs the gate + metric ratchet and can REJECT
    - Updates the loop state; the next cycle continues from where it stopped
 
-3. **Loop termination.** The loop runs until:
+4. **Loop termination.** The loop runs until:
    - The skill's CONVERGED condition holds (no new High+ items over ~3 cycles, open High/Block empty, metrics flat) — or it reports STALLED/DIVERGING, which escalates to the human
    - OR a guardrail is hit (see Guardrails below)
    - OR the loop has run for more than 50 cycles (safety cap — report to human)
 
-4. **After loop completion**, store final results to MemBerry:
+5. **After loop completion**, store final results to MemBerry:
    ```
    berry_store(
      session_id: "autonomous-<prp-name>-<date>",
