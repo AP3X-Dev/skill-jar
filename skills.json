@@ -98,6 +98,14 @@
       "core": false
     },
     {
+      "name": "instrument-observability",
+      "category": "development",
+      "description": "Adds production-grade application observability instrumentation with Sentry by default: error tracking, crash reporting, tracing, release health, workflow breadcrumbs, user/agent attribution, privacy filtering, cost/usage tracking, and real-runtime verification. Use when adding Sentry, telemetry, tracking, monitoring, crash reporting, performance tracing, session replay, workflow failure monitoring, agent cost/usage monitoring, frontend/backend correlation, Electron crash capture, or production debugging; use existing OpenTelemetry, Datadog, New Relic, Honeycomb, LogRocket, Highlight, or structured-log standards only when the repo or user requires them.",
+      "path": "development/instrument-observability/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "loop-engineer",
       "category": "development",
       "description": "Use when the user wants to BUILD an agent loop or loop system — a self-running pipeline where automation discovers work, an agent executes it, a separate verifier checks it, state is recorded, and the loop decides what runs next — instead of hand-prompting every step. Scaffolds the loop into a repo: state files, maker≠checker subagents, automation/trigger and driver prompts, verification gates, safety rules, and worktree isolation. Agent-agnostic (Claude Code, Codex, or generic). NOT for running a single one-off task, fixing one bug (use bugfix), or an audit→fix hardening pass on an existing codebase (use optimization-loop — a specialized loop this skill can scaffold).",
