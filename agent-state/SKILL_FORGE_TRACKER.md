@@ -54,4 +54,4 @@ removed or renamed, mark the row `blocked` and record the decision in
 - If a public skill contract change is required, mark `blocked` and write the
   decision row before editing.
 | SF-022 | add-to-jar | development | `development/add-to-jar/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
-| SF-023 | instrument-observability | development | `development/instrument-observability/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
+| SF-023 | instrument-observability | development | `development/instrument-observability/SKILL.md` | red-captured | 0/3 | observability shortcut pressure | `agent-state/skill-forge-runs/instrument-observability.md` | GREEN patch |
