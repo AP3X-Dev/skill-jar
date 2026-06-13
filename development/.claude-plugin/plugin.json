@@ -16,6 +16,7 @@
     "./design-panel",
     "./diagnose-loop",
     "./improve-architecture",
+    "./instrument-observability",
     "./loop-engineer",
     "./optimization-loop",
     "./plan-prune",
