@@ -42,6 +42,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-12-SF-QUEUE | Forge remaining 17 skills (SF-006..022, SF-021) | skill-forge-queue | this commit | Concurrent RED->GREEN->judge x3 per skill (85 agents, forger != judge); 17/17 forged 3/3; gate 208; run packages written; tracker de-fragmented. Forge queue now 23/23. |
 | C-2026-06-12-SF-005-FORGED | Forge clean-room (SF-005) | skill-forge-batch1 | this commit | 3/3 independent judges COMPLY on the firewall/parity scenario; SF-005 -> forged. |
 | C-2026-06-12-SF-023-GREEN-FORGED | GREEN + forge instrument-observability (SF-023) | skill-forge-batch1 | this commit | Forger closed the captured RED rationalizations (45/+2- diff, description unchanged); 3/3 independent judges COMPLY (forger != judge); SF-023 -> forged. |
 | C-2026-06-12-T-ECO-1 | instrument-observability NOT-for + production-readiness handoff (F-3) | jar-audit-eco-1 | this commit | Added a "When NOT to use" boundary (diagnose-loop / optimization-loop / host bugfix) + description NOT-for clause (900 chars) + a handoff sentence to production-readiness. Maker + independent checker PASS. |
@@ -197,3 +198,17 @@ batch: pick the next pending-red skills, run RED (fresh agents WITHOUT the skill
 to capture rationalizations, GREEN-patch to close them, then 3 judge runs; advance
 in reviewable batches. Note: forging the ~17 remaining is multi-batch — each is a
 content-editing RED->GREEN->judge x3 pipeline.
+
+skill-forge-queue forged ALL 17 remaining skills in one concurrent workflow
+(85 agents, forger != judge, disjoint files): 17/17 surfaced a real RED failure,
+were GREEN-patched, and returned 3/3 COMPLY from independent judges; gate green
+(208). The FORGE QUEUE IS NOW COMPLETE — 23/23 forged. With this, the
+user-authorized "all three loops, until done or blocked" rotation is finished:
+jar-audit (T-ECO-1..4 closed), bug-pipeline (BUG-001 verified), skill-forge
+(23/23 forged). No loop has open/ready work. Remaining repo work is human-gated:
+the open triage-inbox findings F-4, F-5, F-6, F-7 (partial), F-9, F-11 (low/medium,
+not yet promoted) and the audit-policy decisions HD-1..HD-5 in decisions.md
+(propose new gates — need explicit human approval before a maker implements them).
+NOTE on forge maturity: these are first-pass forges gated by LLM judges + the
+structure gate; `forged` means RED-evidenced + 3/3 clean + gate-green, which is
+distinct from the `dogfooded`/`battle-tested` maturity tiers (real-use evidence).

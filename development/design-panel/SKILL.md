@@ -17,6 +17,22 @@ This skill can use Superpowers skills when they are installed, but it does not r
 
 The panel produces a concrete design package, not a brainstorming summary. Before any designer runs, write the framed problem, hard constraints, explicit non-goals, and judging criteria. Each proposed design must name module boundaries, interfaces, data flow, migration path, tests/gates, risks, and tradeoffs. The judge scores only against the agreed criteria, with evidence from the design text. The skeptic's findings are resolved, accepted, or refuted in the final spec; an unaddressed finding blocks handoff.
 
+**The four gates are non-negotiable and survive every deadline.** This skill exists only because each gate fires: (1) two *genuinely different shapes* exist before any judging; (2) the judge is a separate pass that did not author either design; (3) the skeptic grills the winner *before* the spec is written; (4) the human picks. A tight deadline, a "keep it tight" instruction, or a confident hunch shrinks the *artifact* — terser prose, smaller diagram, fewer criteria — never the gates. If you cannot run all four gates in the time available, run a smaller-scope panel (fewer criteria, two-sentence designs) rather than dropping a gate. Skipping a gate means you ran brainstorming, not this skill; say so honestly rather than claiming a panel ran.
+
+## Known pressure rationalizations
+
+These are the dodges a deadline produces. Each is a violation of a gate above. If you catch yourself reasoning any of these, stop and run the gate.
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "The right answer is obvious — a second design would just be a strawman I already know loses." | The second design is not theater; if the first is truly dominant the *judge* proves it cheaply against the criteria. You don't get to skip the comparison by predicting its result — that prediction IS the first-idea-wins failure this skill exists to break. Produce a genuinely different shape and let it be scored. |
+| "I designed it, so I understand the tradeoffs best — being my own judge is just extra steps; I'll be honest." | Maker ≠ checker is structural, not a trust test. The author cannot judge — independence is the mechanism, not a formality. Run a separate judge pass (a fresh persona/agent with only the designs + criteria, no memory of authoring). Honesty does not substitute for independence. |
+| "User said 'keep it tight' / 'review on my phone' — they want the conclusion, not the panel." | "Tight" constrains the output's length, not the process's gates. Deliver a phone-readable package (the design-package table is already terse), but the two-shapes / independent-judge / pre-spec-skeptic / human-pick gates all still fire. Shrink the artifact, never the gates. |
+| "The grilling and the spec are the same activity — I'll address edge cases inline in 'Risks and Mitigations.'" | The skeptic runs as a *separate pass before* the spec, against the winner, with no obligation to be agreeable — precisely so the spec is written knowing what breaks. Writing the spec first and self-addressing risks is the author defending their own design. Grill first; the findings (with dispositions) then populate the spec. |
+| "There's a stubbed `RateLimiter` interface and a Redis client already — the shape is half-decided; a second shape fights the codebase." | Existing scaffolding is a *constraint to honor or challenge*, not a decision that collapses the design space to one shape. A designer may challenge a constraint explicitly. Produce a second shape that respects the seams differently (or argues to move them); do not let a month-old stub pre-pick the winner. |
+| "I'll make design B a thin variant (token-bucket vs sliding-window-log) — both Redis counters, but it fills the 'two designs' box." | Two implementations of one shape is one design twice. Differentiate by *module boundaries, data flow, ownership, or failure model* — give A and B opposing optimization directives. A judge that can't name a real tradeoff between them proves the framing over-constrained the problem: loosen it and redo. |
+| "If the spec has a hole, the implementer or Monday's review will catch it — the review IS the skeptic." | The skeptic is an on-paper adversarial pass you run *before* handoff, not the downstream review. Outsourcing it ships an ungrilled spec into the weekend and burns the review on defects the panel was supposed to surface. Run the grill now; an unaddressed finding blocks the spec. |
+
 ## When to Use
 
 - A feature/component/refactor is worth designing before building, and the solution space is wide enough that the first idea shouldn't win by default.
@@ -37,7 +53,7 @@ The designer never judges its own design — that's how the first idea wins.
 |---|---|---|
 | **Explorers** (×N, parallel) | Map what the design must respect: existing seams, conventions, similar prior art in the repo, constraints | Propose the design |
 | **Designer A / Designer B** | Each produces a complete, *genuinely different* approach — different shape, not a parameter tweak | See each other's work before submitting |
-| **Judge panel** (independent) | Score both against the named criteria; recommend with reasoning | Add a third design; rubber-stamp |
+| **Judge panel** (independent) | Score both against the named criteria; recommend with reasoning | Add a third design; rubber-stamp; **be the same persona that authored a design** (independence is structural, not a self-honesty promise) |
 | **Skeptic** | Attack the chosen design: failure modes, scale limits, edge cases, hidden coupling, "what breaks first?" | Soften findings to be agreeable |
 | **Human** | Set the criteria, pick the winner, accept/reject the skeptic's required changes | — (direction stays human) |
 
@@ -46,9 +62,9 @@ The designer never judges its own design — that's how the first idea wins.
 1. **Recall** *(optional MemBerry)* — `berry_load(task: "design: <topic>", tags: ["project:<tag>"])`: prior designs in this area, ADR-style decisions, and **previously rejected approaches with reasons**. A rejected approach is only re-proposed if its rejection reason no longer holds — say so explicitly.
 2. **Explore in parallel** — dispatch read-only explorers (codebase seams + conventions, similar prior art, external constraints). Minutes instead of a serial read, and the designers start informed.
 3. **Frame with the human** — clarify intent one question at a time, then agree the **judging criteria** (e.g. locality, blast radius, migration cost, testability, time-to-ship). Criteria first, designs second — otherwise the judges improvise values.
-4. **Design it twice** — two designers, isolated, each a complete approach: shape, interfaces, data flow, migration path, tradeoffs. If both come back the same shape, the framing over-constrained the problem — loosen it and redo. (A third design is allowed when the two reveal an obvious hybrid; more than three is churn.)
+4. **Design it twice** — two designers, isolated, each a complete approach: shape, interfaces, data flow, migration path, tradeoffs. Different *shapes* (boundaries/data-flow/ownership), not the same shape with a swapped algorithm or library. A confident hunch that one answer is obvious is not grounds to skip the second shape — the judge prices that hunch in step 5. Existing scaffolding (a stub, a client) is a constraint to honor or explicitly challenge, not a pre-made decision that collapses the space to one shape. If both come back the same shape, the framing over-constrained the problem — loosen it and redo. (A third design is allowed when the two reveal an obvious hybrid; more than three is churn.)
 5. **Judge** — the panel scores both against the agreed criteria and recommends with reasoning. Present both + scores to the human; **the human picks**.
-6. **Grill** — the skeptic attacks the winner. Each finding is resolved (design amended), accepted (recorded as a known tradeoff), or refuted (with reasoning). No unaddressed findings.
+6. **Grill** — the skeptic attacks the winner, as a separate pass *before* the spec is written — not folded into the spec's risks section and not deferred to the implementer or the downstream review. Each finding is resolved (design amended), accepted (recorded as a known tradeoff), or refuted (with reasoning). No unaddressed findings. The spec is written *after* the grill, populated by its dispositions.
 7. **Spec + record** — write the design doc; hand off to an implementation plan / PRP. *(MemBerry)* store the decision, the criteria, and the **losing design with why it lost**.
 
 Prompt templates for every role: [references/panel-kit.md](references/panel-kit.md).

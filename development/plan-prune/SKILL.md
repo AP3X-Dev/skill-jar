@@ -13,6 +13,24 @@ Planning docs rot by multiplication: a roadmap here, a handoff there, a PRP that
 
 Consolidate down and update; do not merely summarize. Every surviving plan item must have a status, source, current evidence, and acceptance check. Every source document found must have a disposition and action: canonical, supporting reference, deleted, archived, stubbed, or blocked for human decision. Default to one active planning file. For "what exists now", repo state and runnable checks beat old docs. For "what should happen next", explicit user direction and current canonical decisions beat inferred code intent. Conflicts become blocked decisions, not guesses.
 
+A blanket grant of trust ("do whatever makes sense", "I trust you", "delete the dead ones") authorizes you to run this process, not to skip it. It is not permission to guess what shipped, to delete content git does not yet hold, or to pick a product direction the docs left open. The looser the human's instruction, the more the process is the only thing keeping the result trustworthy — so follow every gate below.
+
+You are a reconciler, not an architect. The canonical plan records the direction the docs and code already establish; it never substitutes the direction you think is best. If sources disagree on an approach (caching, storage, transport, anything), that is a `conflict` blocked decision, even when consolidating "feels like" the moment to clean it up by choosing.
+
+## Known Pressure Rationalizations
+
+Each of these has been used to skip a gate. If you catch yourself reasoning this way, stop and do the required action instead.
+
+| Rationalization | Required response |
+|---|---|
+| "The human said 'do whatever makes sense' / 'delete the dead ones' — that's authorization to just remove stale files." | A loose grant authorizes the process, not skipping it. Still build the inventory, verify state, and honor the delete precondition for every file. |
+| "Git history is the backup, so deleting loses nothing — I'll write 'see git history' and move on." | A pointer to git is not consolidation. Fold the doc's live claims/TODOs/open decisions into the canonical plan FIRST, and delete only when git already holds that file clean (untracked/staged/dirty → archive or block). |
+| "The doc's own header says 'Status: SHIPPED' (or a recent 'Last updated'), so the feature obviously landed." | A doc's self-reported status is a claim to verify, not evidence. Confirm against code/git before marking anything past `implemented-unverified`. Self-declared "done" with no code evidence is `implemented-unverified` at best. |
+| "Running the test suite to verify what shipped is overkill for a docs task — risk is basically zero." | You may skip the slow full suite, but never skip verification. Use cheap evidence (grep for the symbol/route/migration, `git log` for the merge, direct inspection). No evidence found → `implemented-unverified` or `blocked`, never `verified-complete`. |
+| "These plans contradict on the approach; since I'm consolidating, I'll write the roadmap with the design I think is right." | You reconcile, you don't design. Record the disagreement as a `conflict` blocked decision and ask. Never resolve a product/architecture conflict by inserting your own pick. |
+| "I'll fold the relevant bits from memory of one skim, then `rm` the originals in the same commit — re-reading carefully blows my time budget." | Read each doc you are about to retire closely enough to capture every open decision/TODO/blocked item into the canonical plan before deleting. If time runs out, leave the doc in place and block its retirement; never delete from a half-remembered skim. |
+| "These plans look finished and have no open TODO list, so I'll mark the items 'Completed'." | Absence of a TODO list is not completion evidence. "Completed" requires the code wired and a check or inspection proving it. Otherwise `implemented-unverified` or `planned-not-built`. |
+
 ## When to Use
 
 - Planning docs, roadmaps, specs, PRPs, handoffs, or TODO ledgers disagree.
@@ -71,7 +89,9 @@ Ground the plan in the repo as it is now:
 - Code shape: entry points, routes, commands, migrations, schemas, feature flags, config, and modules named by the planning docs.
 - State ledgers: completed items, failed attempts, bug trackers, triage inboxes, release notes.
 
-Do not call an item done because a file exists. Prefer "verified complete" only when code is wired and a runnable check or direct inspection proves it.
+Do not call an item done because a file exists, because the doc's own header says "shipped/done", or because the doc has no open TODO list. A doc's self-reported status is a claim to verify, not evidence. Mark `verified-complete` only when code is wired and a runnable check or direct inspection proves it.
+
+Verification is mandatory, but the slow full suite is not. "It's only docs" does not exempt you from gathering evidence. For each item you would call done, use the cheapest evidence that actually confirms it: grep for the symbol/route/migration/handler, `git log`/`git log --follow` for the merge that landed it, or direct file inspection. Run the full test suite only if cheap evidence is inconclusive and the call matters. Found no evidence within your time budget → record `implemented-unverified` or `blocked`, never `verified-complete`.
 
 ### 4. Reconcile Claims
 
@@ -111,6 +131,8 @@ Keep historical detail in the source inventory or supporting docs; the plan itse
 ### 7. Reduce the Old Planning Surface
 
 Do not leave stale docs in active locations. After useful claims are folded into the canonical plan's inventory and work table, retire the old planning fragment.
+
+Fold before you retire, and read before you fold. Read each doc you are about to delete closely enough to capture every open decision, TODO, and blocked item into the canonical plan — a half-remembered skim is not enough, and "see git history" in the canonical plan is a citation, not consolidation. If your time budget runs out before a doc is fully folded, leave it in place and block its retirement rather than deleting it.
 
 - **Canonical doc:** update in place.
 - **Supporting reference:** keep only when it provides durable design detail that would bloat the canonical plan; list exactly why it remains.

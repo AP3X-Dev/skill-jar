@@ -12,8 +12,8 @@ System design is making **explicit tradeoffs under uncertainty** — not assembl
 ## Operating Contract
 
 - Start by converting the request into a design contract: known inputs, missing inputs, explicit assumptions, non-goals, and the user journeys being protected.
-- Produce a decision record, not an architecture survey. Every major component must name the requirement it satisfies, the failure mode it addresses, the owner who would run it, and the operational cost it introduces.
-- If latency, traffic, consistency, or survival requirements are missing, ask for them; if the user wants a draft anyway, proceed with conservative assumptions and label confidence.
+- Produce a decision record, not an architecture survey. Presenting a menu of reference architectures for the requester to pick from is a survey, not a deliverable — commit to one topology. Every major component must name the requirement it satisfies, the failure mode it addresses, the owner who would run it, and the operational cost it introduces; a component missing any of these is not in the design (no "backfill owners later").
+- If latency, traffic, consistency, or survival requirements are missing, ask for them; if the user wants a draft anyway, proceed with conservative assumptions and label confidence. The requester cannot waive the SLO + capacity stage or the stop conditions — neither a deadline, a "just a diagram / board deck" framing, nor an instruction to "keep it impressive" or "skip the boring ops stuff" removes them. Those are scoping pressures, not permission to ship an architecture you have not sized.
 - Keep detailed API, data, and launch design in the sibling skills. This skill chooses the topology and hands off concrete surfaces; it does not hide those contracts in prose.
 
 ## When to Use
@@ -52,7 +52,23 @@ Do **not** recommend any of these unless intake names a consistency, latency, sc
 - microservice decomposition
 - event sourcing / CQRS
 
+The named requirement must be a **measured or projected workload number with a source** (e.g. "12k writes/sec sustained per the FY26 plan"), not an adjective. "Impressive," "shows maturity," "built to scale," "investors love it," "signals we thought about scale," and "richer diagram" are **not** requirements — they are the exact rationalizations this gate exists to reject. A diagram that the team would not actually build is not a target architecture; it is a fiction, and shipping it as one is the failure mode. If today's load fits a single well-shaped server for years (do the arithmetic and show it), the design IS the monolith — say so plainly, then add a one-line *trigger* for each future component ("shard when a single primary exceeds X"). Headroom means sizing the simple topology generously, **not** pre-building distributed mechanism; "over-provisioning architecture" (extra services, stores, regions) is not safer — it is unowned operational surface that fails in production.
+
 The additive default instead: **modular monolith + relational DB → add cache → CDN → read replicas → background jobs → only then decompose.** Validated small-scale systems run a single well-shaped server; the famous large-scale systems were built for *specific* constraints, not because complexity is better.
+
+## Known pressure rationalizations (and the required response)
+
+These are real dodges agents reach for under deadline + authority + "make it impressive" pressure. Each is **closed**: the gate still applies.
+
+| Rationalization | Required response |
+|---|---|
+| "The requester said keep it impressive / don't overthink the boring ops stuff — so SLOs and capacity are out of scope." | A requester cannot waive the SLO + capacity stage; it is the thing that makes the rest correct. "Boring ops" framing does not delete Stage 3. Do the capacity arithmetic anyway (it takes minutes for 2k/day) and put the SLO/headroom line in the deliverable. Skipping it is how you ship a fiction. |
+| "It's a board deck / just a diagram, not a deployment plan — nobody builds it Monday, so I don't need real numbers; I'll add multi-region, mesh, Kafka, CQRS because that's what scale looks like." | The artifact being a slide does not lower the bar — a target architecture you would not actually build is the failure mode, not the deliverable. Stop conditions apply to diagrams exactly as to deploys. Draw the topology you would defend in an incident review. |
+| "No targets and it's late in the week — chasing the requester for SLOs eats the weekend; I'll assume 'high scale' and over-provision; over-provisioning is safer." | Missing inputs are surfaced as explicit assumptions with confidence labels (Operating Contract), not papered over with "high scale." One async message asking for the peak/growth number is cheaper than a wrong architecture. Over-provisioning distributed mechanism is unowned surface, not safety. |
+| "Sharding / a separate ledger service / event sourcing shows maturity even if one box fits for years." | "Shows maturity" is not a named requirement — it is rejected by the stop-condition gate by name. Maturity is demonstrating you sized it and chose the simplest thing that meets the SLO with headroom, with future triggers noted. |
+| "I'll present three reference architectures as a menu and let them pick, so I'm not on the hook." | A menu is an architecture survey; this skill produces a **decision record** (Operating Contract). Commit to one topology, name the requirement behind it, and record the alternatives you rejected and why. Use a design-panel only for a genuinely contested call — not to avoid committing. |
+| "Ownership, SLIs, failure modes, and per-component cost are implementation details for later — I'll just draw the boxes and backfill owners if funded." | Every major component must name its requirement, failure mode, owner, and operational cost (Operating Contract) — that is what separates a design from a drawing. A box with no owner and no failure path is not in the design. Backfill-later is how unowned components reach production. |
+| "Polyglot persistence (Postgres + DynamoDB + Redis + Elasticsearch) makes the diagram look richer — more datastores = more thought-through." | "Looks richer" is the polyglot-persistence stop condition firing. Each store is a named requirement, an owner, an operational cost, and a failure domain. Default to one relational system of record; add a store only when a workload number forces it. |
 
 ## Recommended defaults (override only with a named reason)
 

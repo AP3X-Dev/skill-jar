@@ -88,14 +88,30 @@ One cluster per cycle. Built on loop-engineer's spine; the reaper's shape:
 5. **Verification** — the Validator re-runs FUGAZI + the full gate and promotes or reopens.
 6. **State update** — ledger reflects the status; commit code and ledger **together** (`reap(DC-N): <what>`).
 
-**The ratchet:** total FUGAZI finding count must be **≤** baseline and LOC **lower**, with the suite, build, and typecheck green. If a removal *creates* a finding (e.g. `unresolved-imports` because something did use it) the ratchet broke — **reject and reopen**. Floors only advance.
+**The ratchet:** total FUGAZI finding count must be **≤** baseline and LOC **lower**, with the **full** suite, build, and typecheck green. "Full" means the same gate the repo runs in CI — including a slow or flaky integration suite. You may not substitute `tsc --noEmit` + unit tests for the integration suite to dodge a 25-minute run; flakiness gets fixed or explicitly quarantined, never silently skipped. If a removal *creates* a finding (e.g. `unresolved-imports` because something did use it) the ratchet broke — **reject and reopen**. Floors only advance.
 
 ## Safety
 
 - **Never run bare `fugazi fix` unattended.** It mutates source with no confirmation gate and is file-by-file non-atomic. The Reaper does its own surgical removal and runs the gate; if you ever use FUGAZI's fixer, it's `fix_dry_run` → human/Validator-gated apply, never in the loop body.
-- **The deletion test.** "Unused internally" is not "safe to delete" for a library's public surface — that's the API, used by consumers FUGAZI can't see. Public exports flagged unused → `blocked` + human decision, unless config marks the real entry points. This mirrors the rule: never silently drop a supported feature.
-- **Dynamic reachability → blocked.** Reflection, DI, string-keyed dispatch, plugin registration, `__all__`/serialization. If usage could be dynamic, it isn't provably dead.
-- **One cluster per cycle.** Batched deletions make the Validator's job ambiguous and rollbacks expensive.
+- **A static-analysis flag is a candidate, not a proof.** `ts-prune`, `depcheck`, `knip`, `unimported`, IDE "unused" hints, and even FUGAZI's `unused-*` rules find *suspects* by static reference counting. They cannot see dynamic reachability, so they do **not** clear a deletion. The proof is a `trace` (or hand-traced equivalent) returning **0 reachable importers** *after* you account for dynamic and out-of-repo use. No trace → no removal, regardless of how many tools flagged it.
+- **The deletion test applies to internal services too.** "Unused internally" is not "safe to delete" for any surface a consumer FUGAZI can't see — a published package's API, *and* an internal service's HTTP routes, webhook DTOs, queue/job names, ORM-mapped columns, and anything another repo or runtime binds by name. "It's not an npm package" does **not** retire this test. Public-contract-shaped exports flagged unused → `blocked` + human decision, unless config marks the real entry points. This mirrors the rule: never silently drop a supported feature.
+- **Dynamic reachability → blocked, and it is yours to defend.** Reflection, DI, string-keyed dispatch (`adapters[providerName]`, `registerJob('name', …)`), glob/registry wiring (`glob('**/*.handler.ts')`), framework decorators (`@Entity()`), barrel/index re-exports, `React.lazy(() => import(...))`, `__all__`/serialization. If usage *could* be dynamic, it is not provably dead — and "they shouldn't have used a string key" is not an exception. Block it; the cost of a wrong delete is yours, not the author's.
+- **One cluster per cycle — deadlines do not relax this.** Batched deletions make the Validator's job ambiguous and rollbacks expensive. A freeze on Monday is a reason to be *more* careful, not to merge 22 files in one commit. Dependency removals are their own clusters (a `depcheck` "unused" dep can be a dynamic `require`, peer/optional dep, build-tool or runtime-config dependency) — never fold them into a code-removal cluster.
+
+### Known pressure rationalizations
+
+A fresh agent under deadline pressure reaches for these. Each is wrong here; the required response is the gate.
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "ts-prune/depcheck flagged it as unused — that's my reachability proof, I don't need to hand-trace 60 symbols." | The tool produced a *candidate*. Reachability proof = `trace`/hand-trace to 0 reachable importers including dynamic + out-of-repo use. Unproven → don't remove. |
+| "The user said they already eyeballed these and to just blast through it — defer to the owner." | The user owns *launch and direction*, not the per-cluster proof. "Blast through" never waives the trace, the gate, or one-cluster-per-cycle. Confirm scope, then still prove each one. |
+| "Zero static references = dead by definition; if something used it via a string key, that's a code smell on their end." | Dynamic/string-key/reflection use means **not provably dead** → `blocked`. It is not the author's problem to defend; it is your delete to justify. |
+| "tsc --noEmit + unit tests pass = safe; the 25-min flaky integration suite isn't worth blocking a Friday merge, and flaky tests can't be trusted." | The gate is the **full** suite + build + typecheck. A slow/flaky integration suite is not optional; fix or quarantine flakiness explicitly, never silently downgrade the gate to skip it. |
+| "Barrel/index re-exports nothing imports, plus `LegacyRefundHandler` and the V1 webhook DTO — textbook dead code, obviously safe to cut." | Barrel re-exports hide dynamic consumers; `*Handler` and `WebhookV*Payload`/DTO names scream registry/serialization/external-contract. These are the `blocked` cases, not the easy ones. |
+| "Batch all 22 files into one cleanup commit — one PR, one CI run; 60 tiny commits would take all night." | One cluster per cycle, one commit per cluster. Reviewability and cheap rollback beat a tidy single PR, especially before a freeze. |
+| "depcheck says these deps are unused — rip them from package.json in the same pass; fewer deps is the goal." | depcheck misses dynamic `require`, peer/optional deps, and build/runtime-config use. Each dep is its own proven cluster (reinstall + full gate), never folded into a code removal. |
+| "These look like public API but it's an internal `payments-api`, not a published library — no external consumer to worry about." | Internal services have consumers the analyzer can't see: HTTP/webhook callers, queue/job names, ORM columns, other repos. The deletion test applies → `blocked`. |
 
 ## Build, then offer launch
 
@@ -107,7 +123,7 @@ Copy-ready generated agents live in [../agents/README.md](../agents/README.md) a
 
 ## Common Mistakes
 
-- **Deleting without a reachability proof.** FUGAZI's `unused-*` is the candidate; `trace` returning zero importers is the proof. File only proven clusters.
+- **Deleting without a reachability proof.** A static "unused" flag (FUGAZI's `unused-*`, `ts-prune`, `depcheck`, `knip`) is the *candidate*; `trace` returning zero *reachable* importers — after accounting for dynamic and out-of-repo use — is the proof. File only proven clusters.
 - **Reaping a bug.** Code that's dead because a wire was never connected is a *defect*. Removing it makes the missing feature permanent. Route ambiguous cases to diagnose-loop.
 - **Treating public API as dead.** The most expensive mistake — deleting the package's surface because nothing inside calls it. Block it; ask.
 - **Running `fugazi fix` in the loop.** Unattended source mutation with no gate. The loop removes deliberately and verifies; the fixer is a manual, dry-run-first tool.

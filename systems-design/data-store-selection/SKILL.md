@@ -49,11 +49,28 @@ Full tables, key-design rules, and patterns: [references/data-playbook.md](refer
 
 ## Release gates (hard)
 
-- **Reject** if the partition/shard key cannot be justified against the dominant query path.
-- **Reject** if consistency expectations are not explicitly named (per data class, including what readers may see mid-flight).
+- **Reject** if the partition/shard key cannot be justified against the dominant query path. "It's the default / it's always unique" (e.g. Mongo `_id`/ObjectId) is not a justification — ObjectId is monotonically increasing and hot-spots the latest chunk on write-heavy data. "We can reshard later" is not allowed: the shard key is a load-bearing decision now, and resharding a live ledger is a migration, not a tweak.
+- **Reject** if consistency expectations are not explicitly named (per data class, including what readers may see mid-flight). On money/ledger data you MUST name the concrete primitives, not the adjective: read concern / write concern (e.g. `majority` vs `local`), whether stale balance reads are acceptable and for how long. "Mongo gives us consistency" is a non-answer — name read/write concern or it fails.
 - **Reject** if a stateful component has no owner, source of truth, retention/deletion rule, or recovery path.
-- No queue/topic is production-ready without delivery semantics, replay policy, idempotency contract, and DLQ ownership.
-- No cached object without owner, source of truth, invalidation mechanism, TTL, and acceptable staleness.
+- No queue/topic is production-ready without delivery semantics (at-least-once vs at-most-once, named), replay policy, idempotency contract, DLQ ownership, and a named owner of retries on a failed delivery. "It's just notifications, a dropped email is fine" still requires you to state that at-most-once is the chosen contract — silence is a fail, not a default.
+- No cached object without owner, source of truth, invalidation mechanism, TTL, and acceptable staleness. "Invalidation will fall out naturally" / "we'll set a TTL later" is a fail: name *when* the entry is written and *what event busts it* (e.g. a balance write), or do not add the cache.
+- **Reject** if the design defers any of the above to "later" / "post-demo" / "before real funds flow." Money is involved on the first commit; the gates apply to the design you ship Monday, not to a future hardening pass. Fake demo data does not lower the durability/consistency bar — the schema and keys you ship are the ones backend builds on.
+
+## Known pressure rationalizations
+
+Each row is a dodge a time-pressured agent will reach for. The skill rejects it at the named gate. If you catch yourself reasoning the left column, you are skipping a gate.
+
+| Rationalization (dodge) | Required response |
+|---|---|
+| "Team already knows Mongo / it's in prod / one datastore is simpler to operate." | Operational familiarity is not an access pattern. Run the patterns → consistency → family steps; Mongo may win, but only after the matrix justifies it, not because it's incumbent. |
+| "Picking what the team runs + the most popular tools (Redis, RabbitMQ) is the safe, defensible choice." | Popularity/incumbency defends nothing if the access pattern isn't written down. The defensible choice is the one justified against the dominant query path. Brand-first is the failure mode, not the safe path. |
+| "Shard on `_id`/ObjectId — it's the default and always unique." | ObjectId is monotonic → hot-spots the latest chunk on a write-heavy ledger. Unique ≠ good shard key. Pick a high-cardinality, evenly-spread key aligned to the dominant query. |
+| "We can reshard later if we have to." | Resharding a live money ledger is a migration with downtime/risk, not a later tweak. The shard key is decided now, against the write path, or the design fails. |
+| "Redis cache-aside, invalidation will fall out naturally / we'll set a TTL later." | Name the write point and the bust event (balance change) now. An unspecified-invalidation cache on balances serves wrong money. No invalidation rule → no cache. |
+| "A ledger needs to be consistent — Mongo gives us consistency, done." | Name the primitives: read concern / write concern (`majority`? `local`?) and whether stale balance reads are acceptable. The adjective "consistent" is not a consistency model. |
+| "Drop in a queue for notifications — delivery semantics / DLQ / retry owner are 'just notifications', harden post-demo." | State the delivery contract explicitly (at-least-once vs at-most-once), who owns retries on a failed SMS, and the DLQ. Choosing at-most-once is fine; leaving it unnamed is a fail. |
+| "PM said don't overthink it / we'll iterate — demanding access patterns makes me a blocker." | The matrices ARE the deliverable, and they take minutes, not a discovery sprint. Naming patterns + consistency before tools is decisiveness, not blocking. Ship the design *with* the gates filled. |
+| "It's a Wednesday demo with fake data — correctness/durability can wait, leave a TODO." | Money is involved on the first commit. Fake data doesn't lower the bar; the schema, keys, and consistency you ship are what real funds run on. The gates apply to the Monday design. |
 
 ## Generated agents
 

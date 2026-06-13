@@ -28,15 +28,25 @@ on ticketed execution.
 
 Every ticket must be small enough to verify, must name files or discovery steps,
 and must carry a runnable acceptance command before it moves to `ready`.
-Maker and checker stay separate. Parallel work is allowed only from the
+Maker and checker stay separate — always, regardless of time pressure or how
+well a maker "understands" its own code; a maker verifying its own ticket is
+never allowed and never an efficiency win. Parallel work is allowed only from the
 parallelism audit and is invalidated when actual touches exceed the predicted
-write set.
+write set. Disjoint-looking directory names are not an audit: never substitute
+eyeballing paths for tracing real imports, consumers, and shared state. Never
+launch two tickets in parallel planning to "resolve merge conflicts later" — a
+foreseeable conflict means they are `serial`, not `parallel-build`.
 
 **Launch gate — this skill OFFERS launch, it never auto-launches.** Before
 launching any code-writing maker (Phase 4 onward), present the parallelism map
 and the first-cycle plan and get an explicit human "go". A compute-spending
 execution loop starts only on an explicit human yes; ticket creation and the
-parallelism audit (Phases 0–3) and Analysis-Only Mode need no such approval.
+parallelism audit (Phases 0–3) and Analysis-Only Mode need no such approval. A
+vague standing instruction ("run them", "parallelize", "run to completion",
+"keep going until it's done") is NOT the launch-gate go and is NOT a license to
+auto-launch the next maker the moment one finishes: it authorizes a budget, not
+a bypass. You still present the map, get the explicit go, and re-clear the gate
+whenever the map is refreshed.
 
 **Stop condition.** Repeat the execute → verify → update cycle only until one of
 these holds, then write the Closeout and stop — never spin cycles past an empty
@@ -45,6 +55,12 @@ these holds, then write the Closeout and stop — never spin cycles past an empt
 - no `ready` tickets remain;
 - a `blocked` / `NEEDS-DECISION` ticket needs a human; or
 - the human-approved budget (cycle count, wall-clock, or cost) is exhausted.
+
+Work that surfaces mid-sprint (follow-up fixes, easy wins, dependency
+fallout) is new backlog, not a reason to keep the loop spinning. Having
+cycles or momentum left does not extend the sprint: file the new items as
+tickets and stop at the marker. New unticketed work never runs without going
+back through ticket creation, the audit, and the launch gate.
 
 ## State Layout
 
@@ -118,7 +134,10 @@ Write the result to `agent-state/sprint/parallelism-map.md` with lanes:
 The parallelism map is a prediction, not a license to ignore reality. If a
 ticket touches files outside its predicted write set, changes a shared schema or
 config, or introduces a new dependency, pause new parallel launches and refresh
-the map.
+the map. There is no smallness exemption: a one-line, still-compiling touch to a
+shared file is exactly the case the invalidation triggers exist for. "It
+compiles" is not "it is safe to parallelize" — refresh the map before launching
+the remaining tickets.
 
 ### 4. Execute One Cycle
 
@@ -143,6 +162,12 @@ integration policy and record evidence. On `REJECT`, reopen the ticket, record
 the failed approach in `agent-state/sprint/failed-attempts.md`, and do not retry
 the same path blind. On `NEEDS-DECISION`, move the ticket to `blocked` and add
 the decision to `decisions.md`.
+
+A failing test is `REJECT` until the checker proves otherwise with evidence.
+"Probably flaky CI" is a hypothesis, not a verdict: do not dismiss a failure,
+re-run until it passes, or call a ticket green to make the sprint close on time.
+Only the checker declares green, only on recorded passing evidence — never the
+maker, and never on a clean compile alone.
 
 ### 6. Update the Board and Handoff
 
@@ -169,6 +194,21 @@ completed tickets with commits, open tickets, blocked decisions, rejected
 approaches, gates run, and plan drift found. If drift means the canonical plan is
 now stale or contradictory, recommend `plan-prune` as follow-up rather than
 solving it inside this skill.
+
+## Known Pressure Rationalizations
+
+Time pressure and "just go" instructions produce predictable dodges. Each of
+these is a violation, not a shortcut:
+
+| Rationalization | Required response |
+|---|---|
+| "Write sets look disjoint at a glance — different directories, so fire all makers in parallel; no need to trace imports." | Directory names are not a conflict graph. Run the audit: trace real imports, consumers, and shared state. No `parallel-build` without it. |
+| "These two tickets are 'different areas' (cart vs checkout) — run them together and sort out any merge conflict later." | A foreseeable shared touch or producer/consumer dependency (e.g. a util wired into a consumer) is a conflict edge → `serial`. Never launch parallel planning to fix conflicts later, and never ignore the dependency chain. |
+| "The maker that wrote this understands it best, so let it verify its own ticket — a separate checker is overkill under time pressure." | Maker ≠ checker, always. The author's familiarity is the bias, not the qualification. Pull in a separate checker every time. |
+| "The lead said 'run to completion,' so auto-launch the next maker the instant one finishes — no need to pause at a launch gate." | A standing "go fast" authorizes a budget, not a gate bypass. Present the map, get the explicit go, and re-clear the gate on every map refresh. |
+| "A ticket touched a shared file outside its write set, but it's one line and still compiles — let the morning's map stand." | Out-of-write-set touch is an invalidation trigger with no smallness exemption. Pause new launches and refresh the map before continuing. |
+| "We're past the sprint-done marker but follow-ups surfaced and I have momentum — keep the loop spinning." | Stop at the marker. New work is new backlog: file tickets, then re-run audit and launch gate. Momentum is not approval. |
+| "A test broke — probably flaky CI, not my change — re-run and call it green so the sprint closes on time." | A failure is `REJECT` until the checker proves flakiness with evidence. No re-run-to-green, no maker-declared green, no clean-compile green. |
 
 ## Common Mistakes
 

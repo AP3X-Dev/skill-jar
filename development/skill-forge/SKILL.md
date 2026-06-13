@@ -20,6 +20,22 @@ Writing a skill that *holds under pressure* is test-driven work: a skill is only
 
 Do not edit a skill from taste alone. Every rule added or tightened must map to a captured pressure-run failure, a known routing/install defect, or a concrete user requirement. Keep the run package: RED transcript, verbatim rationalizations, patch summary, REFACTOR verdicts, and lint evidence. A skill is not forged until the package shows one failing run first, then K clean runs with the skill loaded.
 
+This contract has **no small-change exemption**. "It's only wording / a routing tweak / two sentences" does not waive RED, maker≠checker, K clean runs, or LINT — a behavioural skill's *words are its behaviour*, so a copy edit to a trigger or a rule is a behaviour change and gets the full loop. If you have no captured RED rationalization to cite as the reason for an edit, you have not run RED yet; "RED N/A" is not a valid rationale field — go capture one. The forge ritual is not optional internal hygiene a deadline can waive: an unforged skill ships unproven, and "we'll re-run the gate later" means it ships unproven now. Honour a deadline by forging a smaller change, not by stamping an unforged one.
+
+## Known pressure rationalizations
+
+Dodges forgers have actually used to skip the loop on "small" or deadline-pressured edits. If you catch yourself reaching for one, the required response is the rule, not the dodge.
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "Pure taste / wording edits — no behaviour change, so nothing for RED to attack; capturing RED for a copy-edit is ceremony." | A behavioural skill's words *are* its behaviour. Edits to a trigger or a rule are behaviour changes. RED runs; no exemption for "small." |
+| "I never generated any RED rationalization, and inventing one now for a cosmetic diff is a strawman — so I'll patch on taste and write 'RED N/A' in the rationale." | No captured RED = RED has not run. "RED N/A" is not a valid rationale. Run RED first; cite a real captured rationalization per substantive edit. |
+| "I wrote the patch so I understand it best; a separate judge for a 5-line fix is overkill — maker-equals-checker is fine when the change is small." | Maker≠checker is structural and size-independent. The author can't un-know intent; a fresh judge runs the scenario with the skill. No self-review. |
+| "The judge harness flakes / takes 3-4 min — I'll run once and call it good; K-clean-runs is for risky logic, not phrasing." | K consecutive clean runs apply to every change. A flaky/slow harness is a reason to fix or wait on it, never to lower K. One pass proves nothing. |
+| "The audit gate is for secrets / AI traces / structure — a two-sentence rewrite can't introduce those, so skip it." | The gate runs on every forge. A wording edit can desync `skills.json`, bloat a trigger, or break a link. "Too small to gate" is not an exit. |
+| "Adding more trigger phrases can only help routing — pad with 8-10 extra examples so it never misses; longer sounds more thorough." | More phrases widens the match surface and *causes* mis-triggering. Tighten and add `NOT for…` exclusions; prove the change mis-fires less via RED. |
+| "User said 'just get it done' before the weekend; honouring the deadline IS honouring intent — mark it forged now, re-run the full gate next week." | An unforged skill ships unproven. "Re-run later" means it ships unproven Monday. Honour the deadline by forging a smaller change, not by stamping an unforged one. |
+
 ## When to Use
 
 - Authoring a new skill, especially a **discipline/behavioural** one (an agent must do — or refuse — something under pressure).
@@ -40,8 +56,8 @@ One skill per run; iterate until it holds.
 |---|---|---|
 | **RED** | Run a **pressure scenario** against a fresh subagent that does NOT have the skill. Record the exact rationalizations / shortcuts it invents — verbatim, they become the test corpus. | At least one realistic failure captured (if the agent never fails, the scenario isn't pressured enough). |
 | **GREEN** | Write or patch the `SKILL.md` to close *those specific* rationalizations — name them in a rationalization table, add red flags, tighten the rule. | The skill addresses every captured rationalization by name. |
-| **REFACTOR** | Re-run the scenario(s) against a fresh subagent that NOW has the skill. Did it comply? Find any *new* loophole it invented and return to GREEN. | **K consecutive clean runs** (default K=3) across the scenario set with zero new loopholes. |
-| **LINT** | Run the structure gate (below). | Frontmatter parses; description ≤1024 chars with a `use when` trigger; `name` matches the directory; every relative link resolves. |
+| **REFACTOR** | Re-run the scenario(s) against a fresh subagent that NOW has the skill. Did it comply? Find any *new* loophole it invented and return to GREEN. | **K consecutive clean runs** (default K=3) across the scenario set with zero new loopholes. K applies to *every* change, not just risky logic — one pass is never "good enough." A flaky or slow judge harness is a reason to fix or wait on the harness, never to lower K; a single pass on a flaky harness is evidence of nothing. |
+| **LINT** | Run the structure gate (below), then the repo's audit gate where one ships. | Frontmatter parses; description ≤1024 chars with a `use when` trigger; `name` matches the directory; every relative link resolves; audit gate clean. The gate runs on every forge regardless of edit size — a wording edit can still desync `skills.json`, bloat a trigger, or break a link, so "the change is too small to need the gate" is not an exit. |
 
 **Iron law:** no skill ships without a failing pressure run first. A skill written from imagination closes the loopholes you guessed, not the ones agents actually take.
 
@@ -61,7 +77,7 @@ Templates for all three prompts: [references/forge-kit.md](references/forge-kit.
 A skill that holds behaviourally still fails if it can't be installed or routed. The lint is runnable, not a vibe — a real pass/fail per item, not an opinion:
 
 - Frontmatter parses as YAML with `name` + non-empty `description`.
-- `description` ≤ 1024 chars, written third-person, and contains a trigger (`use when` / `use during`) so an agent can route to it.
+- `description` ≤ 1024 chars, written third-person, and contains a trigger (`use when` / `use during`) so an agent can route to it. More trigger phrases is *not* strictly better: padding the description with near-duplicate examples widens the match surface and causes the mis-triggering it was meant to fix. Tighten and disambiguate the trigger (and add `NOT for…` exclusions) rather than bloating it; a fix that loosens routing must be proven by a RED run that mis-fires *less*, not by "sounds more thorough."
 - `name` matches the skill's directory name.
 - Every relative Markdown link resolves to a real file (bundle references one level deep).
 - Progressive disclosure: SKILL.md stays lean; heavy templates/catalogs live in `references/`.

@@ -46,14 +46,29 @@ No production launch without **all** of:
 
 - [ ] SLOs + error-budget policy written and agreed
 - [ ] Dashboard URLs live (golden signals + capacity panels)
-- [ ] Alert routes wired; every page names a runbook
+- [ ] Alert routes wired; every page is symptom/SLO-based and names a runbook (resource-utilization alerts do not satisfy this; they are dashboard panels)
 - [ ] Liveness/readiness/startup probes configured and correct
-- [ ] The five standard runbooks written
-- [ ] Rollback command exists and was **executed** in a drill
-- [ ] **At least one failure drill run** (kill a dependency, fail over the DB, or roll back a canary — for real)
-- [ ] Owner, escalation path, postmortem template on file
+- [ ] The five standard runbooks written — each with named first checks, named safe mitigations, and concrete rollback steps for *this* service (a stub with "investigate and roll back if needed" is not a runbook)
+- [ ] Rollback command exists and was **executed against this service in a drill** (reuse of a "standard path" is an assumption until executed here)
+- [ ] **At least one failure drill run** (kill a dependency, fail over the DB, or roll back a canary — for real, with the failure injected)
+- [ ] A **named** owner and escalation route on file; postmortem template on file (`TBD`/`defaults to a channel` is an empty box, not a green one)
 
-A red box is a blocker, not a footnote. "We'll add runbooks after launch" is how 3am pages become 4-hour outages.
+A box is green only when the named artifact exists and the named action was performed — not when the item was "thought about" or planned to follow. A red box is a blocker, not a footnote: "we'll add it week 1" leaves it red. The checklist is the contract, not a thinking aid; the green check you paste means *done*, and you sign it.
+
+### Known pressure rationalizations
+
+A near-launch deadline manufactures these dodges. Each leaves the corresponding box **red** — meet the gate or report `not ready`; do not self-certify green.
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "Staging ran clean for days with synthetic traffic — that *is* my failure test." | A clean soak is observation, not a drill. The gate requires an **injected** failure (kill the dependency, fail the DB, throttle the upstream) and an observed recovery. No injection → drill box stays red. |
+| "Rollback is the same `rollout undo`/redeploy path every service uses — it obviously works, I don't need to run it." | "Standard path" is the most common untested rollback. Reversibility is *proven per service*, not inherited. Not executed against this service → red. |
+| "Wire CPU>80% / mem>90% now; add SLO/burn-rate alerts week 1 — can't set a latency-burn threshold with no prod data." | Resource alerts are cause-based dashboard panels, not the paging gate. Ship with **symptom/SLO-burn** alerts using a defensible launch target (start conservative, tune on real traffic) — the absence of a baseline is not a reason to page on the wrong signal. SLO alert unwired → red. |
+| "Put `customer_id`/email/`charge_id` in the alert labels so on-call can triage faster." | PII and high-cardinality identifiers as labels are forbidden regardless of triage convenience — they leak data and can take down the monitoring system. Put the *link to the dashboard/trace query* in the annotation; identifiers live behind that link, not on the alert. |
+| "A stub runbook with `Owner: TBD` and 'investigate and roll back' beats a perfect one that blocks launch." | A stub is not a written runbook (gate item). Each of the five needs named first checks, named mitigations, and this service's concrete rollback steps. Stub → runbook box red. |
+| "`Owner: TBD` is honest because the rotation isn't finalized." | Honest, and still a blocker. An unassigned owner means no one is accountable at 3am. Name an interim owner by person/role before launch, or the owner box is red. |
+| "It's a one-way-door date the VP announced; cost of slipping outweighs an untested failure mode — ship and harden in-flight." | Deadline pressure does not flip a red box green. State the verdict (`not ready` / `ready after fixes`) plus the smallest fix list, and escalate the ship-with-known-gaps decision to the deadline owner. You surface the tradeoff; you do not silently absorb it by marking green. |
+| "Green means 'we thought about each item' + a footnote that the drill and SLO alerts follow." | Green means the artifact exists and the action ran. "Considered it" is not done; a footnote deferring a gate item is a red box with extra words. Report the real verdict. |
 
 ## Generated agents
 

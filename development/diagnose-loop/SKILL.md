@@ -39,14 +39,18 @@ One root cause per run. Each stage has a falsifiable exit — no vibes.
 
 | # | Stage | Exit condition (gate) |
 |---|---|---|
-| 1 | **Reproduce** | A deterministic command/script that triggers the failure on demand. No repro → STOP and report; do not proceed on a hunch. |
+| 1 | **Reproduce** | A deterministic command/script that triggers the failure on demand. No repro → STOP and report; do not proceed on a hunch. A production traceback/dashboard is the *symptom*, not a repro — it tells you what broke, never why. "Hard to repro" (concurrency, real cluster, time-boxed) does not waive this gate; it changes the *kind* of repro you build (a load/concurrency harness, a staging cluster, a unit test that forces the suspected race), so escalate for the time/access to build one rather than skipping the stage. |
 | 2 | **Minimize** | The smallest input/path that still fails. Strip away everything that doesn't change the symptom. |
 | 3 | **Seed suspects** | A ranked suspect list — from *(optional)* FUGAZI signals on the failing module and *(optional)* MemBerry signatures of similar past bugs, plus a manual backward trace from the failure point. |
 | 4 | **Hypothesize in parallel** | N independent investigators, **one variable each**, each told to *refute its own hypothesis*. Each returns confirmed / refuted **with evidence at a component boundary**. |
 | 5 | **Converge** | A separate analyst weighs the returns and names the single surviving root cause. None survive → new hypotheses (back to 3). ≥3 fix rounds failed → **escalate** (question the architecture, hand to a human). |
-| 6 | **Lock & fix** | Write the failing **regression test first**, then the smallest fix. Both green. A separate **verifier** confirms the symptom is gone, the test fails without the fix, and the repo gate passes. |
+| 6 | **Lock & fix** | Write the failing **regression test first**, then the smallest fix. Both green. A separate **verifier** confirms the symptom is gone, the test fails without the fix, and the repo gate passes. A post-deploy dashboard showing the error rate fall is *monitoring*, not verification — it never proves the test fails without the fix, so it can never substitute for the regression test. If the bug is a concurrency/TTL race, the test reproduces that race (a load/timing harness); "I'll watch prod after deploy" fails this gate. |
 
 **Iron law (inherited):** no fix is written before stage 6, and no fix is written without a named root cause from stage 5. A fix applied during investigation is a contaminated experiment — revert it before continuing.
+
+**One-change law:** the fix changes exactly **one** thing — the one the named root cause demands. Shipping a bundle ("guard + TTL revert + pin the dependency, one of them will fix it") is forbidden: it isolates nothing, you never learn which change mattered, and the error rate dropping proves *only that the bleeding stopped* — not that you found the cause. "Stop the bleeding" is mitigation; mitigation is **not** a diagnosis and is never labelled fixed. If you ship an emergency stopgap (e.g. a revert) to buy time, log it as an open incident, keep the symptom in the tracker, and run the loop to a named root cause before you close it.
+
+**The traceback line is the crime scene, not the culprit.** Where the `NoneType` deref happens (line 212) is the symptom; *why the value was None* (TTL race? client behaviour change on a miss? something else) is the root cause. A null guard suppresses the crash without explaining it — that is patching the symptom, and it is exactly what stage 5 forbids before a cause is named.
 
 ## Roles (maker ≠ checker)
 
@@ -80,6 +84,21 @@ If a MemBerry-style memory MCP is available, the loop remembers what past bugs t
 
 - **Solved:** root cause named with boundary evidence, regression test green, verifier passed. Done — record the signature and stop.
 - **Escalate** when: 3 fix rounds have failed (the architecture is the suspect now, not the line), the fix would change a public contract, or the cause crosses a boundary the loop isn't allowed to touch. Hand the human a tight summary: repro, what was ruled out (with evidence), and the surviving open questions.
+
+## Known pressure rationalizations
+
+A live incident is when these dodges feel most reasonable. Each one is the loop being abandoned under pressure. The right answer is never "skip the loop" — it is "run the loop fast, or ship a labelled stopgap and *then* run the loop."
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "The traceback points at line 212 — the root cause is obvious, no repro needed, just add a null guard and ship." | The traceback is the crime scene, not the culprit. Line 212 is *where* it crashes; the cause is *why the value was None*. A guard suppresses the symptom — forbidden before stage 5 names a cause. |
+| "Bump the TTL back **and** add the guard, ship both, one of them will fix it — no time to isolate." | One-change law. A bundle isolates nothing and teaches nothing. Change exactly the one thing the named root cause demands. |
+| "I'm confident it's the redis 5.0 upgrade, so I'll pin it back to 4.5 *while I'm at it* — covering all bases is safer than being precise." | "Confident" is an unrefuted hypothesis, not a root cause. Acting on a hunch is fix-and-pray; adding more uninvestigated changes multiplies it. Run the hypothesis through an investigator first. |
+| "There's no local repro and I can't spin up a concurrent-load Redis test in 20 min — the prod traceback IS my evidence." | A traceback is the symptom, never a repro. "Hard to repro" changes the *kind* of repro (load harness, staging cluster, forced-race test), not whether you need one. Escalate for the time/access. |
+| "The VP said 'just revert or patch, I don't care which' — process is waived during an active incident." | Authority can re-prioritise (ship a stopgap now) but cannot waive cause→test→verify. Read it as: ship a *labelled* mitigation to stop the bleeding, keep the incident open, diagnose to a named cause before closing. |
+| "Writing a regression test against a real cluster takes hours — I'll just watch the 500s stop in the dashboard and call it verified." | A dashboard is monitoring, not verification: it can never show the test fails without the fix. Build the test that reproduces the race; the dashboard is a bonus, not the gate. |
+| "Deploy guard + TTL revert + pin together; if the error rate drops, that proves the fix worked — I don't need to know which change did it." | Error rate dropping proves the bleeding stopped, not that you found the cause. "Which change mattered" is the entire deliverable. Violates the one-change law and the Operating Contract (green symptom ≠ done). |
+| "It's Friday before peak; a safe null guard can't make things worse — ship now, diagnose properly Monday." | A stopgap to buy time is allowed *if labelled as mitigation and the incident stays open*. It is never "fixed," and "diagnose Monday" only holds if the symptom is still tracked and the loop is actually run. A silent guard that closes the ticket is the trap. |
 
 ## Generated agents
 

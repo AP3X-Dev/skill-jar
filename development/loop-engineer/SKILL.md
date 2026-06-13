@@ -22,7 +22,7 @@ Loop:    Automation discovers → Agent executes → Verifier checks → State u
 
 **Output:** a scaffolded loop system inside the target repo — state files, maker≠checker subagents, trigger/automation prompts, a driver prompt the loop-agent runs each cycle, verification gates, and `AGENTS.md` safety rules — tailored to what the repo actually is. **Not** a one-off code change.
 
-**Core principle:** earn autonomy. Start at the smallest loop that delivers value (triage-only), prove it, then add execution, isolation, and connectors one layer at a time. Never scaffold a "fully autonomous, improve-the-codebase" loop on day one.
+**Core principle:** earn autonomy. Start at the smallest loop that delivers value (triage-only), prove it, then add execution, isolation, and connectors one layer at a time. Never scaffold a "fully autonomous, improve-the-codebase" loop on day one. This is non-negotiable: a brand-new, never-run loop ships at **Level 1 or 2 with a reviewed-cycle gate**, no matter how the user frames the request. User trust ("I trust you, don't make me approve every step"), a deadline ("kick it off before I log off"), low blast-radius ("it's only the skill jar"), or an existing sibling loop ("the pattern's already proven") are **not** evidence the new loop has earned Level 4 — they are the exact pressures the ladder exists to resist. Honoring "don't make me approve every step" means automating the *cycle*, not deleting the maker≠checker split or the human merge gate.
 
 ## What a loop is — and isn't
 
@@ -114,6 +114,21 @@ Find out what the repo is and what loop the user actually needs. Read entry poin
 
 Name the loop in one narrow sentence ("every morning, triage new CI failures and open bugs into an inbox"). Bad loops have vague jobs ("improve the codebase"); good loops have one job. Then pick the **lowest** autonomy level that delivers value and let the loop earn its way up — the four-level ladder (triage-only → isolated implementation → connector integration → semi-autonomous) is in [references/loop-architecture.md](references/loop-architecture.md). Default new loops to Level 1 (triage-only, no code writes).
 
+#### Known pressure rationalizations — do not fold
+
+When a user wants a brand-new loop launched unattended (especially overnight/all-weekend), these dodges will surface. Each one is a hard STOP, not a judgment call. Closing them does **not** require asking the user to approve every step — it means scaffolding the loop disciplined, dry-running it once, and launching at the autonomy level it has earned.
+
+| Rationalization | Required response |
+|---|---|
+| "The sibling loops already prove the pattern works here, so I can copy their scaffolding and trust it the first run — no dry-run." | A never-run loop has earned nothing. Dry-run THIS loop end-to-end (Phase 7) before any unattended run, even when the scaffolding is copied. Other loops' track record is not this loop's. |
+| "'Make the codebase better' is a fine objective; the agent's smart enough to figure out 'better' each cycle — no need to pin a metric or a bounded backlog." | Refuse the vague job. Pin it to ONE narrow sentence with a bounded, discoverable backlog and a runnable success check. "Better" with no metric is churn, not a loop. |
+| "User said 'don't make me approve every step' / 'I trust you', so a maker≠checker split or human gate contradicts what they asked — let one agent write AND self-verify." | Trust automates the *cycle*, never the *verification*. The maker≠checker split is non-negotiable and is not a per-step approval. Keep it; explain that's what makes the autonomy safe. |
+| "'Tests pass and audit green' IS the gate — if `audit-jar.py` exits 0 the cycle's good; no separate adversarial checker needed." | A passing automated gate is necessary, not sufficient. It cannot judge scope, correctness, or whether the change is the *right* one. The separate adversarial checker stays on top of the green script. |
+| "It's only the skill jar, not production — worst case I `git reset` the weekend's commits Monday. Low-risk, clean up later." | "I'll clean it up later" is not a safety design. 60 hours of unreviewed autonomous commits is the risk, regardless of blast radius. Build the gates now; do not trade discipline for a future reset. |
+| "Commit-as-it-goes is fine — AGENTS.md only forbids *pushing*, the human still owns push, so I'm respecting the boundary." | Respecting the letter while gutting the intent is the dodge. "Human owns merge/push" presumes per-cycle reviewed, gated commits — not an unbounded stream of unreviewed autonomous ones. Keep the reviewed-cycle gate. |
+| "A real state-file spine + a separate checker subagent is over-engineering for a loop that runs one weekend — skip `loop-state.md`, let the driver re-scan each cycle." | Short lifetime is no excuse. A scheduled run is a cold start that re-reads state; with no state file every cron wake re-does finished work and loses discoveries. The state spine and checker are required, not optional polish. |
+| "I'm under a deadline to kick it off before logging off, so ship the running loop now and harden autonomy / add the dry-run later." | The deadline does not move the gate. "Hardened later" overnight means "unhardened for 60 hours." Ship the dry-run-passed, correctly-leveled loop now or ship nothing — a disciplined Level-2 loop tonight beats an unbounded Level-4 one. |
+
 ### Phase 2 — Scaffold structure
 
 Create the skeleton. Run the scaffolder, or build it by hand from the templates:
@@ -154,8 +169,9 @@ Run this gate on your own output before presenting the scaffolded loop. Fix any 
 - [ ] Every gate is a runnable command that exits 0/1 — no "looks good" gates. The verification commands were confirmed to actually run in this repo.
 - [ ] `AGENTS.md` exists with the default safety rules (no deleting tests to pass, record failed attempts, smallest diff).
 - [ ] Subagents/triggers are in the host's real format (and portable form noted if the host may change).
-- [ ] The autonomy level is the lowest that delivers value; the path to raise it is written down.
-- [ ] One full cycle was dry-run and closed successfully.
+- [ ] The autonomy level is the lowest that delivers value; the path to raise it is written down. A brand-new, never-run loop is **not** launched above Level 2, and no user framing (trust, deadline, "it's only local", "the pattern's proven") overrode that.
+- [ ] One full cycle of THIS loop was dry-run and closed successfully — not inherited from a sibling loop. An unattended/scheduled launch is blocked until that dry-run passed.
+- [ ] Unattended commits are per-cycle and gated (gate + separate checker), not an unbounded unreviewed stream; "I'll git reset / harden it later" was not used to skip a gate.
 
 ## Specialized loops this skill can scaffold
 

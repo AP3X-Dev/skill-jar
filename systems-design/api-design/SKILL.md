@@ -41,15 +41,30 @@ Decision tree + the full playbook: [references/api-playbook.md](references/api-p
 ## The contract checklist (pin before implementation)
 
 1. **Consumers + trust boundaries** — who calls, from where, with what auth.
-2. **Safety & idempotency per endpoint** — reads safe; side-effecting endpoints get **idempotency keys** so retries can't duplicate effects. *Any endpoint that will be auto-retried must be idempotent — non-negotiable.*
-3. **Deadlines + retry budgets** — every call carries a deadline; retries use exponential backoff + jitter under a budget. Watch layered retries (client + gateway + mesh) — they multiply into retry storms.
-4. **Pagination** — cursor-based for anything unbounded; offset pagination breaks under concurrent writes.
+2. **Safety & idempotency per endpoint** — reads safe; side-effecting endpoints get **idempotency keys** so retries can't duplicate effects. *Any endpoint that will be auto-retried must be idempotent — non-negotiable.* If a client retries (mobile/flaky network) and the effect is money or other non-reversible state, the dedup store ships in v1 — it is the contract, not a v2 optimization. "Double-charges basically never happen in testing" is not evidence; a single retried timeout is the bug.
+3. **Deadlines + retry budgets** — every call carries an explicit deadline (context timeout); retries use exponential backoff + jitter under a budget. The default HTTP client has no deadline — shipping it means one slow upstream hangs every caller. Bounded deadline + retry budget on every outbound call is part of v1, not "premature tuning"; metrics tell you it already broke. Watch layered retries (client + gateway + mesh) — they multiply into retry storms.
+4. **Pagination** — cursor-based for anything unbounded; offset pagination breaks under concurrent writes and degrades on deep pages. "Thousands of rows" and "writes happen while paging" is exactly the unbounded+concurrent case — `OFFSET/LIMIT` is trivial to write and wrong here; ship cursors. The mobile team integrating against page numbers now is the reason to fix the contract before launch, not after.
 5. **Versioning = additive evolution** — add optional fields; never repurpose or remove without a deprecation window. Breaking changes are a new major surface.
-6. **Error schema** — one machine-readable shape (code, message, correlation id, retryability) across all endpoints.
-7. **Auth + rate limits + abuse review** — TLS, OAuth-class authn/z, object- and property-level access checks, per-principal limits. Baseline: OWASP API Security Top 10.
+6. **Error schema** — one machine-readable shape (code, type, message, request/correlation id, retryability) across all endpoints. A *new public* endpoint defines the envelope even if existing services lack one — "consistency" with hand-rolled inline strings means clients parse prose forever; the new surface sets the standard, it doesn't inherit the gap.
+7. **Auth + rate limits + abuse review** — TLS, OAuth-class authn/z, object- and property-level access checks, per-principal limits. A public endpoint validates the caller's token and scope at the handler; reading a gateway-set header (`X-User-Id`) as trusted identity is a spoofable trust boundary — verify it, don't assume it. Per-customer rate limits + `429` semantics are part of the contract from v1, not a gateway "eventually" — a public/mobile endpoint is reachable abuse surface, and the limit defines client retry behavior. Baseline: OWASP API Security Top 10.
 8. **Cacheability** — which responses are cacheable, the key dimensions, TTL/staleness budget (feeds CDN policy).
 9. **Ownership + observability** — every endpoint maps to an owner, an SLI, and a dashboard.
 10. **Multi-service writes** — transactional outbox or saga, never ad-hoc distributed transactions.
+
+## Known pressure rationalizations
+
+Deadline pressure ("demo Monday") manufactures reasons to drop the exact promises that make a public, retried, money-moving API survive. Each below is a real failure dressed as pragmatism. The required response is non-negotiable for a new public endpoint.
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "Idempotency keys are a v2 concern; double-charges basically never happen in testing." | A side-effecting endpoint a client will retry is unsafe without an idempotency key + dedup store **in v1**. "Never in testing" isn't evidence; one retried timeout duplicates the charge. |
+| "Mobile retries but the provider usually succeeds; a dedup table is a whole extra day." | The named retrier (flaky-network mobile) is precisely the trigger. The dedup store is the contract, not optional scope — cost doesn't waive the safety promise. |
+| "Offset/limit is what every example uses; cursor pagination is over-engineering." | Thousands of rows + concurrent writes = unbounded+concurrent. `OFFSET/LIMIT` skips/duplicates rows and degrades deep. Ship cursors before the client integrates against page numbers. |
+| "Match the repo's inline error strings; an envelope is nice-to-have since other services lack one." | A new public endpoint defines the machine-readable error envelope (code/type/message/request_id/retryability). Inheriting the gap forces clients to parse prose. |
+| "No deadlines/retry budget; default `http.Client` is fine — premature tuning." | Every outbound call gets an explicit deadline + bounded retries in v1. The default client has no timeout; one slow upstream (200ms–2s, occasional timeout) hangs every caller. Metrics report the outage, they don't prevent it. |
+| "Auth is handled — the gateway sets `X-User-Id` and we trust it." | A gateway-set header is spoofable if reachable directly. The public handler validates the token + scope itself; trust boundaries are verified, not assumed. |
+| "Rate limiting belongs at the gateway eventually; abuse isn't realistic before the demo." | A public/mobile endpoint is abuse surface from day one. Per-customer limits + `429` are part of the v1 contract — the limit also defines correct client retry/backoff. |
+| "REST-over-JSON because that's what mobile expects; `/v1` in the path is enough of a compatibility story." | Protocol choice (HTTP+JSON for a public/mobile API) is fine — but a version segment is not a compatibility plan. State the additive-evolution + deprecation policy: optional-field-only changes, no field repurposing, a deprecation window before any break. |
 
 ## Release gate
 
