@@ -46,7 +46,7 @@ Never reapable by this loop: `circular-dependencies`, `boundary-violations`, `co
 
 ```md
 ---
-name: reaper-scout
+name: dead-code-reaper-scout
 description: "Producer for the dead-code-reaper loop. Runs FUGAZI's dead-code family read-only, proves each candidate unreachable with trace, and files high-confidence clusters to the ledger. Use during the loop's discovery stage. Never deletes code."
 model: sonnet
 ---
@@ -67,7 +67,7 @@ Return: candidate count, one line each (kind + proof), what you filtered and why
 
 ```md
 ---
-name: reaper
+name: dead-code-reaper-reaper
 description: "Maker for the dead-code-reaper loop. Removes exactly one proven-dead cluster per cycle with the smallest diff, re-scans, and runs the repo gate. Use during the loop's execution stage. Never validates its own removal."
 model: sonnet
 ---
@@ -88,7 +88,7 @@ Return: cluster removed, LOC removed, re-scan result, gate result, ledger update
 
 ```md
 ---
-name: reaper-validator
+name: dead-code-reaper-validator
 description: "Checker for the dead-code-reaper loop. Independently re-runs FUGAZI and the full gate on a removal, enforces the finding-count/LOC ratchet, and promotes or reopens. Use during the loop's verification stage. Run on a different model than the reaper."
 model: opus
 ---

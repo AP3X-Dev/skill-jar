@@ -32,6 +32,20 @@ Maker and checker stay separate. Parallel work is allowed only from the
 parallelism audit and is invalidated when actual touches exceed the predicted
 write set.
 
+**Launch gate — this skill OFFERS launch, it never auto-launches.** Before
+launching any code-writing maker (Phase 4 onward), present the parallelism map
+and the first-cycle plan and get an explicit human "go". A compute-spending
+execution loop starts only on an explicit human yes; ticket creation and the
+parallelism audit (Phases 0–3) and Analysis-Only Mode need no such approval.
+
+**Stop condition.** Repeat the execute → verify → update cycle only until one of
+these holds, then write the Closeout and stop — never spin cycles past an empty
+`ready` lane or an approved budget:
+
+- no `ready` tickets remain;
+- a `blocked` / `NEEDS-DECISION` ticket needs a human; or
+- the human-approved budget (cycle count, wall-clock, or cost) is exhausted.
+
 ## State Layout
 
 Create or maintain these files:
@@ -108,7 +122,8 @@ the map.
 
 ### 4. Execute One Cycle
 
-Pick the next ticket from the board. For a `parallel-build` lane, create one
+Only after the launch gate (Operating Contract) is cleared, pick the next ticket
+from the board. For a `parallel-build` lane, create one
 worktree/branch per ticket and run only one maker per worktree. For a serial
 lane, finish and verify the earlier ticket before starting the next.
 

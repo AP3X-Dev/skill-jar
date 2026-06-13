@@ -30,13 +30,24 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 ## Open Tasks
 
+> Promoted from triage-inbox.md by ecosystem-audit-1. One task per cycle, maker
+> then a separate checker. Full evidence in `agent-state/triage-inbox.md`.
+
 | ID | Task | Owner | Status | Files | Acceptance (exits 0) |
 |----|------|-------|--------|-------|----------------------|
+| T-ECO-1 | Add NOT-for boundary to instrument-observability (F-3) | implementer | pending | development/instrument-observability/SKILL.md, skills.json | `grep -iE "not for\|when not to use" development/instrument-observability/SKILL.md && python scripts/audit-jar.py` |
+| T-ECO-2 | Reframe MemBerry/memberry-setup as optional adapter in autonomous-advisor + clean-room (F-1, F-2, HD-5) | implementer | pending | development/autonomous-advisor/SKILL.md, development/clean-room/SKILL.md | `! grep -n "surface the error and halt" development/autonomous-advisor/SKILL.md && python scripts/audit-jar.py` |
+| T-ECO-3 | Wire reciprocal handoffs incl. test-backfill suspected-bug -> BUG_TRACKER.md (F-7, F-8) | implementer | pending | development/{instrument-observability,improve-architecture,dead-code-reaper,test-backfill-loop}/SKILL.md | `grep -n "BUG_TRACKER" development/test-backfill-loop/SKILL.md && python scripts/audit-jar.py` |
+| T-ECO-4 | Add committed-clean precondition before plan-prune deletes a doc (F-10) | implementer | pending | development/plan-prune/SKILL.md | `grep -in "committed\|untracked" development/plan-prune/SKILL.md && python scripts/audit-jar.py` |
 
 ## Completed Tasks
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-12-ECO-MAP | Add docs/ecosystem-map.md | ecosystem-audit-1 | this commit | Edges-between-skills map: routing table, two pipeline backbones, autonomy ladder + human gate, dependency matrix, 23-skill relationship table, state-files map, gates note. |
+| C-2026-06-12-ECO-KIT-NAMES | Align bundled kit template names with manifest roles | ecosystem-audit-1 | this commit | Renamed fenced `name:` in reaper/backfill/drift kits to dead-code-reaper-*/test-backfill-*/arch-drift-watcher; closes gate-invisible drift; independent checker verified. |
+| C-2026-06-12-ECO-SPRINT-GATE | Add launch gate + stop condition to sprint-ticket-runner | ecosystem-audit-1 | this commit | The lone auto-launch/no-stop loop skill now offers launch and defines a stop condition; aligns with the "ask before launching loops" rule; independent checker verified. |
+| C-2026-06-12-ECO-LINK | Normalize loop-architecture state-templates link | ecosystem-audit-1 | this commit | `../references/state-templates.md` -> `./state-templates.md` (same target, already gate-green); removes the inconsistency one audit lens mis-read as a break. |
 | C-2026-06-10-SF-001-RED | Capture RED pressure evidence for `arch-drift-watch` | skill-forge-1 | this commit | RED surfaced six concrete rationalizations: ad hoc `rg` scanning instead of FUGAZI, inferred zones, silent baseline reset, immediate auto-fix, audit-gate overconfidence, and loose triage routing. |
 | C-2026-06-10-SF-001-GREEN | Patch `arch-drift-watch` for captured RED rationalizations | skill-forge-2 | this commit | GREEN tightened `development/arch-drift-watch/SKILL.md` against ad hoc scanning, inferred zones, silent baseline resets, detection-cycle fixes, audit-green overconfidence, and vague triage routing. |
 | C-2026-06-10-SF-001-REF1 | Judge `arch-drift-watch` pressure pass 1 | skill-forge-3 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
@@ -144,3 +155,17 @@ For future drop-in skills, run `python scripts/sync-jar.py` before
 `python scripts/audit-jar.py`; missing skill-forge rows should appear as
 `pending-red`, and hook evidence should accumulate in
 `agent-state/skill-usage.md`.
+
+ecosystem-audit-1 ran a deep, evidence-backed audit of all 23 skills (29-agent
+workflow: one reader per skill + 6 cross-cutting lenses). The structural gate is
+GREEN (208 checks, 0 failed after this cycle's edits). It applied the four
+highest-leverage fixes this cycle (kit-name alignment, sprint-ticket-runner
+launch gate, the loop-architecture link, and `docs/ecosystem-map.md`) and filed
+the rest to `triage-inbox.md` (F-1..F-12) and `decisions.md` (HD-1..HD-5). Next
+jar-audit cycle: take ONE Open Task (T-ECO-1 recommended first — instrument-
+observability NOT-for is low-risk and resolves a real routing collision), maker
+fixes it, a SEPARATE checker verifies, run `python scripts/audit-jar.py`, commit
+code + state together, stop. The proposed new gates (HD-1..HD-3) are audit-policy
+changes that need explicit human approval before a maker implements them — do not
+add them silently. Note: prior "27 checks"/"182 checks" narration in this file is
+stale; the current count is 208.
