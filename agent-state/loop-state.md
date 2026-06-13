@@ -42,6 +42,8 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-12-SF-005-FORGED | Forge clean-room (SF-005) | skill-forge-batch1 | this commit | 3/3 independent judges COMPLY on the firewall/parity scenario; SF-005 -> forged. |
+| C-2026-06-12-SF-023-GREEN-FORGED | GREEN + forge instrument-observability (SF-023) | skill-forge-batch1 | this commit | Forger closed the captured RED rationalizations (45/+2- diff, description unchanged); 3/3 independent judges COMPLY (forger != judge); SF-023 -> forged. |
 | C-2026-06-12-T-ECO-1 | instrument-observability NOT-for + production-readiness handoff (F-3) | jar-audit-eco-1 | this commit | Added a "When NOT to use" boundary (diagnose-loop / optimization-loop / host bugfix) + description NOT-for clause (900 chars) + a handoff sentence to production-readiness. Maker + independent checker PASS. |
 | C-2026-06-12-T-ECO-2 | MemBerry reframed optional in autonomous-advisor + clean-room (F-1, F-2, F-12; HD-5) | jar-audit-eco-1 | this commit | Removed the "surface the error and halt" mandatory framing; MemBerry/memberry-setup is now an optional adapter (clean skip on absence), consistent across both skills; fixed duplicate list numbering. Checker rejected one inaccurate "FUGAZI above" cross-ref; reworded and re-verified PASS. |
 | C-2026-06-12-T-ECO-3 | Reciprocal handoffs: arch-drift-watch upstream + BUG_TRACKER.md sink (F-7 partial, F-8) | jar-audit-eco-1 | this commit | improve-architecture and dead-code-reaper now name arch-drift-watch as upstream detector; test-backfill-loop names agent-state/BUG_TRACKER.md as the suspected-bug sink. Maker + independent checker PASS. |
@@ -184,3 +186,14 @@ triage-inbox. Next in the authorized rotation: bug-pipeline hunter sweep (focus
 the files changed this run + cross-file consistency), then skill-forge on the
 queue (SF-005 clean-room needs REFACTOR judge runs; SF-023 instrument-
 observability re-baselines after this run's edits; SF-006..022 pending-red).
+
+skill-forge-batch1 (user-authorized rotation) forged SF-005 clean-room (3/3
+judges COMPLY on the existing GREEN) and SF-023 instrument-observability (forger
+applied the GREEN patch closing the captured RED rationalizations; 3/3 independent
+judges COMPLY; forger != judge). Gate green (208). Forge queue now: SF-001..005
+and SF-023 = forged (6 of 23); SF-006..022 + SF-021 still pending-red (need RED
+scenario authoring + capture, then GREEN, then 3 judge runs each). Next skill-forge
+batch: pick the next pending-red skills, run RED (fresh agents WITHOUT the skill)
+to capture rationalizations, GREEN-patch to close them, then 3 judge runs; advance
+in reviewable batches. Note: forging the ~17 remaining is multi-batch — each is a
+content-editing RED->GREEN->judge x3 pipeline.

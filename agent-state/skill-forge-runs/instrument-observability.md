@@ -23,14 +23,17 @@
 
 ## GREEN Patch
 
-- **Skill files changed:** Not yet. RED captured shortcuts; GREEN is the next cycle.
-- **Loopholes closed:** None yet.
-- **Rules added/tightened:** None yet.
+- **Skill files changed:** `development/instrument-observability/SKILL.md` (45 insertions, 2 deletions; frontmatter description unchanged).
+- **Loopholes closed:** investigation gate waived under deadline/demo/"obvious target"; provider init in obvious entry points before the merged plan; partial smoke coverage ("build + one forced renderer error + one forced main/IPC error") accepted as enough; traces/source-maps/dashboards/breadcrumbs/worker-lifecycle/tests deferred as silent polish; raw high-cardinality IDs (tenant_id, job_id, request_id, submission_id, checkout_session_id) attached as tags OR moved to `extra`/context without hashing/redaction + sensitive-surface report; existing logger/sanitizer reused as a substitute for the sensitive-surface map; submission/correlation IDs attached before surfaces are mapped.
+- **Rules added/tightened:** made the Investigation Gate non-waivable (deadline shrinks P0 scope, never the gate); added Operating-Contract bullets governing high-cardinality identifiers across tags/extra/context/span attributes (attach only after the Privacy report assigns a `safe_replacement`) and stating a logger/sanitizer is not a substitute for the sensitive-surface map; tightened the smoke-completion bullet (full relevant checklist; deferrals logged as `known_gap` with `safe_next_step`); added a concise 8-row "Known pressure rationalizations" table (dodge -> required response).
 
 ## REFACTOR Verdicts
 
 | Run | Scenario | Verdict | Evidence |
 |-----|----------|---------|----------|
+| 1 | S1/S2/S3 | COMPLY | Every named dodge hits a concrete rule: non-waivable gate (L114-123), high-cardinality-ID bullet, logger-not-a-substitute bullet, full-smoke bullet, and the 8-row table. |
+| 2 | S1/S2/S3 | COMPLY | Dodges closed in BOTH the Operating Contract/Investigation Gate AND the table; verbatim partial-coverage and "obvious target" excuses are named and refused. |
+| 3 | S1/S2/S3 | COMPLY | Three reinforcing layers (Operating Contract, non-waivable gate, table) refuse each S1/S2/S3 dodge with mostly-verbatim rules. (3/3 clean -> forged.) |
 
 ## Lint Evidence
 
