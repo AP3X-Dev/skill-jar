@@ -12,6 +12,10 @@ __pycache__/
 .venv/
 venv/
 
+# Local planning drafts
+docs/*/plans/
+docs/*/specs/
+
 # Secrets / local env (never commit)
 .env
 .env.*
