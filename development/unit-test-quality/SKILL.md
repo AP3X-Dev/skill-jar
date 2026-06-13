@@ -57,6 +57,7 @@ This skill exists to prevent AI slop tests: tests that merely execute code, asse
    - Does it avoid uncontrolled time, randomness, I/O, network, shared state, and test order?
    - Is setup explicit and minimal enough that a reviewer can see the case?
    If any answer is missing, do not call the test useful; rewrite it or delete it.
+   The expected value in an assertion must be derived independently from the contract (computed by hand, from a spec, or a known reference), never copied from the code's current output. Coverage is a diagnostic, not the goal: a test that executes a line without pinning its expected result does not count as covering that behavior, regardless of what the coverage report says.
 4. **Check isolation and determinism.** Look for uncontrolled time, randomness, env vars, filesystem paths, network, shared databases, global caches, test order, or sleeps.
 5. **Check assertion strength.** Prefer observable outputs and state. Use interaction assertions only when the interaction is part of the contract.
 6. **Check setup shape.** Broad fixtures, loops/conditionals in test bodies, hidden files, or enormous snapshots are test smells unless justified.
@@ -64,6 +65,21 @@ This skill exists to prevent AI slop tests: tests that merely execute code, asse
 8. **Escalate weak confidence.** If coverage is high but assertion strength is unclear, add a mutation/bite check for the changed behavior or file a follow-up with exact scope.
 
 For metrics, language/tool examples, smell taxonomy, and CI lanes, read [references/unit-test-quality-playbook.md](references/unit-test-quality-playbook.md).
+
+## Known Pressure Rationalizations
+
+Under a deadline or a coverage gate, agents talk themselves into shipping slop. Each dodge below is rejected — the gate is behavior pinned by an independently-derived expected value, not a green number.
+
+| Rationalization (dodge) | Required response |
+|---|---|
+| "I hit 85% / the gate, so the code is tested enough — my job is to make the number green, not gold-plate." | The gate is a floor on execution, not proof of behavior. A test that raises coverage without pinning an expected result is not a passing test here. Pin behavior; the number follows. |
+| "I'll call it with several inputs in one test and assert `toBeDefined()` / `not.toThrow()` — that hits all the branches." | Banned. `toBeDefined`, `not.toThrow`, and "it ran" are non-assertions. Each behavior gets its own named case asserting the actual outcome. |
+| "Computing the exact discounted/rounded total by hand is fiddly — I'll just assert it's a number greater than zero." | The fiddly case is exactly the one worth pinning. Compute the expected total by hand or from the spec and assert equality (to the rounding contract). Loose bounds like `> 0` do not catch the regression. |
+| "I'll mock TaxService, InventoryService and the rounding helper to return 9.99, then assert it returns 9.99 — the existing tests already mock everything." | Re-asserting a mock proves nothing. Mock only the boundary that makes the unit deterministic; let the real discount/stacking/rounding logic run and assert its output. An established over-mocking pattern is a smell to fix, not a license to copy. |
+| "Snapshot it — `toMatchSnapshot()` makes whatever the code produces today the expected value, instantly green." | Snapshotting current output pins a behavior nobody verified. Use snapshots only when the artifact itself is the contract; otherwise assert the specific computed total. |
+| "For the expiry path I'll just assert it doesn't throw — covering the line is what moves the metric." | Covering the line is not testing it. Assert the actual expiry behavior (e.g. discount is zero / coupon rejected), not the absence of an exception. |
+| "These are happy-path lines; edge cases (stacking, rounding, expiry, min-spend) get a proper test in a follow-up ticket — right now the priority is unblocking the release." | The edge cases are the behavior contract you just wrote, not a follow-up. A weak test is not "strictly better than no test" — it is a false signal that the behavior is verified. Pin them now or mark the PR not-ready. |
+| "I'll run the code, copy the printed number into the test, and pin that — if it changes we'll see it fail. Pinning current output IS pinning behavior." | No. Copying current output pins whatever bug shipped with it; the test will agree with a wrong implementation. Derive the expected value from the contract independently, then assert it. Characterization tests are only valid when explicitly labeled as such over legacy code with no known contract — not for code you just wrote. |
 
 ## Patterns
 
@@ -110,3 +126,4 @@ Start with these signals:
 - Accepting snapshots that no reviewer can understand.
 - Moving slow or flaky tests out of sight without tracking ownership.
 - Lowering the standard for touched code because the legacy suite is weak; raise standards where you are already editing.
+- Deferring the edge cases you just implemented to a follow-up ticket while shipping only happy-path coverage to clear a deadline; the behavior you wrote is the behavior to pin now.

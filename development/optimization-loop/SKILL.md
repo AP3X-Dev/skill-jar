@@ -63,6 +63,20 @@ Every optimization loop runs on its own branch: `opt/<project>-<focus>` (pick `<
 - Hypothesis-driven experimentation against a frozen eval harness, chasing one scalar (training speedruns, prompt optimization) — use **auto-research**.
 - Judgment-driven architecture work — deepening shallow modules, fixing seams, reducing AI-driven drift — where a human owns direction, not an automated metric ratchet — use **improve-architecture**.
 
+## Known pressure rationalizations — do not fold
+
+These surface when feature work just merged, the gate is already green, and a near-deadline ("20 minutes before I leave", "running by the time I walk out") tempts you to ship a prompt instead of a closed loop. Each is a hard STOP, not a judgment call. A green binary gate and a deadline change **nothing** about what the deliverable is.
+
+| Rationalization | Required response |
+|---|---|
+| "The audit prints '208 checks, 0 failed' — that IS my metric and my baseline; the no-regression rule is just 'keep audit-jar.py exiting 0.'" | The binary gate (Verification Commands, exits 0/1) is NOT the metric vector. "0 failed" is one boolean; a baseline is a vector of *re-runnable numbers* — check count, per-dimension scores, lint/type/coverage/size counts — that can degrade while the gate stays green. Derive the vector in Phase 2 from real commands, or the loop runs open-loop. |
+| "'Harden the jar' is intent enough; a real audit + intent pass would eat my whole 20 minutes and I'd ship nothing." | The deadline does not delete Phases 1–2. Without the audit there is no file-level backlog and no baseline, so cycle 1 has nothing concrete to do — you'd ship churn, not hardening. Run the parallel audit (it IS the 20 minutes' work); a small real backlog tonight beats a themed prompt. |
+| "Write the backlog as themes the smart loop can self-direct on ('tighten descriptions', 'reduce doc drift') — enumerating file-level items by hand is the manual work the loop replaces." | Refuse the themed backlog. Every Open Task names exact files, a concrete fix, and a falsifiable Acceptance command (the Phase-4 checklist gate). "The agent will pick files" is the generic-prompt mistake — a themed loop optimizes nothing measurable. The audit does the enumeration; that is the deliverable, not the loop's job. |
+| "The deliverable is a good driver prompt; wiring the trigger and running a cycle is the loop's job, not mine — I just set it up." | "Hand off running" is a core principle, not optional polish. Phase 5 is YOURS: wire the trigger AND close cycle 1 end-to-end yourself. A prompt on a shelf with unrun acceptance commands is not a loop. |
+| "The audit's at 0 failed, so there's nothing for cycle 1 to fix tonight; the overnight run is its own first cycle." | A green gate does not mean an empty backlog — the audit surfaces dead wires, low scores, and drift that exit 0. Close cycle 1 on backlog item #1 yourself, now. If cycle 1 truly can't close (no item, acceptance won't run, metric recipe is broken), that is a Phase-5 defect to fix BEFORE handoff — not a thing to let the overnight run discover. |
+| "A no-regression ratchet on top of an already-green gate is redundant — if audit stays at 0 failed and tests pass, nothing regressed." | False. The gate cannot see a description quietly weakened, coverage dropping, or a count creeping up — all exit 0. The metric ratchet is a SEPARATE down-only/up-only floor on top of the gate, re-measured every cycle. Keep both. |
+| "Log 'audit: 0 failed, all good' in loop-state.md and call setup complete; if the loop hits something weird the human reads failed-attempts.md in the morning." | "0 failed, all good" is not a baseline and skips closing cycle 1 — two STOPs in one. The Metric Vector table must carry real numbers from commands that ran (Phase-4 checklist), and cycle 1 must close green before handoff. Don't outsource your setup verification to the overnight run and the morning's reader. |
+
 ## The Process (Layer 1)
 
 ```dot
@@ -200,7 +214,12 @@ and this pass's focus>
 | <test pass count> | <cmd> | <n> | <n> | up-only |
 | <tsc errors> | <cmd> | <n> | <n> | down-only |
 <one row per Phase-2 measurement recipe. Floors advance on improvement and
-may never regress without a logged one-line waiver in the session entry.>
+may never regress without a logged one-line waiver in the session entry.
+This vector is REQUIRED and is NOT the Verification gate above: a green gate
+("0 failed") is one boolean and cannot see a count creeping up, coverage
+dropping, or a description weakened — all exit 0. Each Baseline is a real
+number from a command that ran in Phase 2, never the gate's pass/fail. A
+single "audit: 0 failed" line here is not a baseline — that is the empty loop.>
 
 ## Open Tasks  (the backlog — ordered by priority, descending)
 | ID | Task | Owner | Status | Files | Acceptance (exits 0) |
@@ -324,11 +343,11 @@ Two agents from loop-engineer's [subagent-templates](../loop-engineer/references
 
 ### Before proceeding — verify your own output
 
-- [ ] Every backlog item names exact files, a concrete fix, and a falsifiable Acceptance command — no "improve X".
+- [ ] Every backlog item names exact files, a concrete fix, and a falsifiable Acceptance command — no "improve X", no themes the loop is left to "self-direct" on ("tighten descriptions", "reduce drift").
 - [ ] Dimensions AND measurement recipes were derived from the audit, not a generic checklist.
 - [ ] "Already Done" is non-empty (proves the audit ran).
 - [ ] The `opt/` branch exists and is named in the loop-state and driver.
-- [ ] The Metric Vector table carries real baseline numbers from commands that actually ran.
+- [ ] The Metric Vector table carries real baseline numbers from commands that actually ran — not the gate's "0 failed" boolean restated as a baseline.
 - [ ] Maker and verifier are separate agents; the verifier can reject.
 - [ ] Intent Summary exists iff planning docs conflicted.
 
@@ -341,8 +360,8 @@ Present the backlog + driver to the user for review, then:
 **This phase is why the deliverable is a loop and not a prompt.**
 
 1. **Wire the trigger** to the host (forms in loop-engineer's [automation-templates §4](../loop-engineer/references/automation-templates.md)): `/loop <interval> docs/prompts/<name>-optimizer-driver.md` in Claude Code; a scheduled `codex exec` for Codex; cron/CI for generic. Pick the cadence with the user — unattended runs spend money, and the human owns the budget.
-2. **Run cycle 1 end-to-end, now:** preflight → Mode A on backlog item #1 → Mode B sweep → verifier gates it → ratchet → state + commit. For real, not as a description.
-3. **If cycle 1 cannot close green** — the acceptance command was wrong, the metric recipe doesn't run, the verifier's instructions don't fit the repo — fix the driver/state and re-run. Do not hand off a loop that has never closed once.
+2. **Run cycle 1 end-to-end, now:** preflight → Mode A on backlog item #1 → Mode B sweep → verifier gates it → ratchet → state + commit. For real, not as a description. A green binary gate ("0 failed") does NOT mean an empty backlog — the audit surfaces dead wires, low-scoring dimensions, and drift that all exit 0; cycle 1 fixes item #1. The overnight run is **not** "its own first cycle": you close cycle 1 here so the driver, acceptance commands, metric recipes, and verifier are proven against the real repo before anyone walks away.
+3. **If cycle 1 cannot close green** — the acceptance command was wrong, the metric recipe doesn't run, the verifier's instructions don't fit the repo, or the backlog has no concrete item to act on — that is a Phase-5 defect to fix BEFORE handoff. Fix the driver/state/backlog and re-run. Do not hand off a loop that has never closed once, and never let the overnight run be the thing that discovers your setup is broken.
 4. **Hand off:** report the trigger wiring, cycle-1 results (item completed, metrics vs baseline), and the termination conditions the user should expect the loop to report against.
 
 ---
@@ -361,7 +380,7 @@ The loop-agent evaluates these over the loop-state's own records (per-cycle new 
 
 ## Common Mistakes
 
-- **Handing off a prompt instead of a running loop.** Generation without Phase 5 leaves an unproven driver on a shelf — the acceptance commands may not even run. Close cycle 1 first.
+- **Handing off a prompt instead of a running loop.** Generation without Phase 5 leaves an unproven driver on a shelf — the acceptance commands may not even run. Close cycle 1 first. A near-deadline ("20 minutes, then I leave") does not move this gate or make Phase 5 "the loop's job" — wiring the trigger and closing cycle 1 are yours; ship a closed cycle or ship nothing.
 - **Writing generic prompts without auditing.** "Improve performance and quality" is useless. "Item 3: wire searchEndpoint config from Config.swarm through bin.ts to the runner constructor" is actionable.
 - **Skipping intent discovery.** Without it, every dead wire might be a TODO, not a bug.
 - **A fixed backlog with no Mode B.** Codebases have issues that only surface when you fix adjacent code.

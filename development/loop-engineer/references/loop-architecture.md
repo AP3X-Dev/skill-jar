@@ -6,7 +6,7 @@ Everything here describes **Layer 2** — the system that runs cycle after cycle
 
 Companion references:
 
-- [../references/state-templates.md](../references/state-templates.md) — the `agent-state/` files
+- [./state-templates.md](./state-templates.md) — the `agent-state/` files
 - [./subagent-templates.md](./subagent-templates.md) — explorer / implementer / verifier / security-reviewer bodies (Claude Code `.md` + Codex `.toml`)
 - [./automation-templates.md](./automation-templates.md) — trigger prompts + the per-cycle driver prompt
 - [./safety-and-gates.md](./safety-and-gates.md) — `AGENTS.md` rules + runnable gates

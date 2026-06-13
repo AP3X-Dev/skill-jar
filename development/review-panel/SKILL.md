@@ -23,6 +23,13 @@ If `requesting-code-review`, `receiving-code-review`, or `dispatching-parallel-a
 
 The review output is a verified review package, not a list of opinions. Pin `BASE_SHA` and `HEAD_SHA` before dispatch. Every finding must include `file:line`, trigger or abuse path, impact, severity, and origin lens. The synthesizer may dedupe and rank only findings the reviewers raised. The author must verify or refute each finding against the code before acting; fixes for Critical/Important findings name the command that proved the issue gone.
 
+**Hard gates (a deadline does not waive these):**
+
+- **No verification → no severity.** A finding you have not reproduced against the code (step 5) ships tagged **Unverified hypothesis**, never Critical/Important/Minor. The verified/unverified line is the *first* thing the reader sees on each finding, not a footnote. "Patterns are textbook gotchas" and "odds are high enough to flag" do not promote a hypothesis to a verified finding — only the trace does. Stating an unchecked pattern-match flatly, as a confident reviewer would state a verified one, is the lie this skill exists to prevent.
+- **The verdict rests only on verified findings.** "Do not merge until X and Y are fixed" is a claim about X and Y being real. If you have not verified X and Y, the verdict is **"unable to verify in time — N unverified hypotheses below, merge decision blocked on verification,"** not "blocked on X and Y." Blocking a merge on an invented blocker is not the conservative call; it is a false negative that costs the author a verification cycle they were entitled to get from you.
+- **The panel is real reviewers, not one reviewer in four hats.** Four lens headers generated from one reading pass is a forged panel — it manufactures the *appearance* of independent coverage while delivering one set of blind spots. Either dispatch the lenses as separate passes/agents, or state plainly that this was a single-pass review and label it as such. Do not dress one sweep as four.
+- **Run the objective gate before the verdict.** The repo's own gate (its test/compile/lint command — e.g. `scripts/audit-jar.py` here) is the cheapest verification you have: it tells you objectively whether the changed code even compiles and passes, settling several findings for free. "The user wants findings, not a test run" is false — the gate *produces* findings and refutes others. Record its result in **Gate Evidence**; if you truly could not run it, say so explicitly rather than implying the diff was checked.
+
 ## When to Use
 
 - A branch/PR/diff is about to merge and you want adversarial, broad coverage.
@@ -66,8 +73,11 @@ Apply after verification:
 - **Critical** — correctness/security defect that will bite in production. Fix before merge.
 - **Important** — real problem, not a blocker. Fix now or file it.
 - **Minor** — style/preference. Note it; don't gate the merge on it.
+- **Unverified hypothesis** — flagged but not yet reproduced against the code. This is the *only* tier a pre-step-5 finding may carry. It does not gate the merge and it is never reported as Critical/Important/Minor by gut feel.
 
-A finding's severity is only meaningful *after* it survives step 5. An unverified "Critical" is a hypothesis.
+A finding's severity is only meaningful *after* it survives step 5. An unverified "Critical" is a hypothesis — tag it **Unverified**, not Critical. Severity is not subjective eyeballing: Critical/Important/Minor is decided by *what the trace in step 5 showed* (does the bad input reach the line? what is the blast radius?), and that decision is unavailable until the trace exists. "Severity tags are inherently subjective" is the rationalization that lets an unchecked pattern wear a Critical badge.
+
+A false positive is **not** harmless. Each one you ship at a real severity costs the author a verification cycle, and a wall of confident-but-wrong flags trains them to skim past your reviews — including the one true finding. "Over-flagging is the safe default" inverts the cost: the unit of value here is a *verified* finding, not a flagged one.
 
 ## Optional: FUGAZI pre-pass
 
@@ -80,6 +90,21 @@ If a MemBerry-style memory MCP is available, `berry_load` at step 2 to recall fi
 ## Generated agents
 
 Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active review panel: `review-correctness`, `review-security`, `review-simplicity`, `review-synthesizer`.
+
+## Known pressure rationalizations
+
+Under a deadline you will reach for one of these to skip step 5 or the objective gate. Each is a known dodge; the required response is non-negotiable.
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "Findings are hypotheses for the author to confirm — I don't need to verify each myself; flagging a plausible risk *is* the value." | The maker≠checker split is not a license to ship unverified flags. The reviewer verifies what the reviewer can; anything unverified ships tagged **Unverified hypothesis**, never as a confident finding. Under deadline the author often *can't* re-verify before standup — your unverified flag is the only check that runs. |
+| "No time to grep for `shell=True` or re-read `repo_root()`; the patterns are textbook gotchas, so my odds are high enough to flag them." | High base rate is not evidence. A grep is seconds; the trace is the finding. If you genuinely can't check it, ship it as **Unverified hypothesis** with "not checked: <what I'd grep/read>" — do not state it as fact. |
+| "Four lenses (Correctness/Security/Performance/Maintainability) gives the user the panel they asked for — re-reading four times is just slower." | Four headers over one reading pass is a **forged panel**. Run the lenses as separate passes/agents, or label the output a single-pass review. Never dress one sweep as four. |
+| "A few false positives are harmless — worst case the author dismisses them; a missed bug is the real cost, so over-flagging is safe." | False positives cost the author a verification cycle and erode trust in every future review. The deliverable is *verified* findings, not flagged ones. Over-flagging is not the safe default — it is noise that buries the true finding. |
+| "Ending with 'do not merge until X and Y are fixed' is conservative — blocking can't hurt and makes me look thorough." | A merge verdict is a claim that the blockers are real. Blocking on unverified X and Y is a false negative that wastes the author's cycle. If unverified, the verdict is "merge decision blocked on verification — N unverified hypotheses," not "blocked on X and Y." |
+| "Severity tags are inherently subjective, so eyeballing Critical/High/Medium is fine on a 13-minute pass." | Severity is decided by the step-5 trace (does bad input reach the line? blast radius?), not by gut. No trace → tier is **Unverified hypothesis**, full stop. |
+| "Running the repo's gate costs setup time and the user asked for findings, not a test run — skip it." | The gate (e.g. `scripts/audit-jar.py`) is the cheapest verification there is and it *produces* findings. Run it and record the result in Gate Evidence. If you can't, say so — don't imply the code was checked. |
+| "Caveating every finding with 'I haven't verified this' reads wishy-washy; a confident senior states them flatly." | A senior reviewer's confidence comes from *having verified*. Stating an unchecked pattern at the same confidence as a traced bug is not seniority — it is fabrication. The verified/unverified label leads each finding; it is not a hedge, it is the finding's status. |
 
 ## Common Mistakes
 

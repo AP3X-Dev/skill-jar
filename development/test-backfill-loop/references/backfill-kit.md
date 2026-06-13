@@ -34,7 +34,7 @@ A new test must be able to fail. Prove it before counting the test:
 
 ```md
 ---
-name: backfill-scout
+name: test-backfill-scout
 description: "Producer for the test-backfill loop. Finds the highest-value uncovered module and files one target per cycle. Use during the loop's discovery stage. Writes no tests."
 model: sonnet
 ---
@@ -50,7 +50,7 @@ Return: the target, its coverage gap, and why it's the highest value now.
 
 ```md
 ---
-name: backfill-writer
+name: test-backfill-writer
 description: "Maker for the test-backfill loop. Writes characterization tests for one module that pin current behaviour and raise coverage. Use during the loop's execution stage. Never validates its own tests."
 model: sonnet
 ---
@@ -68,7 +68,7 @@ Return: tests added, coverage before→after, any suspected bug filed.
 
 ```md
 ---
-name: backfill-verifier
+name: test-backfill-verifier
 description: "Checker for the test-backfill loop. Confirms each new test bites and the coverage ratchet advanced. Use during the loop's verification stage. Run on a different model than the writer."
 model: opus
 ---

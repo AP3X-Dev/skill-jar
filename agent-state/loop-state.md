@@ -30,6 +30,11 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 ## Open Tasks
 
+> ecosystem-audit-1 promoted T-ECO-1..4 here; jar-audit-eco-1 closed all four
+> (see Completed Tasks below). Remaining findings F-4..F-11 stay in
+> `agent-state/triage-inbox.md` until a future cycle promotes one. One task per
+> cycle, maker then a separate checker.
+
 | ID | Task | Owner | Status | Files | Acceptance (exits 0) |
 |----|------|-------|--------|-------|----------------------|
 
@@ -37,6 +42,17 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-06-12-SF-QUEUE | Forge remaining 17 skills (SF-006..022, SF-021) | skill-forge-queue | this commit | Concurrent RED->GREEN->judge x3 per skill (85 agents, forger != judge); 17/17 forged 3/3; gate 208; run packages written; tracker de-fragmented. Forge queue now 23/23. |
+| C-2026-06-12-SF-005-FORGED | Forge clean-room (SF-005) | skill-forge-batch1 | this commit | 3/3 independent judges COMPLY on the firewall/parity scenario; SF-005 -> forged. |
+| C-2026-06-12-SF-023-GREEN-FORGED | GREEN + forge instrument-observability (SF-023) | skill-forge-batch1 | this commit | Forger closed the captured RED rationalizations (45/+2- diff, description unchanged); 3/3 independent judges COMPLY (forger != judge); SF-023 -> forged. |
+| C-2026-06-12-T-ECO-1 | instrument-observability NOT-for + production-readiness handoff (F-3) | jar-audit-eco-1 | this commit | Added a "When NOT to use" boundary (diagnose-loop / optimization-loop / host bugfix) + description NOT-for clause (900 chars) + a handoff sentence to production-readiness. Maker + independent checker PASS. |
+| C-2026-06-12-T-ECO-2 | MemBerry reframed optional in autonomous-advisor + clean-room (F-1, F-2, F-12; HD-5) | jar-audit-eco-1 | this commit | Removed the "surface the error and halt" mandatory framing; MemBerry/memberry-setup is now an optional adapter (clean skip on absence), consistent across both skills; fixed duplicate list numbering. Checker rejected one inaccurate "FUGAZI above" cross-ref; reworded and re-verified PASS. |
+| C-2026-06-12-T-ECO-3 | Reciprocal handoffs: arch-drift-watch upstream + BUG_TRACKER.md sink (F-7 partial, F-8) | jar-audit-eco-1 | this commit | improve-architecture and dead-code-reaper now name arch-drift-watch as upstream detector; test-backfill-loop names agent-state/BUG_TRACKER.md as the suspected-bug sink. Maker + independent checker PASS. |
+| C-2026-06-12-T-ECO-4 | plan-prune delete precondition: committed-clean only (F-10) | jar-audit-eco-1 | this commit | Delete allowed only when git already holds the doc (tracked + committed clean); untracked/dirty docs are archived or blocked. Maker + independent checker PASS. |
+| C-2026-06-12-ECO-MAP | Add docs/ecosystem-map.md | ecosystem-audit-1 | this commit | Edges-between-skills map: routing table, two pipeline backbones, autonomy ladder + human gate, dependency matrix, 23-skill relationship table, state-files map, gates note. |
+| C-2026-06-12-ECO-KIT-NAMES | Align bundled kit template names with manifest roles | ecosystem-audit-1 | this commit | Renamed fenced `name:` in reaper/backfill/drift kits to dead-code-reaper-*/test-backfill-*/arch-drift-watcher; closes gate-invisible drift; independent checker verified. |
+| C-2026-06-12-ECO-SPRINT-GATE | Add launch gate + stop condition to sprint-ticket-runner | ecosystem-audit-1 | this commit | The lone auto-launch/no-stop loop skill now offers launch and defines a stop condition; aligns with the "ask before launching loops" rule; independent checker verified. |
+| C-2026-06-12-ECO-LINK | Normalize loop-architecture state-templates link | ecosystem-audit-1 | this commit | `../references/state-templates.md` -> `./state-templates.md` (same target, already gate-green); removes the inconsistency one audit lens mis-read as a break. |
 | C-2026-06-10-SF-001-RED | Capture RED pressure evidence for `arch-drift-watch` | skill-forge-1 | this commit | RED surfaced six concrete rationalizations: ad hoc `rg` scanning instead of FUGAZI, inferred zones, silent baseline reset, immediate auto-fix, audit-gate overconfidence, and loose triage routing. |
 | C-2026-06-10-SF-001-GREEN | Patch `arch-drift-watch` for captured RED rationalizations | skill-forge-2 | this commit | GREEN tightened `development/arch-drift-watch/SKILL.md` against ad hoc scanning, inferred zones, silent baseline resets, detection-cycle fixes, audit-green overconfidence, and vague triage routing. |
 | C-2026-06-10-SF-001-REF1 | Judge `arch-drift-watch` pressure pass 1 | skill-forge-3 | this commit | Independent judge returned COMPLY and counted clean run 1/3 for the captured pressure scenario. |
@@ -144,3 +160,55 @@ For future drop-in skills, run `python scripts/sync-jar.py` before
 `python scripts/audit-jar.py`; missing skill-forge rows should appear as
 `pending-red`, and hook evidence should accumulate in
 `agent-state/skill-usage.md`.
+
+ecosystem-audit-1 ran a deep, evidence-backed audit of all 23 skills (29-agent
+workflow: one reader per skill + 6 cross-cutting lenses). The structural gate is
+GREEN (208 checks, 0 failed after this cycle's edits). It applied the four
+highest-leverage fixes this cycle (kit-name alignment, sprint-ticket-runner
+launch gate, the loop-architecture link, and `docs/ecosystem-map.md`) and filed
+the rest to `triage-inbox.md` (F-1..F-12) and `decisions.md` (HD-1..HD-5). Next
+jar-audit cycle: take ONE Open Task (T-ECO-1 recommended first — instrument-
+observability NOT-for is low-risk and resolves a real routing collision), maker
+fixes it, a SEPARATE checker verifies, run `python scripts/audit-jar.py`, commit
+code + state together, stop. The proposed new gates (HD-1..HD-3) are audit-policy
+changes that need explicit human approval before a maker implements them — do not
+add them silently. Note: prior "27 checks"/"182 checks" narration in this file is
+stale; the current count is 208.
+
+jar-audit-eco-1 (user-authorized autonomous run, all-three-loops rotation, until
+done/blocked) closed all four Open Tasks T-ECO-1..4 via a maker->checker workflow
+(8 agents): T-ECO-1/3/4 passed first try; T-ECO-2 was rejected by its checker for
+one inaccurate "FUGAZI above" cross-reference, corrected, and re-verified PASS by
+an independent validator. skills.json was regenerated for the instrument-
+observability description change. Gate green (208 checks, 0 failed). Closed
+findings F-1, F-2, F-3, F-8, F-10, F-12 and the arch-drift/instrument edges of
+F-7; remaining open findings F-4, F-5, F-6, F-7 (partial), F-9, F-11 stay in
+triage-inbox. Next in the authorized rotation: bug-pipeline hunter sweep (focus
+the files changed this run + cross-file consistency), then skill-forge on the
+queue (SF-005 clean-room needs REFACTOR judge runs; SF-023 instrument-
+observability re-baselines after this run's edits; SF-006..022 pending-red).
+
+skill-forge-batch1 (user-authorized rotation) forged SF-005 clean-room (3/3
+judges COMPLY on the existing GREEN) and SF-023 instrument-observability (forger
+applied the GREEN patch closing the captured RED rationalizations; 3/3 independent
+judges COMPLY; forger != judge). Gate green (208). Forge queue now: SF-001..005
+and SF-023 = forged (6 of 23); SF-006..022 + SF-021 still pending-red (need RED
+scenario authoring + capture, then GREEN, then 3 judge runs each). Next skill-forge
+batch: pick the next pending-red skills, run RED (fresh agents WITHOUT the skill)
+to capture rationalizations, GREEN-patch to close them, then 3 judge runs; advance
+in reviewable batches. Note: forging the ~17 remaining is multi-batch — each is a
+content-editing RED->GREEN->judge x3 pipeline.
+
+skill-forge-queue forged ALL 17 remaining skills in one concurrent workflow
+(85 agents, forger != judge, disjoint files): 17/17 surfaced a real RED failure,
+were GREEN-patched, and returned 3/3 COMPLY from independent judges; gate green
+(208). The FORGE QUEUE IS NOW COMPLETE — 23/23 forged. With this, the
+user-authorized "all three loops, until done or blocked" rotation is finished:
+jar-audit (T-ECO-1..4 closed), bug-pipeline (BUG-001 verified), skill-forge
+(23/23 forged). No loop has open/ready work. Remaining repo work is human-gated:
+the open triage-inbox findings F-4, F-5, F-6, F-7 (partial), F-9, F-11 (low/medium,
+not yet promoted) and the audit-policy decisions HD-1..HD-5 in decisions.md
+(propose new gates — need explicit human approval before a maker implements them).
+NOTE on forge maturity: these are first-pass forges gated by LLM judges + the
+structure gate; `forged` means RED-evidenced + 3/3 clean + gate-green, which is
+distinct from the `dogfooded`/`battle-tested` maturity tiers (real-use evidence).

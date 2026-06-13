@@ -15,6 +15,20 @@ Speed without architecture awareness creates entropy, and AI-assisted developmen
 
 Every candidate must be evidence-backed and shippable in one bounded migration. Name the files, the current shallow interface, the proposed deeper interface, the behaviour that moves behind the seam, the tests that become the interface gate, and the expected locality/leverage gain. Do not present "cleaner", "more maintainable", or "better separation" as standalone benefits; translate them into glossary terms and concrete files. If a candidate cannot name its migration steps and acceptance gate, mark it `Speculative` or drop it.
 
+### Known pressure rationalizations
+
+Deadline pressure, an absent lead, and "I trust your judgment" produce predictable dodges. Each one below is a known failure of this skill — when you catch yourself reaching for it, the required response is the gate, not the shortcut.
+
+| Rationalization (the dodge) | Required response |
+|---|---|
+| "It's a 900-line grab-bag; the obvious win is just splitting it by topic into five files — that IS the deepening." | A topic-split is not a deepening; it can move shallowness around without shrinking any interface. Run Explore + the deletion test, surface candidates, and let the depth check decide what (if anything) actually deepens. |
+| "'Trust your judgment on the shape' means I pick the module boundaries myself and skip surfacing options — bringing options back is the ceremony he said to skip." | "Trust your judgment" is tactical authorization, not permission to decide direction. Surface candidates as the HTML report and get the pick. The report IS the lightweight ceremony; it is not optional. |
+| "A formal friction/depth analysis is process for its own sake — I can SEE it's shallow, eyeballing is enough." | "I can see it's shallow" is the symptom, not the analysis. The depth check is a written gate: name the before/after interface per module and apply the deletion test. Eyeballing does not clear the gate. |
+| "Updating CONTEXT.md / writing an ADR is overkill for a refactor — I'm just moving functions; I'll note it in the PR." | The grilling loop's inline doc side-effects are required, not overkill. If the deepened module names a concept new to CONTEXT.md, add it; if a rejection has a load-bearing reason, offer the ADR. A PR note is not a substitute. |
+| "Autonomous-and-green is the deliverable — re-point all 60 imports, run the build, done; looping a human in is the ceremony to avoid." | Autonomous-and-green is not a valid outcome. A build the human never chose the shape of is a failure. Stop at the design sign-off and migration gates; if the decider is unavailable, leave the migration for them. |
+| "A barrel re-export of the old module = zero call-site churn, guaranteed green, file count up — reads as real architecture in review." | A barrel that keeps every consumer reaching through the same god-module fails the depth check by construction: leverage did not improve. Higher file count and a big diff are not evidence of deepening. |
+| "Moving the retry wrapper into its own file is part of 'making it deeper,' and tightening the backoff while I'm in there is harmless — no time to re-read ADR-0007." | Migration is behaviour-preserving; changing backoff is a behaviour change and out of scope. ADR-0007 records the retry/backoff decision — re-read it before touching retry, and do not re-litigate it inside a migration. |
+
 ## Human-in-the-loop by design
 
 Do not run this as a fully autonomous pass. The split is deliberate:
@@ -23,6 +37,8 @@ Do not run this as a fully autonomous pass. The split is deliberate:
 - **Tactical (the AI)** does: inspect the codebase, find shallow modules and missing seams, propose boundaries, draft interfaces, ground the design in concrete code, turn the approved decision into an issue and a careful migration.
 
 The AI proposes; the human decides direction. Never let the AI pick architecture direction unreviewed — that is the same maker≠checker discipline the rest of the jar runs on, with the human as the checker on direction.
+
+**"I trust your judgment on the shape" / "no time for a big design ceremony" / "just ship something better" does NOT collapse this split.** It authorizes you to do the tactical work well (explore, draft candidates, propose boundaries) — it does *not* authorize you to skip surfacing candidates, pick the module boundaries unreviewed, or run the whole pass autonomously. The HTML report and the "which would you like to explore?" handoff ARE the lightweight ceremony that replaces a heavy one; they are the deliverable, not the thing you cut to save time. "Autonomous-and-green" is not a valid outcome of this skill — a green build that the human never chose the shape of is a failure, not a win. If the deciding human is unavailable, you may produce the report and the grilled design, but you stop at the migration gate and leave it for them; you do not ship the move yourself.
 
 ## Glossary
 
@@ -116,16 +132,16 @@ Once grilling converges on a module shape the human approves, take it the rest o
 Two gates before any code moves:
 
 - **Design signed off.** Don't start moving code on a shape the human hasn't approved.
-- **Depth check.** Re-confirm the change actually deepens: does the interface get simpler, does the module hide more, does the caller need to know less, does related behaviour move into one place? If the honest answer is no, the refactor is only rearranging files — stop and rework the shape, don't ship it.
+- **Depth check.** Re-confirm the change actually deepens: does the interface get simpler, does the module hide more, does the caller need to know less, does related behaviour move into one place? If the honest answer is no, the refactor is only rearranging files — stop and rework the shape, don't ship it. The depth check is a written gate, not an eyeball — name the before/after interface and apply the deletion test per module; "I can see it's shallow" is the symptom, not the analysis. A topic-split into N files (priceUtils, addressUtils, …) that leaves every caller reaching through the same surface, **and any barrel re-export of the old module**, fail this gate: file count went up, leverage did not. Higher file count and a big-looking diff are not evidence of deepening.
 
-The migration is small, reversible steps with tests green between each, ending with the deep-module checklist as the acceptance gate.
+The migration is small, reversible steps with tests green between each, ending with the deep-module checklist as the acceptance gate. **Behaviour-preserving means exactly that:** moving code into a deeper module is in scope; tweaking what it does — backoff, retry counts, rounding, validation rules — is a behaviour change and is out of scope, however tempting it is "while I'm in there." If the behaviour is governed by an ADR (e.g. ADR-0007 for retry/backoff), re-read it before touching that code and do not re-litigate the decision inside a migration.
 
 ## Optional: memory, and turning detection into a loop
 
 Both are off by default — this skill is human-in-the-loop, and `CONTEXT.md` + the ADRs are the authoritative record. These only add reach when the tools are present.
 
 - **(MemBerry)** If a MemBerry-style memory MCP is available, `berry_load(task: "architecture review: <area>", tags: ["project:<tag>"])` at the start of Explore to recall prior reviews and the directions you already rejected, and `berry_store` the **decision and its load-bearing reason** after a candidate is accepted or rejected — the same thing an ADR captures, in queryable form. On any conflict, the ADR / `CONTEXT.md` files win; memory is a convenience index over them, never the source of truth.
-- **Detection on a schedule.** The *finding* half of this skill can run unattended even though the *deciding* half can't. Point [dead-code-reaper](../dead-code-reaper/SKILL.md) at the removal side, or stand up a [loop-engineer](../loop-engineer/SKILL.md) loop that watches `fugazi boundaries` / `circular-deps` and files new drift to a triage inbox for your next review. The human still owns every architecture decision; the loop just keeps the candidate list fresh between reviews.
+- **Detection on a schedule.** The *finding* half of this skill can run unattended even though the *deciding* half can't. [arch-drift-watch](../arch-drift-watch/SKILL.md) is the continuous, scheduled detector that surfaces drift/deepening candidates feeding this human-in-the-loop review — the automated upstream behind the periodic-review trigger. Point [dead-code-reaper](../dead-code-reaper/SKILL.md) at the removal side, or stand up a [loop-engineer](../loop-engineer/SKILL.md) loop that watches `fugazi boundaries` / `circular-deps` and files new drift to a triage inbox for your next review. The human still owns every architecture decision; the loop just keeps the candidate list fresh between reviews.
 
 ## Generated agents
 

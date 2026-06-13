@@ -1,6 +1,6 @@
 ---
 name: instrument-observability
-description: "Adds production-grade application observability instrumentation with Sentry by default: error tracking, crash reporting, tracing, release health, workflow breadcrumbs, user/agent attribution, privacy filtering, cost/usage tracking, and real-runtime verification. Use when adding Sentry, telemetry, tracking, monitoring, crash reporting, performance tracing, session replay, workflow failure monitoring, agent cost/usage monitoring, frontend/backend correlation, Electron crash capture, or production debugging; use existing OpenTelemetry, Datadog, New Relic, Honeycomb, LogRocket, Highlight, or structured-log standards only when the repo or user requires them."
+description: "Adds production-grade application observability instrumentation with Sentry by default: error tracking, crash reporting, tracing, release health, workflow breadcrumbs, user/agent attribution, privacy filtering, cost/usage tracking, and real-runtime verification. Use when adding Sentry, telemetry, tracking, monitoring, crash reporting, performance tracing, session replay, workflow failure monitoring, agent cost/usage monitoring, frontend/backend correlation, Electron crash capture, or production debugging; use existing OpenTelemetry, Datadog, New Relic, Honeycomb, LogRocket, Highlight, or structured-log standards only when the repo or user requires them. NOT for diagnosing one live incident (use diagnose-loop), a general quality/hardening pass (use optimization-loop), or fixing one known bug (use the host bugfix skill) — this skill adds instrumentation, it does not run the debugging loop."
 ---
 
 # Instrument Observability
@@ -16,6 +16,18 @@ set only after sign-in/profile fetch, critical workflows wrapped with spans and
 breadcrumbs, handled failures captured without swallowing errors, tests/smoke
 checks run, and dashboards/alerts recommended.
 
+## When NOT to use
+
+This skill **adds instrumentation; it does not run the debugging loop.**
+
+- Diagnosing a single live incident → diagnose-loop.
+- A general quality/hardening pass → optimization-loop.
+- Fixing one known bug → the host bugfix skill (external).
+
+The telemetry, dashboards, and alerts produced here are the input
+[production-readiness](../../systems-design/production-readiness/SKILL.md)
+consumes at its launch gate.
+
 ## Operating Contract
 
 - Do not add provider code until the investigation gate is complete. Use real
@@ -29,11 +41,31 @@ checks run, and dashboards/alerts recommended.
   leave the process. Never send secrets, tokens, cookies, raw prompts, raw model
   responses, transcripts, audio, payment data, full request/response bodies, or
   customer records.
+- High-cardinality and correlation identifiers (`tenant_id`, `job_id`,
+  `request_id`, `submission_id`, `checkout_session_id`, and similar) are not
+  safe by virtue of where they sit. Moving them from `tags` to event `extra`,
+  `context`, or a span attribute does not make them safe — it just relocates the
+  same leak/cardinality problem. They may be attached only after the
+  Privacy/Data-Safety report has mapped each one as a sensitive surface and
+  assigned a `safe_replacement` (hash, opaque id, count, or category), and only
+  in the form that report approves.
+- An existing logger, sanitizer, or scrubber is not a substitute for the
+  sensitive-surface map. "There is already a sanitizer" does not let you attach
+  correlation IDs before the surfaces and their safe replacements are mapped;
+  the map decides what may be attached, the sanitizer only enforces it.
 - Preserve behavior. Telemetry failures must not break the app; captured errors
   must be rethrown unless existing code intentionally swallows them.
 - Do not claim production-ready telemetry until real runtime smoke events
   arrive with correct release, environment, attribution, readable stacks, and
-  redaction verified.
+  redaction verified. Completion requires the **full** relevant smoke checklist
+  in the playbook, not a sampled subset. "Build succeeds plus one forced
+  renderer error plus one forced main/IPC error" is partial coverage, not done —
+  every P0 surface the merged plan named (workflow success *and* failure,
+  external-dependency failure, identity set/clear, child/worker lifecycle and
+  crash/respawn, release/source-map verification, redaction) must run or be
+  listed as an explicit `known_gap` with a `safe_next_step`. Deferring traces,
+  source-map upload, dashboards, breadcrumbs, worker lifecycle, or the test
+  suite is allowed only as a logged gap, never as a silent "later polish."
 
 ## Provider Decision
 
@@ -81,7 +113,14 @@ verification.
 
 ## Investigation Gate
 
-No instrumentation code may be added before this is produced:
+No instrumentation code may be added before this is produced. The gate is **not
+waivable** by a deadline, a demo, an "obvious" first target (e.g. "just
+instrument the expensive LLM calls"), or "the entry points are obvious." A
+deadline shrinks *scope* (what lands as P0 vs. a logged gap), never the gate or
+the merged prioritized plan. Initializing the provider in "obvious entry points"
+before the merged plan exists **is** adding instrumentation code — it fails this
+gate. Reusing an existing logger/telemetry boundary is still provider code: it
+may not be wired to emit telemetry until the gate passes.
 
 ```text
 Sub-agent investigation complete.
@@ -120,6 +159,22 @@ Prioritize workflow importance over technical convenience.
 - **Do not track:** raw prompts/transcripts, secrets, full bodies, sensitive
   screens without masking, every click, expected validation failures, or noisy
   warnings.
+
+## Known pressure rationalizations
+
+Each of these is a dodge that feels reasonable under deadline or scope pressure.
+The required response is the rule, not the excuse.
+
+| Rationalization | Required response |
+|-----------------|-------------------|
+| "Demo deadline — skip the sub-agent investigation/merged plan and just add Sentry init in the obvious entry points." | The gate is not waivable by deadline or demo. A deadline shrinks P0 scope, never the gate. Provider init in "obvious" entry points before the merged plan is instrumentation code and fails the gate. |
+| "Capture only crash/error paths now; defer traces, source-map upload, dashboards, breadcrumbs, deep worker lifecycle, and tests." | Crash/error-only is a P0 subset, not completion. Each deferral is an explicit `known_gap` with a `safe_next_step`, not a silent omission — and source-map verification on JS/TS/Electron is P0, not deferrable to polish. |
+| "Build plus one forced renderer error plus one forced main/IPC error is enough runtime proof." | That is partial smoke coverage. Run the full relevant checklist (workflow success *and* failure, dependency failure, identity set/clear, child/worker crash + respawn, release/source-map, redaction) or log each unrun item as a gap. |
+| "Cost is the obvious priority, so instrument the expensive LLM calls first and skip the specialist investigation." | An obvious target does not waive the gate. The Cost/Latency and Privacy investigators must run first so cost fields and their sensitive surfaces are mapped before any provider call is wrapped. |
+| "Attach `tenant_id` / `job_id` / `request_id` / `submission_id` / `checkout_session_id` as tags so we can correlate." | These are high-cardinality/correlation IDs. They may be attached only after the Privacy report maps each as a sensitive surface with an approved `safe_replacement` (hash/opaque id/count/category). |
+| "Putting those IDs in event `extra`/`context` instead of tags avoids the cardinality rule." | Relocating an identifier does not sanitize it — `extra`, `context`, and span attributes carry the same leak. The sensitive-surface map governs every field regardless of slot. |
+| "Pipe telemetry through the existing logger and rely on its sanitizer — the boundary already exists." | Reusing the logger is still provider wiring behind the gate, and a sanitizer is not a sensitive-surface map. Map surfaces and safe replacements first; attach submission/correlation IDs only in the approved form. |
+| "Full dashboards and broad PII scrubbing are later polish, not part of finishing this." | Privacy filtering before capture is P0 and part of the completion contract; dashboards/alerts are recommended deliverables. Neither is optional polish — defer only as a logged gap. |
 
 ## Output Contract
 

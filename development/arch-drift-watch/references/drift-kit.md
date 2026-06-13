@@ -58,7 +58,7 @@ Advance the baseline **only** when a human accepts the current state (post-revie
 
 ```md
 ---
-name: drift-watcher
+name: arch-drift-watcher
 description: "Producer for the arch-drift-watch loop. Runs FUGAZI structural rules read-only, diffs against the committed baseline, and files NEW violations to the triage inbox. Use during the loop's scan stage. Writes no code; never edits the baseline."
 model: sonnet
 ---
