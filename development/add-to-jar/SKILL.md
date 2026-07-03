@@ -7,6 +7,13 @@ description: "Use when adding, importing, or reconciling a Codex skill inside th
 
 Use this skill to add exactly one skill to this repo and reconcile it with the jar ecosystem.
 
+## When NOT to use
+
+- **Authoring a skill from scratch.** This skill reconciles an *existing* `SKILL.md` folder into the jar. To design and pressure-test new skill *behavior*, use [skill-forge](../skill-forge/SKILL.md) (plus your host's skill-authoring skill, e.g. `write-a-skill`, if present) — then bring the finished folder here.
+- **Editing or improving an already-installed skill.** Changing an existing skill's content is a direct edit or a [skill-forge](../skill-forge/SKILL.md) pass, not an intake reconcile.
+- **Bulk-importing many skills in one pass.** Add skills one at a time so each gets its own reviewable `sync-jar.py` + `audit-jar.py` diff; a batch import is where missing fields and stale packs hide.
+- **Any change that would weaken `scripts/audit-jar.py`, delete state/history, or alter a public contract** — stop and record a human decision instead.
+
 ## Workflow
 
 1. Work in an isolated branch or worktree. Do not push.

@@ -29,7 +29,7 @@ This skill exists to prevent AI slop tests: tests that merely execute code, asse
 
 ## When NOT to Use
 
-- Designing and implementing new production behavior from tests in a red/green/refactor cycle -- use TDD, then use this skill as the unit-test quality gate if needed.
+- Designing and implementing new production behavior from tests in a red/green/refactor cycle -- use TDD (an external/global skill, not shipped in this jar; if absent, drive the red/green/refactor cycle by hand), then use this skill as the unit-test quality gate if needed.
 - Raising coverage continuously across a legacy codebase — use [test-backfill-loop](../test-backfill-loop/SKILL.md).
 - Diagnosing one stubborn bug before writing the regression test — use [diagnose-loop](../diagnose-loop/SKILL.md).
 - Broad post-feature hardening across many dimensions — use [optimization-loop](../optimization-loop/SKILL.md).

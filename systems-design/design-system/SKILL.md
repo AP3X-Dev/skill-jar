@@ -26,7 +26,7 @@ System design is making **explicit tradeoffs under uncertainty** — not assembl
 
 - One feature inside an established architecture — [design-panel](../../development/design-panel/SKILL.md) (this skill *uses* its judged-alternatives panel for contested topology calls).
 - The API contract itself → [api-design](../api-design/SKILL.md); the store choice → [data-store-selection](../data-store-selection/SKILL.md); the launch gate → [production-readiness](../production-readiness/SKILL.md).
-- Reimplementing an existing system — **clean-room**.
+- Reimplementing an existing system — [clean-room](../../development/clean-room/SKILL.md).
 
 ## The staged process
 
@@ -92,4 +92,4 @@ Copy-ready generated agents live in [../agents/README.md](../agents/README.md) a
 
 ---
 
-*The category's front door: hands its API surface to [api-design](../api-design/SKILL.md), its data layer to [data-store-selection](../data-store-selection/SKILL.md), its launch to [production-readiness](../production-readiness/SKILL.md). Pairs with the development category's [design-panel](../../development/design-panel/SKILL.md) for judged alternatives and feeds **writing-plans** / a PRP for execution.*
+*The category's front door: hands its API surface to [api-design](../api-design/SKILL.md), its data layer to [data-store-selection](../data-store-selection/SKILL.md), its launch to [production-readiness](../production-readiness/SKILL.md). Pairs with the development category's [design-panel](../../development/design-panel/SKILL.md) for judged alternatives and feeds **writing-plans** (an external/global planning skill, not shipped in this jar) / a PRP for execution.*

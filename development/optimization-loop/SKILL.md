@@ -21,7 +21,7 @@ This is a **specialized loop built on [loop-engineer](../loop-engineer/SKILL.md)
 |---|---|
 | **Trigger** | `/loop` interval, scheduled task, or cron — wired in Phase 5, not left to the user |
 | **Discovery** | One-time: the Phase 2 audit (builds the backlog). Recurring: each cycle's **Mode B** sweep |
-| **Planning** | The top item in the loop-state backlog (priority-ordered at generation) |
+| **Planning** | The top item in the loop-state backlog — kept priority-ordered: each cycle's Mode B inserts a discovered higher-value item ahead of lower-priority ones, so it runs next |
 | **Execution** | The maker fixes ONE backlog item (Mode A) + inline discovery fixes (Mode B) |
 | **Verification** | A **separate verifier** re-runs the suite and metric commands, enforces the ratchet, inspects the diff — and can REJECT |
 | **State update** | Session entry + metric deltas appended to `loop-state.md`; code and state commit together |
@@ -58,7 +58,7 @@ Every optimization loop runs on its own branch: `opt/<project>-<focus>` (pick `<
 ## When NOT to Use
 
 - Brand-new codebase (nothing to optimize — do design/planning first).
-- One specific bug (just fix it, or run **bug-pipeline** for an ongoing defect pipeline).
+- One specific bug — just fix it with your host's debugger/**bugfix** (external, not shipped in this jar), or run **bug-pipeline** for an ongoing defect pipeline.
 - A loop whose job isn't optimization (triage, releases, migrations) — use **loop-engineer** directly.
 - Hypothesis-driven experimentation against a frozen eval harness, chasing one scalar (training speedruns, prompt optimization) — use **auto-research**.
 - Judgment-driven architecture work — deepening shallow modules, fixing seams, reducing AI-driven drift — where a human owns direction, not an automated metric ratchet — use **improve-architecture**.
@@ -190,7 +190,8 @@ Compare intent (Phase 1) against reality (Phase 2). Classify every finding:
 
 ```
 git checkout -b opt/<project>-<focus>
-python <loop-engineer>/scripts/scaffold-loop.py --loop-name <project>-optimizer --repo . --host <claude|codex|both|generic> --level 2
+# scaffold-loop.py ships with loop-engineer (../loop-engineer/scripts/ in your skill-jar checkout)
+python ../loop-engineer/scripts/scaffold-loop.py --loop-name <project>-optimizer --repo . --host <claude|codex|both|generic> --level 2
 ```
 
 The scaffolder lays down `agent-state/`, `AGENTS.md` (keep it — its safety floor applies verbatim), and the driver stub. Everything below *fills* that skeleton.
@@ -221,11 +222,15 @@ dropping, or a description weakened — all exit 0. Each Baseline is a real
 number from a command that ran in Phase 2, never the gate's pass/fail. A
 single "audit: 0 failed" line here is not a baseline — that is the empty loop.>
 
-## Open Tasks  (the backlog — ordered by priority, descending)
-| ID | Task | Owner | Status | Files | Acceptance (exits 0) |
+## Open Tasks  (the backlog — a maintained priority queue, descending)
+| ID | Task | Owner | Priority | Status | Files | Acceptance (exits 0) |
 <every Phase-3 item: exact files, concrete fix, falsifiable acceptance.
 Within a tier, planned-missing and dead-wire items outrank cleanup.
-Destructive items carry their Evidence requirement in the Task cell.>
+Destructive items carry their Evidence requirement in the Task cell.
+This is a priority queue, not an append log: Mode B inserts each discovery at
+its priority rank, so a found High/Medium jumps ahead of pending Lows. The top
+row is therefore always the highest-value pending work — what the next cycle
+runs. IDs are stable identifiers, NOT execution order; never reorder by ID.>
 
 ## Already Done — Do Not Re-Audit
 <verified-complete areas with evidence. An area stays here only until code in
@@ -256,7 +261,9 @@ tracks active integration; STOP and ask the human past <threshold> divergence.
 
 ## 1. Load
 Read agent-state/loop-state.md: objective, verification commands, metric
-floors, next Open Task. (MemBerry) `berry_load` for conventions and gotchas;
+floors, and the TOP (highest-priority) Open Task — the backlog is priority-
+ordered, so take the top row, never the lowest unfinished ID. (MemBerry)
+`berry_load` for conventions and gotchas;
 set `working_state` to the in-flight item. Check failed attempts and Blocked —
 never retry a logged dead end or a blocked item.
 
@@ -278,6 +285,14 @@ Trace one integration path end-to-end.
 - Larger → new backlog row with files, priority, source ("found fixing #7") —
   ONLY if impact ≥ Medium or it moves a tracked metric. Below the bar:
   fix-now-or-skip. A clean sweep is a valid, successful cycle.
+- **Insert by priority, never append.** Place the new row at its priority rank,
+  so a discovered High/Medium lands ABOVE pending Lows and becomes the top of
+  the backlog — the next cycle runs it before the lows it leapfrogged. Example:
+  backlog is 10 Lows, this sweep finds one Medium → the Medium goes to the top,
+  the 10 Lows shift down, next cycle takes the Medium. Never push a higher-value
+  find to the bottom behind cheaper work. (Re-sorting only moves discoveries
+  relative to existing items; it never reorders or re-prioritizes a row a human
+  set — leave human-assigned priorities intact.)
 
 ## 4. Verification — a SEPARATE verifier agent gates the cycle
 Hand the diff to the verifier. It independently: re-runs the Verification
@@ -293,16 +308,21 @@ the session entry carries a one-line waiver explaining why (e.g. "deleted 3
 tests for a removed dead module — intentional").
 
 ## 6. State update + commit (code and state together)
-Move the item to Completed (commit SHA), append discoveries, update the status
-counts and metric table, write the Session History entry:
+Move the item to Completed (commit SHA), insert each new discovery at its
+priority rank in Open Tasks (a Medium/High jumps ahead of pending Lows — never
+appended to the bottom), update the status counts and metric table, write the
+Session History entry:
 
   ### Cycle N — <date>
   - Commit: `<sha>` opt(N): <title>
   - Backlog item: #X — COMPLETED / IN PROGRESS / SKIPPED (reason)
   - Mode B: <discoveries> found, <n> fixed inline, <n> added as #Y, #Z
+    (note any inserted ABOVE existing items, e.g. "#Y Medium inserted ahead of Lows")
   - Verifier: PASS/REJECT (<evidence summary>)
   - Metrics (vs floor / vs baseline): <metric>: <prev>→<curr>, ...  <waiver?>
-  - Next cycle starts at: #X+1 / continue #X / Mode B only
+  - Next cycle starts at: top of backlog (= <ID/title>) / continue #X / Mode B
+    only — name the row the priority order now puts first, which may be a
+    discovery just inserted ahead of lower-priority items, not mechanically #X+1
 
 Then ONE commit: `git add <changed files> agent-state/` →
 `opt(N): <item title> + M discovery fixes`. Never commit a red gate.
@@ -384,6 +404,7 @@ The loop-agent evaluates these over the loop-state's own records (per-cycle new 
 - **Writing generic prompts without auditing.** "Improve performance and quality" is useless. "Item 3: wire searchEndpoint config from Config.swarm through bin.ts to the runner constructor" is actionable.
 - **Skipping intent discovery.** Without it, every dead wire might be a TODO, not a bug.
 - **A fixed backlog with no Mode B.** Codebases have issues that only surface when you fix adjacent code.
+- **Appending discoveries to the bottom of the backlog.** The backlog is a priority queue, not an append log. A Mode B discovery rated Medium/High must be inserted ahead of pending Lows so the next cycle runs it first; appended at the bottom, a critical find sits behind 10 trivial items for 10 cycles.
 - **The maker grading its own cycle.** Without a separate verifier, plausible-but-wrong fixes and quietly weakened tests survive. This loop's verifier re-runs everything itself.
 - **Measuring once, then flying blind.** Score at audit time but never re-measure and the loop goes open-loop: quality erodes while tests stay green. Ratchet every cycle.
 - **Acting on auditor claims without confirming.** "Dead code" and "no subscriber" findings are routinely wrong. Reproduce destructive claims or skip the item.

@@ -79,7 +79,7 @@ Starting execution.
    1. Design phase — use brainstorming/design-panel if installed; otherwise write the spec directly from the PRP and repo context.
    2. Planning phase — use writing-plans if installed; otherwise write an implementation plan with files, tasks, and acceptance commands.
    3. Implementation phase — use host-native subagents where available; otherwise execute tasks inline with a separate verifier.
-   4. Branch completion — use the repo's normal PR/merge workflow; never push directly to main/master or deploy; if the PRP asks for that, pause at a release checkpoint after local gates.
+   4. Branch completion — run an adversarial pre-merge review ([review-panel](../review-panel/SKILL.md)) on the finished branch, then use the repo's normal PR/merge workflow; never push directly to main/master or deploy; if the PRP asks for that, pause at a release checkpoint after local gates.
    5. Optimization loop — generate optimizer + launch loop through [optimization-loop](../optimization-loop/SKILL.md).
 
 **The advisor does NOT skip any phase.** It follows the same workflow a human would — it just answers faster and never stops to wait. **And no phase advances on say-so alone** — each phase ends at a gate (see Phase Gates below).

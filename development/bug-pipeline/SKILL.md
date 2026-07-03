@@ -84,7 +84,7 @@ that files nothing is a valid success and still gets a note>
 
 ## Setting it up in a repo
 
-1. **Scaffold the loop infra** with [loop-engineer](../loop-engineer/SKILL.md) (`scaffold-loop.py` lays down `agent-state/`, `AGENTS.md`, a driver stub) — or go minimal: just the tracker and the three agents.
+1. **Scaffold the loop infra** with [loop-engineer](../loop-engineer/SKILL.md) (its `../loop-engineer/scripts/scaffold-loop.py` lays down `agent-state/`, `AGENTS.md`, a driver stub) — or go minimal: just the tracker and the three agents.
 2. **Pin the gate**: the exact command(s) that exit 0/1 in THIS repo (tests, lint, an audit script). The Fixer and Validator both run it every cycle.
 3. **Drop the three agents** (templates below) into the host's agent dir (`.claude/agents/` for Claude Code; adapt to `.codex/agents/*.toml` via loop-engineer's subagent-templates for Codex).
 4. **Dry-run one cycle** end-to-end before scheduling anything. Do not hand off a pipeline that has never closed a cycle.
@@ -168,6 +168,8 @@ The pipeline turns two debugging disciplines into enforced gates instead of good
 ## Generated agents
 
 Copy-ready generated agents live in [../agents/README.md](../agents/README.md) and are sourced from [../agents/manifest.json](../agents/manifest.json). Install only the roles needed for the active bug-pipeline run: `bug-pipeline-hunter`, `bug-pipeline-fixer`, `bug-pipeline-validator`.
+
+The bare `hunter` / `fixer` / `validator` templates inline in this SKILL.md (and the jar's own dogfooded instance under `.claude/agents/`) are the **legacy, illustrative** copies — handy for reading the roles in place. The **canonical** installable artifacts are the manifest-prefixed `bug-pipeline-hunter` / `bug-pipeline-fixer` / `bug-pipeline-validator` roles named above; prefer those when installing into a real repo, so generic role names never collide across loops.
 
 ## Common Mistakes
 

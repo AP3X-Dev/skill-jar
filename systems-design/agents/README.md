@@ -33,6 +33,18 @@ runtime agent directory:
 .codex/agents/<agent>.toml
 ```
 
+## Roles
+
+Every role below is defined in `manifest.json` and rendered to `claude/<role>.md`
+and `codex/<role>.toml`. Grouped by the skill that owns them:
+
+| Skill | Roles |
+|---|---|
+| `design-system` | `system-intake-analyst`, `system-topology-designer`, `system-topology-skeptic` |
+| `api-design` | `api-contract-designer`, `api-compatibility-reviewer`, `api-abuse-reviewer` |
+| `data-store-selection` | `data-access-analyst`, `data-store-designer`, `data-gate-reviewer` |
+| `production-readiness` | `readiness-slo-operator`, `readiness-runbook-writer`, `readiness-launch-reviewer` |
+
 ## Scope
 
 Systems-design roles are mostly design and review specialists:

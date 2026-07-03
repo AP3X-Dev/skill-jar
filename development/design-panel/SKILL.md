@@ -91,4 +91,4 @@ Copy-ready generated agents live in [../agents/README.md](../agents/README.md) a
 
 ---
 
-*Borrows the Superpowers brainstorming and parallel-agent disciplines when available, but stands alone through the bundled panel prompts. Downstream: an implementation plan / PRP, [autonomous-advisor](../autonomous-advisor/SKILL.md) for hands-off execution, or the repo's normal planning workflow; the systems-design category's [design-system](../../systems-design/design-system/SKILL.md) uses this panel for its architecture alternatives.*
+*Borrows the Superpowers brainstorming and parallel-agent disciplines when available, but stands alone through the bundled panel prompts. Downstream: an implementation plan / PRP — to hand off to [autonomous-advisor](../autonomous-advisor/SKILL.md) for hands-off execution, first convert the panel's spec into a PRP (autonomous-advisor rejects a run with no PRP) — or the repo's normal planning workflow; the systems-design category's [design-system](../../systems-design/design-system/SKILL.md) uses this panel for its architecture alternatives.*

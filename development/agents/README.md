@@ -38,6 +38,25 @@ Only install the roles the active skill needs. For example, a
 `test-backfill-writer`, and `test-backfill-verifier`; a `review-panel` run may
 dispatch only the lens agents for the risky surface under review.
 
+## Roles
+
+Every role below is defined in `manifest.json` and rendered to `claude/<role>.md`
+and `codex/<role>.toml`. Grouped by the skill that owns them:
+
+| Skill | Roles |
+|---|---|
+| `bug-pipeline` | `bug-pipeline-hunter`, `bug-pipeline-fixer`, `bug-pipeline-validator` |
+| `dead-code-reaper` | `dead-code-reaper-scout`, `dead-code-reaper-reaper`, `dead-code-reaper-validator` |
+| `test-backfill-loop` | `test-backfill-scout`, `test-backfill-writer`, `test-backfill-verifier` |
+| `diagnose-loop` | `diagnose-investigator`, `diagnose-analyst`, `diagnose-fixer`, `diagnose-verifier` |
+| `review-panel` | `review-correctness`, `review-security`, `review-simplicity`, `review-synthesizer` |
+| `design-panel` | `design-explorer`, `design-designer`, `design-judge`, `design-skeptic` |
+| `skill-forge` | `skill-forge-pressure-tester`, `skill-forge-forger`, `skill-forge-judge`, `skill-forge-linter` |
+| `arch-drift-watch` | `arch-drift-watcher` |
+| `improve-architecture` | `architecture-explorer`, `architecture-interface-designer`, `architecture-depth-checker` |
+| `clean-room` | `clean-room-analyzer`, `clean-room-researcher`, `clean-room-gap-checker`, `clean-room-improvement-sweeper`, `clean-room-contamination-reviewer` |
+| `autonomous-advisor` | `autonomous-advisor`, `autonomous-verifier` |
+
 ## Naming
 
 Agent names are prefixed by the owning skill or job area. This avoids collisions

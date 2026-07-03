@@ -178,4 +178,4 @@ If a project memory system is available, load prior plan decisions before reconc
 
 ---
 
-*Pairs well with [optimization-loop](../optimization-loop/SKILL.md), which can use the consolidated plan as its intent source before building a hardening backlog.*
+*Once the plan is canonical, hand off to [sprint-ticket-runner](../sprint-ticket-runner/SKILL.md) to EXECUTE it as durable tickets, or to [improve-architecture](../improve-architecture/SKILL.md) for architecture direction. Pairs well with [optimization-loop](../optimization-loop/SKILL.md), which can use the consolidated plan as its intent source before building a hardening backlog.*

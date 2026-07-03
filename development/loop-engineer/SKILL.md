@@ -63,7 +63,7 @@ A loop is a pattern, not a product. Every artifact this skill scaffolds is provi
 
 ## When NOT to Use
 
-- A single one-off task or one specific bug — just do it (use **bugfix**, or **diagnose-loop** for a hard bug whose cause is unknown).
+- A single one-off task or one specific bug — just do it (use your host's **bugfix** skill/debugger — external, not shipped in this jar; if absent, just fix it directly — or **diagnose-loop** for a hard bug whose cause is unknown).
 - An audit→fix→measure hardening pass on an existing codebase — use **optimization-loop** (a specialized loop; this skill can scaffold it as the execution stage).
 - A brand-new codebase with nothing to loop over yet — do design and implementation planning first.
 
