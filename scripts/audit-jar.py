@@ -23,6 +23,13 @@ agent-state/loop-state.md) and that CI runs on every push. Checks, in order:
                       sync with the category layout (gen-plugins.py --check).
   8. Agent packs   -- category agent-pack host files are generated from their
                       manifests (gen-agent-packs.py --check).
+  9. Boundaries    -- every installable skill states a negative routing
+                      boundary ("NOT for" / "when not to use") so overlapping
+                      skills stay disambiguated at routing time.
+ 10. Kit roles     -- role `name:` fields embedded in bundled `*-kit.md` files
+                      (invisible to the link/name checks, which strip fenced
+                      code) resolve to a role in the sibling agents/manifest.json,
+                      unless the file is marked `# example-only`.
 
 Skills live at `<category>/<skill>/SKILL.md`. Stdlib only (PyYAML used when
 present); discovery is shared via jarlib so the generators and this gate agree.
@@ -33,6 +40,7 @@ Usage:
 """
 
 import argparse
+import json
 import py_compile
 import re
 import shutil
@@ -264,6 +272,87 @@ def check_scripts():
 
 
 # ---------------------------------------------------------------------------
+# Routing boundaries / bundled-kit role names (gate-invisible drift classes)
+# ---------------------------------------------------------------------------
+
+NOT_FOR_RE = re.compile(r"\bnot for\b|\bwhen not to use\b", re.IGNORECASE)
+KIT_NAME_RE = re.compile(r"^\s*name:\s*(.+?)\s*$")
+ROLE_NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
+
+
+def check_not_for_boundaries():
+    """Every installable skill states a negative routing boundary.
+
+    A skill with a trigger but no "NOT for" / "when not to use" clause collides
+    with its neighbours when an agent routes by intent. The clause lives in
+    prose no other check inspects, so assert its presence here (see
+    agent-state/decisions.md HD-2). Templates are exempt -- only installable
+    skills route.
+    """
+    for s in jarlib.discover_skills(ROOT):
+        rel = s["path"].relative_to(ROOT).as_posix()
+        text = s["path"].read_text(encoding="utf-8")
+        if NOT_FOR_RE.search(text):
+            record(True, "boundary", "%s states a NOT-for boundary" % rel)
+        else:
+            record(False, "boundary",
+                   "%s: no 'NOT for' / 'when not to use' routing boundary" % rel)
+
+
+def _manifest_role_names(category_dir):
+    """Role names declared in <category>/agents/manifest.json, or None if absent."""
+    manifest = category_dir / "agents" / "manifest.json"
+    if not manifest.exists():
+        return None
+    try:
+        data = json.loads(manifest.read_text(encoding="utf-8"))
+    except (ValueError, OSError):
+        return None
+    return {a.get("name") for a in data.get("agents", []) if a.get("name")}
+
+
+def check_kit_role_names():
+    """Bundled `*-kit.md` role `name:` fields must resolve to a manifest role.
+
+    Kit files embed copy-ready agent frontmatter inside fenced code blocks,
+    which strip_code() hides from every other check. A `name:` that drifts from
+    the sibling agents/manifest.json ships a mis-named, collision-prone agent to
+    whoever copies the kit (see agent-state/decisions.md HD-1). A file marked
+    `# example-only` opts a deliberately-generic snippet out.
+    """
+    for kit in sorted(ROOT.glob("*/*/references/*-kit.md")):
+        rel = kit.relative_to(ROOT).as_posix()
+        text = kit.read_text(encoding="utf-8")
+        if "# example-only" in text:
+            record(True, "kit-roles", "%s: marked example-only (skipped)" % rel)
+            continue
+        category = kit.relative_to(ROOT).parts[0]
+        claimed = []
+        for line in text.splitlines():
+            m = KIT_NAME_RE.match(line)
+            if m:
+                val = m.group(1).strip().strip("\"'")
+                if ROLE_NAME_RE.match(val):
+                    claimed.append(val)
+        if not claimed:
+            record(True, "kit-roles", "%s: no embedded role names" % rel)
+            continue
+        roles = _manifest_role_names(ROOT / category)
+        if roles is None:
+            record(False, "kit-roles",
+                   "%s: names %s but no %s/agents/manifest.json"
+                   % (rel, ", ".join(claimed), category))
+            continue
+        bad = [n for n in claimed if n not in roles]
+        if bad:
+            record(False, "kit-roles",
+                   "%s: name(s) not a role in %s/agents/manifest.json: %s"
+                   % (rel, category, ", ".join(bad)))
+        else:
+            record(True, "kit-roles", "%s: all embedded role names resolve" % rel)
+
+
+# ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
 
@@ -274,9 +363,11 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     check_all_skills()
+    check_not_for_boundaries()
     for f in md_files_for_link_audit():
         check_links(f)
     check_scripts()
+    check_kit_role_names()
 
     fails = [r for r in results if not r[0]]
     for ok, label, detail in results:

@@ -9,6 +9,7 @@
 | Durable ecosystem knowledge goes in `docs/ecosystem-map.md`; the audit narrative is delivered in-response, not as a repo file | Avoids a point-in-time report rotting in the tree (the jar's own plan-prune philosophy). Edges between skills are the durable part; findings live in triage-inbox/decisions | ecosystem-audit-1 |
 | Did NOT implement the proposed new audit gates this cycle | Audit-policy changes need separate review (maker != checker) and a careful false-positive assessment; proposed below with evidence + risk for human sign-off | ecosystem-audit-1 |
 | Aligned bundled `references/*-kit.md` template `name:` to the manifest/install names | The agents/README "Naming" section already mandates skill-prefixed role names to avoid `scout`/`validator` collisions; the kits violated the repo's own stated policy. Names inside fenced blocks are invisible to the gate, so this was a real, gate-undetectable drift | ecosystem-audit-1 |
+| Implemented the HD-1 + HD-2 audit gates (with maker != checker review) | These are the two narrow, additive checks ecosystem-audit-1 recommended APPROVE and deferred only for separate review + a false-positive assessment. This human-directed pass supplied both: an independent validator (stronger model) verified the audit-policy change PASS, and the false-positive risk was assessed (role-name/marker regexes are slug/word-bounded, scoped to installable skills and `*-kit.md`, with a `# example-only` hatch). Both ship green (239 checks) and permanently close gate-invisible drift classes. HD-4's broad noise-prone lints stay rejected. | jar-quality-pass |
 
 ## Human-Decision Items (pending)
 
@@ -20,12 +21,14 @@
 - **Proposed check:** parse `name:` from fenced ```md/```yaml frontmatter in `*/*/references/*-kit.md`; assert each is a real role in the sibling `agents/manifest.json` OR carries an explicit `# example-only` marker.
 - **Risk:** moderate maintenance (a mini fenced-block parser + a whitelist for intentionally-generic examples). Net: closes a real, gate-undetectable drift class affecting 3+ skills at bounded cost.
 - **Recommendation:** APPROVE as a narrow, additive check (does not weaken any existing gate).
+- **Status:** IMPLEMENTED (jar-quality-pass) — `check_kit_role_names` in `scripts/audit-jar.py`, covered by `tests/test_audit_boundaries.py`. Scans `*/*/references/*-kit.md`; `# example-only` opts a file out.
 
 ### HD-2 -- Add a gate: every installable skill must carry a "NOT for" boundary
 - **Evidence:** Exactly 2 of 23 skills (add-to-jar, instrument-observability) have no negative boundary; instrument-observability's empty boundary creates a real routing collision (F-3). All 21 others carry one.
 - **Proposed check:** assert each `*/*/SKILL.md` contains a case-insensitive `not for` / `when not to use` marker.
 - **Risk:** low (2 current violators, stable phrasing). The DEEPER check — that each NOT-for redirect resolves to a real jar skill or a hedged external one — is NOT recommended for automation: external redirects (`bugfix`/`tdd`/`writing-plans`) are legitimate and distinguishing "hedged-optional" from "dangling" needs judgment.
 - **Recommendation:** APPROVE the marker-presence subset only; keep redirect-resolution a human review item.
+- **Status:** IMPLEMENTED (jar-quality-pass) — `check_not_for_boundaries` in `scripts/audit-jar.py` (marker-presence only, word-bounded regex; redirect-resolution deliberately NOT automated), covered by `tests/test_audit_boundaries.py`.
 
 ### HD-3 -- Add a gate: maturity vs. evidence consistency
 - **Evidence:** The gate verifies `evidence:` paths EXIST but not that they hold real proof. `bug-pipeline` declares `maturity: dogfooded` against `proof/bug-pipeline/README.md` which still says "No completed public proof packet has been added yet." `skill-forge` is honest (`maturity: dry-run` + empty packet).
