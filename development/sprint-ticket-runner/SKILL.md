@@ -21,8 +21,10 @@ considered complete.
 
 Act like the sprint's local issue tracker and execution controller. The sprint
 state is authoritative for what is in flight; the source PRP/PRD/roadmap remains
-authoritative for product intent. Do not merge planning fragments or rewrite the
-roadmap here. If planning sources conflict, record a blocked planning issue and
+authoritative for product intent. A validated [spec-driven-change](../spec-driven-change/SKILL.md)
+change folder is an accepted intent source — its `tasks.md` seeds tickets and its
+`openspec/specs/` is the authoritative requirements the board points at. Do not
+merge planning fragments or rewrite the roadmap here. If planning sources conflict, record a blocked planning issue and
 recommend [plan-prune](../plan-prune/SKILL.md); keep the sprint runner focused
 on ticketed execution.
 

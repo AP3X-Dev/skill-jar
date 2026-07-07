@@ -112,7 +112,7 @@ When evidence is thin, use `implemented-unverified` or `blocked`; do not over-pr
 
 ### 5. Choose the Canonical Plan Path
 
-Prefer the repo's existing convention if it is clear (`docs/ROADMAP.md`, `docs/PLAN.md`, `PORTAL_DEVELOPER_START_HERE.md`, etc.). If no convention exists, create `docs/PLAN.md`. The canonical plan must be the only file that claims to be the current plan.
+Prefer the repo's existing convention if it is clear (`docs/ROADMAP.md`, `docs/PLAN.md`, `PORTAL_DEVELOPER_START_HERE.md`, etc.). If no convention exists, create `docs/PLAN.md`. The canonical plan must be the only file that claims to be the current plan. Where [spec-driven-change](../spec-driven-change/SKILL.md) is adopted, `openspec/specs/` is the canonical *requirements* layer (what-must-hold); the canonical plan links to it and reconciles the *work* surface (what-to-do-next) against it rather than duplicating the requirements — and this reconciled plan can seed the initial living specs during that skill's onboarding.
 
 ### 6. Write or Update the Canonical Plan
 

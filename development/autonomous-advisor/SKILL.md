@@ -26,10 +26,11 @@ This skill does not require the Superpowers plugin. If Superpowers skills are in
 - The human has written a complete PRP and wants hands-off execution
 - The project should go from requirements to working code autonomously
 - The human explicitly says "run this autonomously" or provides a PRP for execution
+- A validated [spec-driven-change](../spec-driven-change/SKILL.md) change folder (proposal + tasks + a machine-checked spec delta) stands in for the PRP as the source of truth — `tasks.md` seeds the plan and the delta is the acceptance contract
 
 ## When NOT to Use
 
-- No PRP exists (create one through a human-guided design/planning pass first)
+- No PRP or validated spec-driven-change change folder exists (create one through a human-guided design/planning or spec-driven-change pass first)
 - The PRP is vague or incomplete (send it back to the human)
 - The project involves irreversible external actions (deploying to production, publishing packages, sending emails)
 
