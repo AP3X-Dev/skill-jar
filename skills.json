@@ -148,6 +148,14 @@
       "maturity": "linted"
     },
     {
+      "name": "simplify-loop",
+      "category": "development",
+      "description": "Autonomous loop that safely collapses LIVE, over-engineered code — one behavior-identity-gated cluster per cycle. A Scout files only structurally-provable single-use over-engineering (forwarding wrappers, single-caller indirection, config read at one constant, a factory with one product and no public/DI/plugin binding); a Collapser writes a characterization test first, then inlines it proving output byte-identical; an independent Validator re-checks the test wasn't loosened and a complexity/LOC ratchet fell. Builds and dry-runs, then OFFERS launch — never auto-collapses. Use when working code has accreted speculative abstraction and needless indirection to reduce continuously and safely. Requires a runnable test suite; ast-grep/FUGAZI sharpen detection. NOT for a deliberate seam or shallow-module reshape (use improve-architecture, human-owned), behavior-CHANGING cleanup or broad hardening (use optimization-loop), unreachable/dead code (use dead-code-reaper), or a defect (use diagnose-loop/bug-pipeline).",
+      "path": "development/simplify-loop/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "skill-forge",
       "category": "development",
       "description": "Loop that hardens an agent skill with pressure-test discipline. RED: run a pressure scenario against a fresh subagent WITHOUT the skill and record the rationalizations it invents; GREEN: draft or patch the SKILL.md to close them; REFACTOR: re-run, hunt new loopholes, repeat until K consecutive clean runs. Lints structure (frontmatter parses, description carries a trigger, links resolve, length) and grows a rationalization corpus in optional MemBerry; Superpowers writing-skills is optional lineage, not a prerequisite. Use when writing a new skill or hardening an existing one against the loopholes agents talk themselves into — especially behavioural/discipline skills. NOT for a one-line skill tweak (just edit it), authoring non-skill docs, or building a code loop (use loop-engineer).",

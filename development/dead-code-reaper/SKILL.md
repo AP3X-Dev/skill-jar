@@ -19,7 +19,7 @@ A specialized [loop-engineer](../loop-engineer/SKILL.md) loop whose discovery en
 ## When NOT to Use
 
 - One obvious unused symbol — just delete it and run the tests.
-- The code is *live but ugly* (shallow modules, tangled seams) — that's **improve-architecture**, not removal.
+- The code is *live but ugly* (shallow modules, tangled seams) — that's **improve-architecture**, not removal. Provably single-use over-engineering in live code (a one-caller wrapper, a factory-for-one) that must stay behavior-identical is **simplify-loop**.
 - The "dead" code is a defect (a wire that should be connected but isn't) — that's **diagnose-loop** / **bug-pipeline**; reaping it hides the bug.
 - No reachability analyzer available and no test suite. Without FUGAZI (or equivalent) the discovery is guesswork; without a gate, "removed safely" is a rumor.
 

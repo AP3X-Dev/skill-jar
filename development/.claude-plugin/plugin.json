@@ -21,6 +21,7 @@
     "./optimization-loop",
     "./plan-prune",
     "./review-panel",
+    "./simplify-loop",
     "./skill-forge",
     "./sprint-ticket-runner",
     "./test-backfill-loop",

@@ -39,6 +39,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Deepen shallow modules (human picks direction) | [improve-architecture](../development/improve-architecture/SKILL.md) | optimization-loop (automated) |
 | Get continuous early warning on architecture drift | [arch-drift-watch](../development/arch-drift-watch/SKILL.md) | improve-architecture (it decides) |
 | Safely remove confirmed-dead code | [dead-code-reaper](../development/dead-code-reaper/SKILL.md) | improve-architecture (live code) |
+| Collapse live over-engineering, behavior-identical | [simplify-loop](../development/simplify-loop/SKILL.md) | improve-architecture (seams/reshape), optimization-loop (behavior change) |
 | Raise test coverage one module per cycle | [test-backfill-loop](../development/test-backfill-loop/SKILL.md) | unit-test-quality (judging tests) |
 | Judge / repair / reject existing or slop tests | [unit-test-quality](../development/unit-test-quality/SKILL.md) | test-backfill-loop (a loop) |
 | Build a NEW custom loop (job ≠ the named loops) | [loop-engineer](../development/loop-engineer/SKILL.md) | the specialized loops |
@@ -60,14 +61,16 @@ The four well-modelled overlap clusters (copy this discipline when adding
 skills): **defect triad** diagnose-loop ↔ bug-pipeline ↔ optimization-loop;
 **improvement triad** optimization-loop ↔ auto-research ↔ improve-architecture;
 **test pair** test-backfill-loop ↔ unit-test-quality; **detector→actor**
-arch-drift-watch → improve-architecture / dead-code-reaper. Each names the
+arch-drift-watch → improve-architecture / dead-code-reaper; **reduce pair**
+dead-code-reaper (removes unreachable code) ↔ simplify-loop (collapses live,
+provably single-use over-engineering, behavior-identical). Each names the
 others in its "NOT for" boundary.
 
 ## 2. Composition — the two backbones
 
 **Loop backbone.** [loop-engineer](../development/loop-engineer/SKILL.md) is the
 scaffolding spine (state files, maker≠checker subagents, drivers, gates,
-worktree isolation). Five specialized loops run ON it and should be invoked
+worktree isolation). Six specialized loops run ON it and should be invoked
 directly when their job matches — loop-engineer is the builder of last resort,
 not a competitor:
 
@@ -77,7 +80,8 @@ loop-engineer (scaffold)
   ├─ optimization-loop   (audit → fix → measure, metric ratchet)
   ├─ auto-research       (hypothesize → mutate → run → keep/discard, one scalar)
   ├─ dead-code-reaper    (Scout proves dead → Reaper removes → Validator gates)
-  └─ test-backfill-loop  (Scout → Writer characterization tests → Verifier "bite")
+  ├─ test-backfill-loop  (Scout → Writer characterization tests → Verifier "bite")
+  └─ simplify-loop       (Scout proves single-use → Collapser inlines byte-identical → Validator gates)
 ```
 
 **Design → build → launch backbone (systems-design + autonomous execution).**
@@ -118,7 +122,7 @@ any irreversible external action (deploys, publishes, emails). See
 | Posture | Meaning | Example skills |
 |---|---|---|
 | detection-only | reads + reports, writes no code | arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
-| offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, optimization-loop, auto-research, test-backfill-loop, loop-engineer, sprint-ticket-runner |
+| offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, simplify-loop, optimization-loop, auto-research, test-backfill-loop, loop-engineer, sprint-ticket-runner |
 | fully-autonomous (gated) | runs the whole pipeline, but behind hard phase gates, a 50-cycle cap, maker≠checker, and no irreversible actions | autonomous-advisor |
 
 `offers-launch` skills MUST present the plan/baseline and wait for a human yes;
@@ -155,6 +159,7 @@ own or needs none).
 | bug-pipeline | dev | loop-engineer | diagnose-loop (deep bug) | NOT one bug; NOT metric hardening | `bug-pipeline-hunter`, `-fixer`, `-validator` |
 | clean-room | dev | (an original codebase) | autonomous-advisor (via PRP) | NOT your own code; NOT a literal transpile | `clean-room-analyzer`, `-researcher`, `-gap-checker`, `-improvement-sweeper`, `-contamination-reviewer` |
 | dead-code-reaper | dev | loop-engineer | improve-architecture, diagnose-loop/bug-pipeline | NOT one symbol; NOT live-but-ugly code | `dead-code-reaper-scout`, `-reaper`, `-validator` |
+| simplify-loop | dev | loop-engineer; a test suite | improve-architecture (seams), optimization-loop (behavior change) | NOT a seam/reshape; NOT behavior change; NOT dead code | `simplify-loop-scout`, `-collapser`, `-validator` |
 | design-panel | dev | — | autonomous-advisor (once a PRP exists) | NOT trivial; NOT whole-system (design-system) | `design-explorer`, `-designer`, `-judge`, `-skeptic` |
 | diagnose-loop | dev | a repro | bug-pipeline (backlog) | NOT a known fix; NOT a backlog | `diagnose-investigator`, `-analyst`, `-fixer`, `-verifier` |
 | improve-architecture | dev | — | dead-code-reaper, arch-drift-watch | NOT autonomous hardening; NOT a rewrite (clean-room) | `architecture-explorer`, `-interface-designer`, `-depth-checker` |
@@ -196,6 +201,7 @@ cross-file (jar-audit findings ≠ bug-pipeline defects ≠ forge results).
 | `skill-usage.md` | generated agent hooks | skill-forge | usage/error evidence → improvement candidates |
 | `ARCH_BASELINE.json` | arch-drift-watch | the watcher | committed structural baseline to diff against (runtime) |
 | `DEAD_CODE_LEDGER.md` | dead-code-reaper | reaper, validator | proven-dead clusters (runtime) |
+| `SIMPLIFICATION_LEDGER.md` | simplify-loop | collapser, validator | proven single-use collapse candidates (runtime) |
 | `COVERAGE_TARGETS.md` | test-backfill-loop | writer, verifier | chosen coverage targets (runtime) |
 | `sprint/` | sprint-ticket-runner | restarts | board, tickets, parallelism map, handoff (runtime) |
 
