@@ -23,6 +23,7 @@
     "./review-panel",
     "./simplify-loop",
     "./skill-forge",
+    "./spec-driven-change",
     "./sprint-ticket-runner",
     "./test-backfill-loop",
     "./unit-test-quality"

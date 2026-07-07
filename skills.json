@@ -170,6 +170,14 @@
       "evidence": "proof/skill-forge/README.md"
     },
     {
+      "name": "spec-driven-change",
+      "category": "development",
+      "description": "Spec-driven development as native, tracker-free markdown: agree on WHAT before code and keep the spec current by construction. Each change ships as a folder (proposal + tasks + a typed spec DELTA) whose requirements use a machine-checkable `### Requirement:` / `#### Scenario:` GIVEN/WHEN/THEN grammar; a bundled validator gates it; on archive the delta merges into a living `openspec/specs/` layer so requirements never drift. Hands a validated change folder to autonomous-advisor / sprint-ticket-runner instead of a hand-written PRP. Use when you want a persistent requirements contract, spec-driven change proposals, an anti-stale living spec, or to align intent before implementation — git-native, no issue tracker, no openspec CLI. NOT for deciding a design's shape (use design-panel / clean-room, which feed this), executing the work (use autonomous-advisor / sprint-ticket-runner, which consume it), or reconciling stale prose plans (use plan-prune; this prevents drift by construction).",
+      "path": "development/spec-driven-change/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "sprint-ticket-runner",
       "category": "development",
       "description": "Use when running a long development sprint, autonomous coding cycle, or multi-ticket implementation push that needs a local Linear-style board, durable ticket state, worktree isolation, maker-checker verification, and first-class parallelism detection. Turns PRPs/PRDs/plans/user requests into executable tickets, keeps `agent-state/sprint/` current across restarts, classifies what can run in parallel, and prevents agents from drifting during multi-hour or multi-day work. NOT for a single bug, one-off edit, plan cleanup (use plan-prune), or generic quality loop (use optimization-loop).",

@@ -47,6 +47,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Adversarial multi-lens review of a diff/branch/PR | [review-panel](../development/review-panel/SKILL.md) | bug-pipeline (continuous) |
 | Add observability/telemetry to an app | [instrument-observability](../development/instrument-observability/SKILL.md) | diagnose-loop (it debugs) |
 | Reconcile fragmented/stale planning docs | [plan-prune](../development/plan-prune/SKILL.md) | sprint-ticket-runner (it executes) |
+| Pin WHAT before code as a living, validated spec | [spec-driven-change](../development/spec-driven-change/SKILL.md) | design-panel/clean-room (design), autonomous-advisor/sprint-ticket-runner (execution), plan-prune (stale prose) |
 | Run a long multi-ticket sprint from a board | [sprint-ticket-runner](../development/sprint-ticket-runner/SKILL.md) | autonomous-advisor (single PRP pass) |
 | Hands-off execute a complete PRP | [autonomous-advisor](../development/autonomous-advisor/SKILL.md) | sprint-ticket-runner, clean-room |
 | Reimplement / port / clone an existing codebase | [clean-room](../development/clean-room/SKILL.md) | autonomous-advisor (no analysis pass) |
@@ -93,7 +94,10 @@ design-system  ──▶ api-design / data-store-selection  (detail the contract
 design-panel (feature spec)  or  clean-room (port/clone → DESIGN_DOC + PRP)
       │
       ▼
-autonomous-advisor  (execute the PRP hands-off; advisor ≠ verifier)
+spec-driven-change  (optional WHAT-gate: encode intent as a validated change folder → living openspec/specs/)
+      │
+      ▼
+autonomous-advisor  (execute the PRP or validated change folder hands-off; advisor ≠ verifier)
       │
       ├─▶ review-panel        (adversarial pre-merge review of the branch)
       ├─▶ optimization-loop   (Phase 5 hardening, delegated not reimplemented)
@@ -169,6 +173,7 @@ own or needs none).
 | plan-prune | dev | — | sprint-ticket-runner (execute), improve-architecture (direction) | NOT new plans; NOT architecture redesign | — |
 | review-panel | dev | a diff/branch/PR | diagnose-loop (deep bug), bug-pipeline (sweep) | NOT a single-file glance; NOT a continuous loop | `review-correctness`, `-security`, `-simplicity`, `-synthesizer` |
 | skill-forge | dev | a target skill | loop-engineer (code loop) | NOT a one-line edit; NOT non-skill docs | `skill-forge-pressure-tester`, `-forger`, `-judge`, `-linter` |
+| spec-driven-change | dev | design-panel / clean-room (a design), or — | autonomous-advisor, sprint-ticket-runner (consume the change folder); plan-prune (points at openspec/specs/) | NOT design decisions; NOT execution; NOT stale-plan cleanup | — (markdown + 2 bundled optional stdlib scripts) |
 | sprint-ticket-runner | dev | plan-prune (clean plan); a worktree mechanism | plan-prune (drift) | NOT a single bug; NOT plan cleanup (plan-prune); NOT a single gated PRP run (autonomous-advisor) | — |
 | test-backfill-loop | dev | loop-engineer | diagnose-loop / bug-pipeline (suspected bug → `BUG_TRACKER.md`) | NOT greenfield TDD; NOT judging tests (unit-test-quality) | `test-backfill-scout`, `-writer`, `-verifier` |
 | unit-test-quality | dev | TDD (external, optional) | test-backfill-loop, diagnose-loop | NOT continuous backfill; NOT broad hardening | — |

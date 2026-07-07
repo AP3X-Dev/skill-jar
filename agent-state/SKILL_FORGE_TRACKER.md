@@ -56,3 +56,4 @@ removed or renamed, mark the row `blocked` and record the decision in
 - If a public skill contract change is required, mark `blocked` and write the
   decision row before editing.
 | SF-024 | simplify-loop | development | `development/simplify-loop/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
+| SF-025 | spec-driven-change | development | `development/spec-driven-change/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |

@@ -8,7 +8,7 @@
     {
       "name": "skill-jar-development",
       "source": "./development",
-      "description": "development-category skills: add-to-jar, arch-drift-watch, auto-research, autonomous-advisor, bug-pipeline, clean-room, dead-code-reaper, design-panel, diagnose-loop, improve-architecture, instrument-observability, loop-engineer, optimization-loop, plan-prune, review-panel, simplify-loop, skill-forge, sprint-ticket-runner, test-backfill-loop, unit-test-quality."
+      "description": "development-category skills: add-to-jar, arch-drift-watch, auto-research, autonomous-advisor, bug-pipeline, clean-room, dead-code-reaper, design-panel, diagnose-loop, improve-architecture, instrument-observability, loop-engineer, optimization-loop, plan-prune, review-panel, simplify-loop, skill-forge, spec-driven-change, sprint-ticket-runner, test-backfill-loop, unit-test-quality."
     },
     {
       "name": "skill-jar-systems-design",
