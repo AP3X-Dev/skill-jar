@@ -44,6 +44,7 @@ This skill exists to prevent AI slop tests: tests that merely execute code, asse
 | Determinism | Same commit plus same inputs produce the same result. | Sleeps, retries, uncontrolled snapshots, shared fixtures, or leaked state make results flaky. |
 | Diagnostic value | Test names and failure messages identify one broken behavior. | One broad test fails for many possible reasons. |
 | Defect detection | The test would fail if the covered behavior changed materially. | Coverage rises but assertions are absent, weak, or tautological. |
+| Regression completeness | A test for a fixed defect pins the whole error CLASS — every boundary/format/variant that shares the root cause. | It pins only the one reported input, leaving sibling variants of the same bug unguarded. |
 | Maintainability | Setup is local or narrowly abstracted; test data is explicit. | Broad fixtures, mystery files, logic in tests, and snapshot sprawl hide intent. |
 
 ## Review Workflow
@@ -80,6 +81,7 @@ Under a deadline or a coverage gate, agents talk themselves into shipping slop. 
 | "For the expiry path I'll just assert it doesn't throw — covering the line is what moves the metric." | Covering the line is not testing it. Assert the actual expiry behavior (e.g. discount is zero / coupon rejected), not the absence of an exception. |
 | "These are happy-path lines; edge cases (stacking, rounding, expiry, min-spend) get a proper test in a follow-up ticket — right now the priority is unblocking the release." | The edge cases are the behavior contract you just wrote, not a follow-up. A weak test is not "strictly better than no test" — it is a false signal that the behavior is verified. Pin them now or mark the PR not-ready. |
 | "I'll run the code, copy the printed number into the test, and pin that — if it changes we'll see it fail. Pinning current output IS pinning behavior." | No. Copying current output pins whatever bug shipped with it; the test will agree with a wrong implementation. Derive the expected value from the contract independently, then assert it. Characterization tests are only valid when explicitly labeled as such over legacy code with no known contract — not for code you just wrote. |
+| "The bug report named one input (empty string) — I'll pin that exact case and ship; the other empty-ish inputs are separate tickets." | The regression test guards the error CLASS, not the one reported input. If `""` triggered it, so may `null`, `"   "`, and a 3- vs 8-char variant of the same root cause — pin the class with a table-driven case, or the same bug ships again through the sibling you skipped. |
 
 ## Patterns
 

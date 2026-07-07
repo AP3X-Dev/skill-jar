@@ -273,7 +273,11 @@ Read every file it names → implement the smallest fix that satisfies its
 Acceptance command. For any remove/delete/rewire item: reproduce the claim
 first (re-grep INCLUDING dynamic/string/reflection references — registries, DI,
 dynamic import, config-keyed lookups); if no-consumer can't be reproduced, mark
-"unconfirmed — needs investigation" and skip. Prefer a failing test before the
+"unconfirmed — needs investigation" and skip. For a correctness fix that routes
+through a shared function, grep every caller before editing and fix it once at
+the shared root — one guard there covers all callers and is a smaller diff than
+patching only the path this item named; note the sibling callers in the Session
+entry so they aren't re-filed as separate bugs. Prefer a failing test before the
 fix, especially in modules flagged fix-requires-test-first.
 
 ## 3. Mode B — discovery sweep
