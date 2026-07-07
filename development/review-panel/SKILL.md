@@ -50,7 +50,7 @@ The author of the diff is never a reviewer of it. Each reviewer is a fresh, inde
 |---|---|---|
 | **Correctness reviewer** | Logic errors, edge cases, error handling, data flow, concurrency | Comment on style |
 | **Security reviewer** | Auth, injection, secrets, unsafe deserialization, input validation at boundaries | Pass over a risk as "probably fine" |
-| **Simplicity reviewer** | Reuse (is this already in the codebase?), dead abstraction, over-engineering, YAGNI | Demand gold-plating |
+| **Simplicity reviewer** | Walk the 7-rung ladder (needs-to-exist? → reuse in repo → stdlib → native → installed dep → one line → minimum code) and flag the first rung each new abstraction skipped — reuse, dead abstraction, over-engineering, YAGNI | Demand gold-plating |
 | **Synthesizer** | Dedupe across lenses, rank by severity, drop overlaps | Add findings no reviewer raised |
 | **Author** (receives) | Verify each finding against reality, then act — fix or push back **with reasoning** | Reply "great catch!" and implement before verifying |
 
