@@ -57,3 +57,4 @@ removed or renamed, mark the row `blocked` and record the decision in
   decision row before editing.
 | SF-024 | simplify-loop | development | `development/simplify-loop/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-025 | spec-driven-change | development | `development/spec-driven-change/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
+| SF-026 | rebuild-panel | development | `development/rebuild-panel/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |

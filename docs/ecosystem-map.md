@@ -37,6 +37,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Harden an existing codebase on measured metrics | [optimization-loop](../development/optimization-loop/SKILL.md) | auto-research, improve-architecture |
 | Optimize ONE scalar metric on a frozen harness | [auto-research](../development/auto-research/SKILL.md) | optimization-loop (multi-metric) |
 | Deepen shallow modules (human picks direction) | [improve-architecture](../development/improve-architecture/SKILL.md) | optimization-loop (automated) |
+| Get a first-principles reshape plan for a subsystem I own | [rebuild-panel](../development/rebuild-panel/SKILL.md) | clean-room (full rewrite), improve-architecture (one module), arch-drift-watch (continuous) |
 | Get continuous early warning on architecture drift | [arch-drift-watch](../development/arch-drift-watch/SKILL.md) | improve-architecture (it decides) |
 | Safely remove confirmed-dead code | [dead-code-reaper](../development/dead-code-reaper/SKILL.md) | improve-architecture (live code) |
 | Collapse live over-engineering, behavior-identical | [simplify-loop](../development/simplify-loop/SKILL.md) | improve-architecture (seams/reshape), optimization-loop (behavior change) |
@@ -109,6 +110,14 @@ autonomous-advisor  (execute the PRP or validated change folder hands-off; advis
 improve-architecture; duplication/dead code → dead-code-reaper. It never decides
 or applies a refactor itself.
 
+**Analysis → routing.** [rebuild-panel](../development/rebuild-panel/SKILL.md)
+(one-shot, detection-only) answers "what would a from-scratch rebuild change?"
+for a subsystem you own and routes every recommendation to its executor:
+module depth → improve-architecture (one candidate at a time); collapse /
+dead code / hardening → simplify-loop / dead-code-reaper / optimization-loop;
+build-class items → the design→build backbone above; a full-rewrite verdict →
+clean-room, where the panel stops. It owns no execution state.
+
 **Cross-cutting.** [instrument-observability](../development/instrument-observability/SKILL.md)
 produces the telemetry/alerts that [production-readiness](../systems-design/production-readiness/SKILL.md)'s
 launch gate consumes (instrument first, then gate). [plan-prune](../development/plan-prune/SKILL.md)
@@ -171,6 +180,7 @@ own or needs none).
 | loop-engineer | dev | — | the 5 specialized loops | NOT a one-off task; NOT a hardening pass (optimization-loop) | explorer/implementer/verifier templates (in `references/`) |
 | optimization-loop | dev | loop-engineer | improve-architecture (judgment) | NOT one bug; NOT single-scalar (auto-research) | — (scaffolds via loop-engineer) |
 | plan-prune | dev | — | sprint-ticket-runner (execute), improve-architecture (direction) | NOT new plans; NOT architecture redesign | — |
+| rebuild-panel | dev | — | improve-architecture (one candidate at a time), simplify-loop, dead-code-reaper, optimization-loop, test-backfill-loop, design-panel→spec-driven-change→autonomous-advisor (build-class), clean-room (rewrite verdict — route and stop), sprint-ticket-runner (execution board) | NOT a rewrite (clean-room); NOT execution (owners ship); NOT one-module deepening (improve-architecture); NOT continuous detection (arch-drift-watch); NOT an execution ledger (sprint-ticket-runner / plan-prune) | `rebuild-mapper`, `rebuild-lens`, `rebuild-skeptic`, `rebuild-synthesizer` |
 | review-panel | dev | a diff/branch/PR | diagnose-loop (deep bug), bug-pipeline (sweep) | NOT a single-file glance; NOT a continuous loop | `review-correctness`, `-security`, `-simplicity`, `-synthesizer` |
 | skill-forge | dev | a target skill | loop-engineer (code loop) | NOT a one-line edit; NOT non-skill docs | `skill-forge-pressure-tester`, `-forger`, `-judge`, `-linter` |
 | spec-driven-change | dev | design-panel / clean-room (a design), or — | autonomous-advisor, sprint-ticket-runner (consume the change folder); plan-prune (points at openspec/specs/) | NOT design decisions; NOT execution; NOT stale-plan cleanup | — (markdown + 2 bundled optional stdlib scripts) |

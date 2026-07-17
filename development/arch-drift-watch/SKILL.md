@@ -20,6 +20,7 @@ Architecture entropy compounds quietly — each AI-assisted change can add a lit
 - Deciding *which* refactor to do, or designing the deepening — that's **improve-architecture** (human judgment; this loop only detects).
 - Removing dead code — **dead-code-reaper**.
 - A broad quality pass with a fix backlog — **optimization-loop**.
+- A one-shot first-principles reshape plan for a subsystem — **rebuild-panel** (a deep read on demand; this loop watches for *new* drift on a schedule).
 
 ## Requires FUGAZI
 

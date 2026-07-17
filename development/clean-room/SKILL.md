@@ -120,6 +120,7 @@ Declare roles in `DESIGN_DOC.md` §0 under a **"Repository Roles"** subsection:
 
 **Do NOT use for:**
 - Refactoring your own code (just refactor)
+- A first-principles *reshape plan* for a subsystem you own, without a full rewrite — that's [rebuild-panel](../rebuild-panel/SKILL.md) (it routes back here only when its verdict is a genuine rewrite)
 - Small utilities where reading the source is fine
 - When the user wants a literal translation (use a transpiler or direct port instead)
 

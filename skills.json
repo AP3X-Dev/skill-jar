@@ -92,7 +92,7 @@
     {
       "name": "improve-architecture",
       "category": "development",
-      "description": "Find — then ship — deepening opportunities in a codebase: refactors that turn shallow modules into deep ones for testability, locality, and AI-navigability. Human-in-the-loop by design (a strategic human picks direction; the AI explores, drafts, and migrates): explore for friction, present candidates as a visual HTML report, grill the chosen one into a module shape, then convert the approved design into an issue and a careful migration. Informed by the domain language in CONTEXT.md and decisions in docs/adr/. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, reduce AI-driven architecture drift/entropy, make a codebase more testable, or wants a periodic architecture review. NOT for autonomous metric-driven hardening (use optimization-loop), defect repair (use bug-pipeline), or reimplementing a codebase from scratch (use clean-room).",
+      "description": "Find — then ship — deepening opportunities in a codebase: refactors that turn shallow modules into deep ones for testability, locality, and AI-navigability. Human-in-the-loop by design (a strategic human picks direction; the AI explores, drafts, and migrates): explore for friction, present candidates as a visual HTML report, grill the chosen one into a module shape, then convert the approved design into an issue and a careful migration. Informed by the domain language in CONTEXT.md and decisions in docs/adr/. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, reduce AI-driven architecture drift/entropy, make a codebase more testable, or wants a periodic architecture review. NOT for autonomous metric-driven hardening (use optimization-loop), defect repair (use bug-pipeline), reimplementing a codebase from scratch (use clean-room), or subsystem-wide rebuild analysis (use rebuild-panel; it feeds candidates back one at a time).",
       "path": "development/improve-architecture/SKILL.md",
       "tags": [],
       "core": false
@@ -131,6 +131,14 @@
       "category": "development",
       "description": "Use when a repo has fragmented, stale, duplicated, or conflicting planning documentation and needs one current plan grounded in the live codebase, git history, tests, and existing docs. Use for roadmap reconciliation, PRP/spec/handoff cleanup, plan updates after development drift, reducing outdated docs, or when agents are unsure which plan is authoritative. NOT for creating a brand-new plan from no prior docs, architecture redesign (use improve-architecture), or quality hardening loops (use optimization-loop).",
       "path": "development/plan-prune/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
+      "name": "rebuild-panel",
+      "category": "development",
+      "description": "First-principles rebuild analysis for a subsystem you OWN — answers 'if we were rebuilding X from scratch with intent to significantly improve and optimize it, what would we recommend?' WITHOUT rewriting anything. Parallel mappers ground every claim in real code, git/defect history, and docs/memory; isolated first-principles lenses (substrate, keep-verbatim archaeologist, coupling/blast-radius, operability/cost) each propose from-scratch changes; a skeptic attacks them; a synthesizer emits ONE report: keep-verbatim list, ranked load-bearing changes with the pain each retires, a strangler-fig sequence with effort classes, and a per-recommendation owner routing to executor skills. Detection-only — the human picks; it never ships a change. Use when the user asks what a from-first-principles rebuild would change, wants a refactor/improvement roadmap for a living subsystem, or a rebuild-vs-refactor verdict. NOT for a full rewrite (clean-room), one module's deepening (improve-architecture), or executing changes.",
+      "path": "development/rebuild-panel/SKILL.md",
       "tags": [],
       "core": false
     },

@@ -43,3 +43,9 @@
 ### HD-5 -- MemBerry / `memberry-setup` contract: optional adapter, jar-wide
 - **Evidence:** autonomous-advisor (F-1) and clean-room (F-2) present an unbundled user-global skill as a hard prerequisite/halt, contradicting optimization-loop's "OPTIONAL adapter" posture and the user's recorded "jar skills self-contained" rule.
 - **Recommendation:** APPROVE the stance "MemBerry is an optional persistence adapter; absence is a clean skip" jar-wide, and let F-1/F-2 fixers reframe the two skills to match. Documented in docs/ecosystem-map.md §4.
+
+### D-2026-07-16 -- rebuild-panel ships as an analysis panel only; campaign mode cut
+- **Context:** The user asked for a "skill loop" for first-principles refactor/improvement analysis ("if we were rebuilding the orchestrator from first principles... what would you recommend?") and initially picked panel + optional campaign mode.
+- **Evidence:** The redundancy skeptic found campaign mode (a panel-owned ledger tracking a strangler sequence phase-by-phase) duplicates three skills: sprint-ticket-runner (sequenced board), plan-prune (post-ship reconciliation), and arch-drift-watch (finding router). It also collides with the ecosystem-map section 6 no-cross-file discipline.
+- **Decision (human):** Cut campaign mode. The iterate-after-a-phase behavior is "re-run the panel scoped to the changed area" -- zero new machinery. Execution state belongs to the executors.
+- **Also binding:** a full-rewrite verdict routes to clean-room and STOPS (the panel never writes a rewrite DESIGN_DOC/PRP -- that is clean-room Transparent Phase 1-2); improve-architecture receives deepening candidates ONE at a time per its own contract.

@@ -20,6 +20,7 @@
     "./loop-engineer",
     "./optimization-loop",
     "./plan-prune",
+    "./rebuild-panel",
     "./review-panel",
     "./simplify-loop",
     "./skill-forge",
