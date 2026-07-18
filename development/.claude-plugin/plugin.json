@@ -18,6 +18,7 @@
     "./improve-architecture",
     "./instrument-observability",
     "./loop-engineer",
+    "./operating-discipline",
     "./optimization-loop",
     "./plan-prune",
     "./rebuild-panel",

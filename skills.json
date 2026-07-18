@@ -119,6 +119,14 @@
       "maturity": "dogfooded"
     },
     {
+      "name": "operating-discipline",
+      "category": "development",
+      "description": "Frontier-agent operating discipline distilled from 23k+ observed turns of Claude Fable 5: ten behavioral laws, a per-task operating loop, situation recipes, and a tool-error recovery ladder that close most of the capability gap between frontier and mid-tier agents — because the gap is mostly discipline (ground before acting, prove before claiming, never retry verbatim, fix the class, distrust success claims, externalize state), not intelligence. Includes a condensed drop-in system-prompt block for weaker-model workers. Use when configuring or prompting any agent/subagent/swarm worker on a smaller model, hardening an agent that asserts without verifying or retries failed calls verbatim, writing driver prompts for loops and pipelines, or auditing an agent's transcript for process failures. NOT for running a phased workflow itself — it is doctrine other skills' prompts should inherit; pair it with loop-engineer / autonomous-advisor / bug-pipeline driver prompts rather than replacing them.",
+      "path": "development/operating-discipline/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "optimization-loop",
       "category": "development",
       "description": "Use when the user wants an optimization loop, hardening pass, or continuous improvement cycles on an EXISTING codebase — typically after feature work or when shifting to quality/hardening mode. Audits first, builds a concrete file-level backlog, then scaffolds and LAUNCHES the loop on loop-engineer conventions (agent-state spine, driver prompt, maker≠checker verifier, metric ratchet) — wires the trigger and closes cycle 1 before handing off, so the deliverable is a running loop, not a prompt on a shelf. NOT for a single one-off bug (use bugfix or bug-pipeline), a brand-new codebase (do design/planning first), building a non-optimization loop (use loop-engineer directly), single-metric experimentation on a frozen harness (use auto-research), or judgment-driven architecture / deep-module refactoring (use improve-architecture).",
