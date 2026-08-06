@@ -15,6 +15,7 @@
     "./dead-code-reaper",
     "./design-panel",
     "./diagnose-loop",
+    "./gauntlet-loop",
     "./improve-architecture",
     "./instrument-observability",
     "./loop-engineer",

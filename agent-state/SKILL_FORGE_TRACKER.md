@@ -59,3 +59,4 @@ removed or renamed, mark the row `blocked` and record the decision in
 | SF-025 | spec-driven-change | development | `development/spec-driven-change/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-026 | rebuild-panel | development | `development/rebuild-panel/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-027 | operating-discipline | development | `development/operating-discipline/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
+| SF-028 | gauntlet-loop | development | `development/gauntlet-loop/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |

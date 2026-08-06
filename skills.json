@@ -90,6 +90,14 @@
       "maturity": "linted"
     },
     {
+      "name": "gauntlet-loop",
+      "category": "development",
+      "description": "Turns any goal into ONE short, paste-ready \"gauntlet loop\" prompt — a prompt that makes an agent set a concrete quality bar (a named, fetchable, comparable real-world reference), split the work into small judgeable pieces, run a builder and a separate harsh critic with fresh context on each, compare blind against the bar with labels stripped, and loop until ours wins the A/B. Works for builds, writing, code, research, or design. Use when the user says \"gauntlet loop\", \"gauntlet this\", \"make a gauntlet prompt\", \"loop until it beats X\", or wants agent work held to a real external reference instead of a self-written rubric. NOT for running a recurring interval task (use the host's /loop directly), scaffolding a persistent repo loop with state files and verifiers (use loop-engineer), or reviewing an existing diff (use review-panel) — this skill only writes the one prompt, and optionally runs it.",
+      "path": "development/gauntlet-loop/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "improve-architecture",
       "category": "development",
       "description": "Find — then ship — deepening opportunities in a codebase: refactors that turn shallow modules into deep ones for testability, locality, and AI-navigability. Human-in-the-loop by design (a strategic human picks direction; the AI explores, drafts, and migrates): explore for friction, present candidates as a visual HTML report, grill the chosen one into a module shape, then convert the approved design into an issue and a careful migration. Informed by the domain language in CONTEXT.md and decisions in docs/adr/. Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, reduce AI-driven architecture drift/entropy, make a codebase more testable, or wants a periodic architecture review. NOT for autonomous metric-driven hardening (use optimization-loop), defect repair (use bug-pipeline), reimplementing a codebase from scratch (use clean-room), or subsystem-wide rebuild analysis (use rebuild-panel; it feeds candidates back one at a time).",

@@ -44,6 +44,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Raise test coverage one module per cycle | [test-backfill-loop](../development/test-backfill-loop/SKILL.md) | unit-test-quality (judging tests) |
 | Judge / repair / reject existing or slop tests | [unit-test-quality](../development/unit-test-quality/SKILL.md) | test-backfill-loop (a loop) |
 | Build a NEW custom loop (job ≠ the named loops) | [loop-engineer](../development/loop-engineer/SKILL.md) | the specialized loops |
+| Get ONE paste-ready prompt that loops work against a real reference bar | [gauntlet-loop](../development/gauntlet-loop/SKILL.md) | loop-engineer (persistent repo loop), review-panel (diff review) |
 | Explore a feature/component design (design-it-twice) | [design-panel](../development/design-panel/SKILL.md) | design-system (whole system) |
 | Adversarial multi-lens review of a diff/branch/PR | [review-panel](../development/review-panel/SKILL.md) | bug-pipeline (continuous) |
 | Add observability/telemetry to an app | [instrument-observability](../development/instrument-observability/SKILL.md) | diagnose-loop (it debugs) |
