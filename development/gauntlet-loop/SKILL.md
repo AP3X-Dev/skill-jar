@@ -11,10 +11,6 @@ fresh agent session.
 You are not doing the work. You are writing the prompt that makes another
 agent grind on the work until it beats a real reference.
 
-Ported from [robonuggets/gauntlet-loop](https://github.com/robonuggets/gauntlet-loop)
-(CC BY 4.0). Self-contained: nothing here requires that repo or any other
-jar skill.
-
 ## Flow
 
 1. **Read the goal.** One line restatement in your head, not on screen.
