@@ -1,8 +1,46 @@
 # Drift kit
 
-Bundled FUGAZI recipes, the baseline/diff mechanics, and the detection-agent template for [arch-drift-watch](../SKILL.md). Self-contained — adapt `<placeholders>`.
+Bundled guardrail-pack/FUGAZI recipes, mode-specific baseline/diff mechanics,
+and the detection-agent template for [arch-drift-watch](../SKILL.md).
+Self-contained—adapt `<placeholders>`.
 
-## FUGAZI structural scan (read-only)
+## Guardrail-forge pack scan (preferred after forge handoff)
+
+```text
+python scripts/architecture/watch_guardrail.py
+```
+
+Initialize once from an approved clean Level 2 handoff with `--initialize`, a
+decision ID, and owner. The ID must resolve to a committed approved
+`watch-handoff` decision whose subject hash is the adapter's independently
+computed authority and whose bytes match `HEAD`. All authority-bearing pack
+files, canonical tools, generated hook and CI workflow, validator implementation
+roots, fixtures, and required evidence/target files must be tracked and
+clean-filtered blob-equivalent to
+`HEAD`, bypassing index hints such as `assume-unchanged`; committing only
+the decision is invalid. Require
+`schema: guardrail-watch-v1`, `complete: true`, a
+nonzero `rules_run`, and findings shaped as
+`{rule_id, fingerprint, path, message, kind, owner, state}`.
+Exit `0` is a complete clean scan, exit `1` is complete drift, and exit `2` is a
+configuration/tool/incomplete-scan blocker. The watcher files exit-1 findings by
+fingerprint and never changes `.architecture/policy.yaml`, `baseline.json`,
+`exceptions.yaml`, `decisions.json`, or `verification.json`.
+
+The pack's baseline is authoritative. The adapter compares complete-scan findings
+to the only permitted cursor path,
+`agent-state/architecture-guardrail/watch-cursor.json`, to classify new,
+persisting, and resolved findings. It emits every active finding and exit `1`
+regardless of cursor label. The cursor stores authority digest, scan time, and
+observed fingerprints; it never suppresses a finding. Custom paths, symlinks,
+and Windows junction ancestors are invalid. It advances atomically only after a complete scan, then
+re-runs verification and restores the exact prior cursor bytes if the result changed. Do not
+create `ARCH_BASELINE.json` or run the FUGAZI
+recipe below in the same watcher. If the configured pack command is broken or
+its authority digest changed without an approved handoff, stop rather than
+changing source modes.
+
+## Standalone FUGAZI structural scan (read-only)
 
 ```bash
 fugazi boundaries    --format json   # boundary-violations (needs zones in .fugazirc.json)
@@ -29,7 +67,7 @@ MCP equivalents: `boundaries`, `analyze` (filtered), `health`, `dupes` — all t
 
 A finding = an import that crosses a seam the zones forbid. Set these up with the user before capturing the baseline.
 
-## Baseline + diff mechanics
+## Standalone baseline + diff mechanics
 
 ```
 ARCH_BASELINE.json  (committed)
@@ -59,12 +97,15 @@ Advance the baseline **only** when a human accepts the current state (post-revie
 ```md
 ---
 name: arch-drift-watcher
-description: "Producer for the arch-drift-watch loop. Runs FUGAZI structural rules read-only, diffs against the committed baseline, and files NEW violations to the triage inbox. Use during the loop's scan stage. Writes no code; never edits the baseline."
+description: "Producer for arch-drift-watch. Runs the configured guardrail-pack verifier or standalone FUGAZI scan read-only, compares against that mode's authoritative baseline/cursor, and files NEW violations. Use during the loop scan stage. Never edits policy or baseline."
 model: sonnet
 ---
 You are the drift watcher. ONE scan per dispatch, read-only.
-- Run fugazi boundaries / circular-deps / health / dupes (--format json).
-- Fingerprint each finding as {kind, file, symbol} and diff against ARCH_BASELINE.json.
+- Read loop-state.md and run only its configured source mode.
+- Guardrail-pack mode: run `python scripts/architecture/watch_guardrail.py`,
+  require complete output, and treat every returned finding as active drift.
+- Standalone mode: run fugazi boundaries / circular-deps / health / dupes
+  (--format json), fingerprint each finding, and diff against ARCH_BASELINE.json.
 - File ONLY new findings (not in the baseline) to <triage-inbox>: kind, file:line,
   "new since <baseline-SHA>", suggested owner (improve-architecture | dead-code-reaper).
 - Report resolved findings (in baseline, gone now) as good news.

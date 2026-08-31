@@ -212,3 +212,23 @@ not yet promoted) and the audit-policy decisions HD-1..HD-5 in decisions.md
 NOTE on forge maturity: these are first-pass forges gated by LLM judges + the
 structure gate; `forged` means RED-evidenced + 3/3 clean + gate-green, which is
 distinct from the `dogfooded`/`battle-tested` maturity tiers (real-use evidence).
+
+## Current Restart Status -- 2026-08-31
+
+The historical completion statement above is superseded for current execution.
+SF-001 `arch-drift-watch` and SF-029 `guardrail-forge` are reopened at `0/3`
+after independent executable counterexamples; the forge queue therefore has
+open work. The current implementation is the fifty-sixth GREEN described in
+`GUARDRAIL_FORGE_HANDOFF.md` and the two forge run packages. Its exact next
+action is the full focused/full/audit/skill/diff gate sequence followed by three
+fresh read-only judges. Do not reuse any prior clean verdict or mark either row
+forged before all three current-revision judges comply.
+
+## Release Preparation -- 2026-08-31
+
+The human directed the completed local guardrail-forge build to be committed,
+merged, and pushed without continuing the optional adversarial certification
+loop. Pre-commit verification on the current implementation passed all 91 tests
+and the mandatory jar audit passed all 299 checks. SF-001 and SF-029 remain
+honestly labeled `reopened` at `0/3`; shipping the integrated implementation does
+not relabel either skill as `forged`.

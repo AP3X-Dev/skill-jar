@@ -22,7 +22,7 @@ removed or renamed, mark the row `blocked` and record the decision in
 
 | ID | Skill | Category | Path | Status | Clean Runs | Pressure Focus | Last Evidence | Next Action |
 |----|-------|----------|------|--------|------------|----------------|---------------|-------------|
-| SF-001 | arch-drift-watch | development | `development/arch-drift-watch/SKILL.md` | forged | 3/3 | scheduled drift triage pressure | `agent-state/skill-forge-runs/arch-drift-watch.md` | complete |
+| SF-001 | arch-drift-watch | development | `development/arch-drift-watch/SKILL.md` | reopened | 0/3 | generated guardrail-pack adapter, complete-scan fail-closed behavior, authority digest, and operational cursor pressure | `agent-state/skill-forge-runs/arch-drift-watch.md` | fifty-sixth GREEN gated; awaiting fresh judges |
 | SF-002 | auto-research | development | `development/auto-research/SKILL.md` | forged | 3/3 | fixed-budget experiment shortcut pressure | `agent-state/skill-forge-runs/auto-research.md` | complete |
 | SF-003 | autonomous-advisor | development | `development/autonomous-advisor/SKILL.md` | forged | 3/3 | hands-off PRP guardrail pressure | `agent-state/skill-forge-runs/autonomous-advisor.md` | complete |
 | SF-004 | bug-pipeline | development | `development/bug-pipeline/SKILL.md` | forged | 3/3 | hunter/fixer/validator shortcut pressure | `agent-state/skill-forge-runs/bug-pipeline.md` | complete |
@@ -60,3 +60,4 @@ removed or renamed, mark the row `blocked` and record the decision in
 | SF-026 | rebuild-panel | development | `development/rebuild-panel/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-027 | operating-discipline | development | `development/operating-discipline/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-028 | gauntlet-loop | development | `development/gauntlet-loop/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
+| SF-029 | guardrail-forge | development | `development/guardrail-forge/SKILL.md` | reopened | 0/3 | path containment, empty enforcement, approval/checker binding, drift adapter, and scaffold escape pressure | `agent-state/skill-forge-runs/guardrail-forge.md` | fifty-sixth GREEN gated; awaiting fresh judges |

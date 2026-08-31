@@ -12,7 +12,7 @@
     {
       "name": "arch-drift-watch",
       "category": "development",
-      "description": "A scheduled detection loop that guards architecture against drift: each run executes FUGAZI boundaries / circular-deps / complexity (and dupes) read-only, diffs the findings against a committed baseline, and files only the NEW violations to a triage inbox — routing structural-judgment items to improve-architecture (human-owned) and offering small, safe auto-fixes only at higher autonomy. Detection-only by default (Level 1, no code writes). Builds the baseline and dry-runs one cycle, then offers the schedule. Use when you want continuous early warning on architecture entropy / AI-driven drift between periodic reviews. Requires FUGAZI. NOT for the judgment call of what to refactor (use improve-architecture), dead-code removal (use dead-code-reaper), or general hardening (use optimization-loop).",
+      "description": "Use when an established repository needs continuing read-only architecture drift detection between reviews. In guardrail-pack mode it consumes guardrail-forge's approved policy, exact baseline/exceptions, and canonical machine-readable verifier; in standalone mode it runs configured FUGAZI boundaries/cycles/complexity/dupes against agent-state/ARCH_BASELINE.json. Each cycle files only new violations and never redesigns policy, advances a baseline, or fixes code. Choose one source mode explicitly and fail closed; never silently fall back. NOT for bootstrapping policy (use guardrail-forge), deciding refactors (use improve-architecture), dead-code removal, or general hardening.",
       "path": "development/arch-drift-watch/SKILL.md",
       "tags": [],
       "core": false
@@ -94,6 +94,14 @@
       "category": "development",
       "description": "Turns any goal into ONE short, paste-ready \"gauntlet loop\" prompt — a prompt that makes an agent set a concrete quality bar (a named, fetchable, comparable real-world reference), split the work into small judgeable pieces, run a builder and a separate harsh critic with fresh context on each, compare blind against the bar with labels stripped, and loop until ours wins the A/B. Works for builds, writing, code, research, or design. Use when the user says \"gauntlet loop\", \"gauntlet this\", \"make a gauntlet prompt\", \"loop until it beats X\", or wants agent work held to a real external reference instead of a self-written rubric. NOT for running a recurring interval task (use the host's /loop directly), scaffolding a persistent repo loop with state files and verifiers (use loop-engineer), or reviewing an existing diff (use review-panel) — this skill only writes the one prompt, and optionally runs it.",
       "path": "development/gauntlet-loop/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
+      "name": "guardrail-forge",
+      "category": "development",
+      "description": "Use when an unfamiliar established repository needs a project-specific architecture enforcement pack: discover actual boundaries read-only, classify evidence without mistaking prevalence for intent, stop on conflicts, then after human approval generate and pressure-test deterministic validators, exact baselines/exceptions, hooks, CI, and a handoff to arch-drift-watch. MemBerry can enrich discovery but is never required for enforcement. NOT for deciding product architecture from scratch, a one-off architecture review (use improve-architecture), or continuing drift detection after installation (use arch-drift-watch).",
+      "path": "development/guardrail-forge/SKILL.md",
       "tags": [],
       "core": false
     },

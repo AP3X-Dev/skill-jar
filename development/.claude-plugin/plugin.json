@@ -16,6 +16,7 @@
     "./design-panel",
     "./diagnose-loop",
     "./gauntlet-loop",
+    "./guardrail-forge",
     "./improve-architecture",
     "./instrument-observability",
     "./loop-engineer",
