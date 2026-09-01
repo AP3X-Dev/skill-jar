@@ -43,6 +43,7 @@ These are the dodges a deadline produces. Each is a violation of a gate above. I
 
 - Trivial or fully-specified changes — just build them.
 - Whole-system intake (SLOs, topology, data path, failure path) — that's the systems-design category's [design-system](../../systems-design/design-system/SKILL.md) skill; it can *use* this panel for its alternatives step.
+- One load-bearing *architecture* decision (module ownership, schema, tenancy, consistency, topology) that must end in a human-approved ADR — [architecture-decision-loop](../../systems-design/architecture-decision-loop/SKILL.md); it reuses this panel's designer/judge/skeptic roles.
 - A PRP already exists for hands-off execution — **autonomous-advisor** owns that pipeline (its advisor can run this skill's panel internally).
 
 ## Roles (maker ≠ checker)

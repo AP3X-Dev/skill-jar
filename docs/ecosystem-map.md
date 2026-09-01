@@ -55,6 +55,9 @@ NOT to use, so overlapping skills stay disambiguated.
 | Reimplement / port / clone an existing codebase | [clean-room](../development/clean-room/SKILL.md) | autonomous-advisor (no analysis pass) |
 | Harden a skill against agent rationalizations | [skill-forge](../development/skill-forge/SKILL.md) | loop-engineer (code loop) |
 | Add/import one skill into this jar | [add-to-jar](../development/add-to-jar/SKILL.md) | skill-forge (authoring) |
+| Architect a brand-new product/service before code exists | [greenfield-architecture](../systems-design/greenfield-architecture/SKILL.md) | guardrail-forge (established repo), design-panel (one feature) |
+| Resolve ONE load-bearing architecture choice (ADR) | [architecture-decision-loop](../systems-design/architecture-decision-loop/SKILL.md) | design-panel (feature design), greenfield-architecture (whole intake) |
+| Enforce an established repo's architecture with validators | [guardrail-forge](../development/guardrail-forge/SKILL.md) | arch-drift-watch (after the pack exists), improve-architecture (one-shot review) |
 | Design a whole system / size a topology | [design-system](../systems-design/design-system/SKILL.md) | design-panel (one feature) |
 | Pin an API contract (retries/versioning/errors) | [api-design](../systems-design/api-design/SKILL.md) | design-system, data-store-selection |
 | Choose the data layer from access patterns | [data-store-selection](../systems-design/data-store-selection/SKILL.md) | design-system, api-design |
@@ -90,6 +93,9 @@ loop-engineer (scaffold)
 **Design → build → launch backbone (systems-design + autonomous execution).**
 
 ```
+greenfield-architecture  (empty repo: domain contract → constitution + skeleton; uses design-system + architecture-decision-loop)
+      │
+      ▼
 design-system  ──▶ api-design / data-store-selection  (detail the contract & data layer)
       │
       ▼
@@ -105,6 +111,14 @@ autonomous-advisor  (execute the PRP or validated change folder hands-off; advis
       ├─▶ optimization-loop   (Phase 5 hardening, delegated not reimplemented)
       └─▶ production-readiness (launch gate: SLOs, runbooks, drill)
 ```
+
+**Decision → enforcement.** [architecture-decision-loop](../systems-design/architecture-decision-loop/SKILL.md)
+settles one load-bearing choice into a human-approved ADR and emits Guardrail
+*candidates* only for deterministic consequences. [greenfield-architecture](../systems-design/greenfield-architecture/SKILL.md)
+runs it per contested choice, then hands the bootstrap repo to
+[guardrail-forge](../development/guardrail-forge/SKILL.md), which still starts at
+Level 1 read-only discovery (constitution and seed are evidence, not authority)
+and after Level 2 approval hands continuing detection to arch-drift-watch.
 
 **Detection → decision.** [arch-drift-watch](../development/arch-drift-watch/SKILL.md)
 (continuous, detection-only) files NEW drift and routes it: structural-judgment →
@@ -176,6 +190,7 @@ own or needs none).
 | simplify-loop | dev | loop-engineer; a test suite | improve-architecture (seams), optimization-loop (behavior change) | NOT a seam/reshape; NOT behavior change; NOT dead code | `simplify-loop-scout`, `-collapser`, `-validator` |
 | design-panel | dev | — | autonomous-advisor (once a PRP exists) | NOT trivial; NOT whole-system (design-system) | `design-explorer`, `-designer`, `-judge`, `-skeptic` |
 | diagnose-loop | dev | a repro | bug-pipeline (backlog) | NOT a known fix; NOT a backlog | `diagnose-investigator`, `-analyst`, `-fixer`, `-verifier` |
+| guardrail-forge | dev | an established repo, or a greenfield-architecture bootstrap | arch-drift-watch (continuing detection) | NOT greenfield design (greenfield-architecture); NOT a one-shot review (improve-architecture) | `architecture-explorer`, `policy-maker`, `guardrail-breaker`, `guardrail-verifier` (bundled pack) |
 | improve-architecture | dev | — | dead-code-reaper, arch-drift-watch | NOT autonomous hardening; NOT a rewrite (clean-room) | `architecture-explorer`, `-interface-designer`, `-depth-checker` |
 | instrument-observability | dev | — | production-readiness (telemetry → launch gate) | NOT live-incident debugging (diagnose-loop) | — |
 | loop-engineer | dev | — | the 5 specialized loops | NOT a one-off task; NOT a hardening pass (optimization-loop) | explorer/implementer/verifier templates (in `references/`) |
@@ -188,8 +203,10 @@ own or needs none).
 | sprint-ticket-runner | dev | plan-prune (clean plan); a worktree mechanism | plan-prune (drift) | NOT a single bug; NOT plan cleanup (plan-prune); NOT a single gated PRP run (autonomous-advisor) | — |
 | test-backfill-loop | dev | loop-engineer | diagnose-loop / bug-pipeline (suspected bug → `BUG_TRACKER.md`) | NOT greenfield TDD; NOT judging tests (unit-test-quality) | `test-backfill-scout`, `-writer`, `-verifier` |
 | unit-test-quality | dev | TDD (external, optional) | test-backfill-loop, diagnose-loop | NOT continuous backfill; NOT broad hardening | — |
+| architecture-decision-loop | sd | a framed load-bearing question | guardrail-forge (candidates), greenfield-architecture (caller) | NOT trivial choices; NOT feature design (design-panel); NOT autonomous approval | — (reuses design-panel's designer/judge/skeptic) |
 | api-design | sd | design-system | data-store-selection, production-readiness | NOT topology; NOT store internals | `api-contract-designer`, `api-compatibility-reviewer`, `api-abuse-reviewer` |
 | data-store-selection | sd | design-system | api-design, production-readiness | NOT topology; NOT API contract | `data-access-analyst`, `data-store-designer`, `data-gate-reviewer` |
+| greenfield-architecture | sd | requirements + a domain/data model; an empty repo | guardrail-forge (bootstrap repo), architecture-decision-loop, design-system | NOT established-repo discovery (guardrail-forge); NOT a refactor (improve-architecture) | — (uses design-system + decision-loop roles) |
 | design-system | sd | — | api-design, data-store-selection, production-readiness, design-panel, clean-room | NOT one feature; NOT launch gating | `system-intake-analyst`, `system-topology-designer`, `system-topology-skeptic` |
 | production-readiness | sd | design-system | diagnose-loop, optimization-loop | NOT designing the system; NOT live-incident root cause | `readiness-slo-operator`, `readiness-runbook-writer`, `readiness-launch-reviewer` |
 

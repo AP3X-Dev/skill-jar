@@ -65,6 +65,13 @@ Optional sources:
 - **FUGAZI or another configured structural analyzer:** boundaries, cycles,
   duplicates, complexity, and machine-readable dependency evidence.
 - Existing production/runtime evidence.
+- **A greenfield handoff:** `docs/architecture/` (constitution, ADRs,
+  `07-guardrail-candidates.md`) and `.architecture-seed/architecture-seed.yaml`
+  from [greenfield-architecture](../../systems-design/greenfield-architecture/SKILL.md),
+  plus per-decision candidates from
+  [architecture-decision-loop](../../systems-design/architecture-decision-loop/SKILL.md).
+  These are documented/approved-state evidence with a decision ID, never
+  pre-enforced rules; the skeleton source must still corroborate them.
 
 These sources improve discovery; none may silently approve a rule, exception, or
 baseline. The committed pack must validate when MemBerry and other optional
@@ -202,7 +209,9 @@ cost boundary.
 
 ## When NOT to use
 
-- Designing greenfield product architecture; use the project's design process.
+- Designing greenfield product architecture; use
+  [greenfield-architecture](../../systems-design/greenfield-architecture/SKILL.md),
+  which hands its bootstrap repo back here for Level 1 discovery.
 - A one-shot architecture assessment or refactor decision; use
   [improve-architecture](../improve-architecture/SKILL.md).
 - Continuing detection after a pack exists; use

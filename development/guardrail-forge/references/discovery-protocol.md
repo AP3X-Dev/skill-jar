@@ -33,6 +33,11 @@ Run lanes independently where possible and merge their evidence afterward:
 - Dependency direction, cycles, central registries, and adapter boundaries.
 - Existing tests, lint/typecheck/build, hooks, and CI.
 - Instructions, ADRs, architecture docs, relevant history, and exceptions.
+- Architecture seed, when present: `.architecture-seed/architecture-seed.yaml`
+  and `docs/architecture/07-guardrail-candidates.md` (emitted by
+  greenfield-architecture / architecture-decision-loop). Import each candidate
+  as `documented` or, with a matching ADR decision ID, `approved`; confirm its
+  scope against the actual skeleton before it can reach `verified`.
 
 `scripts/inspect-project.py` inventories likely files and commands. Its results
 are hints. Read the actual files on each claimed path and verify dynamic,

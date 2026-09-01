@@ -27,6 +27,8 @@ System design is making **explicit tradeoffs under uncertainty** — not assembl
 - One feature inside an established architecture — [design-panel](../../development/design-panel/SKILL.md) (this skill *uses* its judged-alternatives panel for contested topology calls).
 - The API contract itself → [api-design](../api-design/SKILL.md); the store choice → [data-store-selection](../data-store-selection/SKILL.md); the launch gate → [production-readiness](../production-readiness/SKILL.md).
 - Reimplementing an existing system — [clean-room](../../development/clean-room/SKILL.md).
+- An empty repo that needs a domain contract, architecture constitution, and skeleton *around* the topology — [greenfield-architecture](../greenfield-architecture/SKILL.md) (it calls this skill for sizing).
+- One contested load-bearing choice that needs an ADR with adversarial critique — [architecture-decision-loop](../architecture-decision-loop/SKILL.md).
 
 ## The staged process
 
