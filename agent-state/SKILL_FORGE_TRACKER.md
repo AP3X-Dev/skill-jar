@@ -61,3 +61,5 @@ removed or renamed, mark the row `blocked` and record the decision in
 | SF-027 | operating-discipline | development | `development/operating-discipline/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-028 | gauntlet-loop | development | `development/gauntlet-loop/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-029 | guardrail-forge | development | `development/guardrail-forge/SKILL.md` | reopened | 0/3 | path containment, empty enforcement, approval/checker binding, drift adapter, and scaffold escape pressure | `agent-state/skill-forge-runs/guardrail-forge.md` | fifty-sixth GREEN gated; awaiting fresh judges |
+| SF-030 | architecture-decision-loop | systems-design | `systems-design/architecture-decision-loop/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
+| SF-031 | greenfield-architecture | systems-design | `systems-design/greenfield-architecture/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |

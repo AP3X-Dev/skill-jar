@@ -252,6 +252,14 @@
       "core": false
     },
     {
+      "name": "architecture-decision-loop",
+      "category": "systems-design",
+      "description": "Use when a load-bearing software architecture choice is unresolved and could affect module ownership, public APIs, schemas, tenancy/auth, consistency, datastore ownership, integration seams, runtime topology, failure domains, recurring cost, or vendor lock-in. Runs problem framing -> research -> genuinely different alternatives -> tradeoff analysis -> independent adversarial critique -> human choice -> ADR/provenance -> optional MemBerry indexing -> Guardrail candidate handoff. NOT for trivial implementation choices or autonomous architecture approval.",
+      "path": "systems-design/architecture-decision-loop/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "data-store-selection",
       "category": "systems-design",
       "description": "Choose and shape the data layer from access patterns, not brand loyalty: write the dominant read/write patterns first, name the required consistency model, then pick relational (joins, transactions, multi-row invariants — the default), document, key-value/wide-column (keyed access at scale), or Spanner-class global SQL — plus the cache layer (cache-aside vs write-through, explicit invalidation, stampede protection) and queue/stream choice (Kafka-style log vs RabbitMQ-style broker) with outbox wiring. Hard release gates: reject any design whose partition/shard key isn't justified against the dominant query path, or whose consistency expectations are unnamed. Use when choosing a database, designing a schema/partition strategy, adding a cache, picking a queue, or debugging hot partitions and invalidation. NOT for system topology (use design-system) or API contracts (use api-design).",
@@ -264,6 +272,14 @@
       "category": "systems-design",
       "description": "Front-door for designing a software system or major subsystem: translate product requirements into SLOs and a capacity envelope (Little's Law, tail latency), then choose the SIMPLEST topology that meets the SLO with headroom — request path, data path, and failure path made explicit — and emit the operational artifact set (diagram, component list, risk register, dashboards/alerts, canary plan, runbook references, cost notes). Hard stop-conditions block premature complexity: no multi-region, service mesh, sharding, or polyglot persistence without a named requirement simpler options can't satisfy. Use when designing a new system/service, doing systems-design intake, sizing an architecture, choosing a topology, or reviewing a proposed architecture for over-engineering. NOT for one feature inside an existing design (use design-panel), API surface detail (use api-design), store choice detail (use data-store-selection), or launch gating (use production-readiness).",
       "path": "systems-design/design-system/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
+      "name": "greenfield-architecture",
+      "category": "systems-design",
+      "description": "Use when starting a new software product, service, or major subsystem before meaningful implementation exists and the project needs an explicit architecture that coding agents can safely build inside. Starts from requirements plus a domain/data model, separates derived invariants from architecture choices, sizes the system, resolves load-bearing decisions, emits an approved architecture constitution and minimal skeleton, then hands the bootstrap repository to guardrail-forge. NOT for established-repo discovery, ordinary feature design, or refactoring.",
+      "path": "systems-design/greenfield-architecture/SKILL.md",
       "tags": [],
       "core": false
     },

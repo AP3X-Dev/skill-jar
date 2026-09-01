@@ -13,7 +13,7 @@
     {
       "name": "skill-jar-systems-design",
       "source": "./systems-design",
-      "description": "systems-design-category skills: api-design, data-store-selection, design-system, production-readiness."
+      "description": "systems-design-category skills: api-design, architecture-decision-loop, data-store-selection, design-system, greenfield-architecture, production-readiness."
     }
   ]
 }

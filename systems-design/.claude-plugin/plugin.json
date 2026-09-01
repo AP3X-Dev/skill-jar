@@ -7,8 +7,10 @@
   },
   "skills": [
     "./api-design",
+    "./architecture-decision-loop",
     "./data-store-selection",
     "./design-system",
+    "./greenfield-architecture",
     "./production-readiness"
   ]
 }
