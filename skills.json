@@ -53,6 +53,14 @@
       "evidence": "proof/bug-pipeline/README.md"
     },
     {
+      "name": "change-impact-proof",
+      "category": "development",
+      "description": "Use when determining what a proposed or completed code change can affect beyond its edited lines, investigating downstream breakage, or proving a small diff safe with executable evidence. Produces traced impact paths, decisive assurances with explicit evidence states, and a bounded safety verdict. NOT for broad multi-lens review, root-cause repair, architecture design or enforcement, production readiness, continuous drift detection, or implementation.",
+      "path": "development/change-impact-proof/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "clean-room",
       "category": "development",
       "description": "Use when reimplementing, porting, or cloning an existing codebase/repo — produces an exhaustive design doc via multi-pass analysis, proposes improvements over the original, then hands off to autonomous implementation (the autonomous-advisor skill). Supports three modes: full clean-room (firewalled, IP-safe), Parity Mode (close gaps against an original), and Transparent Mode (no firewall, for code you own). Triggers include 'clean room rewrite', 'port this repo', 'reimplement X in Y', 'clone without copying code', 'rewrite from scratch based on the original', 'transparent rewrite', 'rewrite without firewall'.",

@@ -47,6 +47,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Get ONE paste-ready prompt that loops work against a real reference bar | [gauntlet-loop](../development/gauntlet-loop/SKILL.md) | loop-engineer (persistent repo loop), review-panel (diff review) |
 | Explore a feature/component design (design-it-twice) | [design-panel](../development/design-panel/SKILL.md) | design-system (whole system) |
 | Adversarial multi-lens review of a diff/branch/PR | [review-panel](../development/review-panel/SKILL.md) | bug-pipeline (continuous) |
+| Trace downstream effects and prove a specific change safe | [change-impact-proof](../development/change-impact-proof/SKILL.md) | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) |
 | Add observability/telemetry to an app | [instrument-observability](../development/instrument-observability/SKILL.md) | diagnose-loop (it debugs) |
 | Reconcile fragmented/stale planning docs | [plan-prune](../development/plan-prune/SKILL.md) | sprint-ticket-runner (it executes) |
 | Pin WHAT before code as a living, validated spec | [spec-driven-change](../development/spec-driven-change/SKILL.md) | design-panel/clean-room (design), autonomous-advisor/sprint-ticket-runner (execution), plan-prune (stale prose) |
@@ -133,6 +134,13 @@ dead code / hardening → simplify-loop / dead-code-reaper / optimization-loop;
 build-class items → the design→build backbone above; a full-rewrite verdict →
 clean-room, where the panel stops. It owns no execution state.
 
+**Change → evidence.** [change-impact-proof](../development/change-impact-proof/SKILL.md)
+traces one proposed or completed change to its reachable consumers and derives a
+read-only safety verdict from decisive assurances. Broad adversarial review stays
+with review-panel; root-cause repair stays with diagnose-loop; architecture policy
+and continuing drift stay with guardrail-forge and arch-drift-watch; launch
+approval stays with production-readiness.
+
 **Cross-cutting.** [instrument-observability](../development/instrument-observability/SKILL.md)
 produces the telemetry/alerts that [production-readiness](../systems-design/production-readiness/SKILL.md)'s
 launch gate consumes (instrument first, then gate). [plan-prune](../development/plan-prune/SKILL.md)
@@ -149,7 +157,7 @@ any irreversible external action (deploys, publishes, emails). See
 
 | Posture | Meaning | Example skills |
 |---|---|---|
-| detection-only | reads + reports, writes no code | arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
+| detection-only | reads + reports, writes no code | change-impact-proof, arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
 | offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, simplify-loop, optimization-loop, auto-research, test-backfill-loop, loop-engineer, sprint-ticket-runner |
 | fully-autonomous (gated) | runs the whole pipeline, but behind hard phase gates, a 50-cycle cap, maker≠checker, and no irreversible actions | autonomous-advisor |
 
@@ -185,6 +193,7 @@ own or needs none).
 | auto-research | dev | loop-engineer | — | NOT multi-metric (optimization-loop) | — (harness is the checker) |
 | autonomous-advisor | dev | a PRP (from design-panel/clean-room) | optimization-loop, review-panel | NOT without a PRP; NOT a port (clean-room); NOT a ticket sprint (sprint-ticket-runner) | `autonomous-advisor`, `autonomous-verifier` |
 | bug-pipeline | dev | loop-engineer | diagnose-loop (deep bug) | NOT one bug; NOT metric hardening | `bug-pipeline-hunter`, `-fixer`, `-validator` |
+| change-impact-proof | dev | a concrete proposed or completed change | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) | NOT implementation; NOT broad review; NOT architecture policy/drift; NOT release approval | — |
 | clean-room | dev | (an original codebase) | autonomous-advisor (via PRP) | NOT your own code; NOT a literal transpile | `clean-room-analyzer`, `-researcher`, `-gap-checker`, `-improvement-sweeper`, `-contamination-reviewer` |
 | dead-code-reaper | dev | loop-engineer | improve-architecture, diagnose-loop/bug-pipeline | NOT one symbol; NOT live-but-ugly code | `dead-code-reaper-scout`, `-reaper`, `-validator` |
 | simplify-loop | dev | loop-engineer; a test suite | improve-architecture (seams), optimization-loop (behavior change) | NOT a seam/reshape; NOT behavior change; NOT dead code | `simplify-loop-scout`, `-collapser`, `-validator` |

@@ -16,6 +16,9 @@ venv/
 docs/*/plans/
 docs/*/specs/
 
+# Clean-room planning artifacts
+clean-room/
+
 # Secrets / local env (never commit)
 .env
 .env.*

@@ -11,6 +11,7 @@
     "./auto-research",
     "./autonomous-advisor",
     "./bug-pipeline",
+    "./change-impact-proof",
     "./clean-room",
     "./dead-code-reaper",
     "./design-panel",

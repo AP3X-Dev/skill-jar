@@ -42,6 +42,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-09-08-SF-032-FORGED | Add and forge change-impact-proof | change-impact-proof | this commit | Original clean-room implementation; RED captured; 3/3 executable judges COMPLY; 11/11 behavioral acceptance; attribution scan clean; 91 tests and 321-check audit passed. |
 | C-2026-06-12-SF-QUEUE | Forge remaining 17 skills (SF-006..022, SF-021) | skill-forge-queue | this commit | Concurrent RED->GREEN->judge x3 per skill (85 agents, forger != judge); 17/17 forged 3/3; gate 208; run packages written; tracker de-fragmented. Forge queue now 23/23. |
 | C-2026-06-12-SF-005-FORGED | Forge clean-room (SF-005) | skill-forge-batch1 | this commit | 3/3 independent judges COMPLY on the firewall/parity scenario; SF-005 -> forged. |
 | C-2026-06-12-SF-023-GREEN-FORGED | GREEN + forge instrument-observability (SF-023) | skill-forge-batch1 | this commit | Forger closed the captured RED rationalizations (45/+2- diff, description unchanged); 3/3 independent judges COMPLY (forger != judge); SF-023 -> forged. |
@@ -232,3 +233,12 @@ loop. Pre-commit verification on the current implementation passed all 91 tests
 and the mandatory jar audit passed all 299 checks. SF-001 and SF-029 remain
 honestly labeled `reopened` at `0/3`; shipping the integrated implementation does
 not relabel either skill as `forged`.
+
+## Current Restart Status -- 2026-09-08
+
+SF-032 `change-impact-proof` is complete in the isolated
+`feat/change-impact-proof` worktree and is not committed. Its clean-room
+implementation passed 3/3 independent executable judges, 11/11 behavioral
+acceptance checks, the no-attribution contamination review, 91 unit tests, and
+the mandatory jar audit at 321/321. The exact next action is human review and
+approval of the proposed local commit message; do not push.
