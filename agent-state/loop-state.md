@@ -294,3 +294,17 @@ verdict promotion returned COMPLY, and final acceptance passed 16/16. All seven
 raw evaluator-response hashes are recorded in the run package. SF-036 is
 `forged` at `3/3`. The exact next action is human review and approval of the
 exact local commit message. Do not commit, merge, or push without that approval.
+
+## Current Restart Status -- 2026-09-08 (SF-037)
+
+SF-037 `subsystem-explanation` is complete in the isolated
+`feat/subsystem-explanation` worktree and is not committed. RED captured a
+prose-only explanation without stable evidence relationships and a diagram that
+continued through admitted assumptions. The original GREEN skill was repaired
+after hostile design and schema rejections, then passed three independent
+current-revision scenarios at 5/5 each, schema promotion at 6/6, and final
+acceptance at 16/16. Quick validation, 91 tests, the 339-check jar audit, the
+eleven-path allowlist, nine protected gate inputs, change-surface contamination
+scan, and diff check passed. The final-state jar audit passed 339/339. The exact
+next action is human approval of the exact local commit message. Do not commit,
+merge, or push without that approval.

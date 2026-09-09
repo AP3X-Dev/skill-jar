@@ -8,7 +8,7 @@
     {
       "name": "skill-jar-development",
       "source": "./development",
-      "description": "development-category skills: add-to-jar, arch-drift-watch, auto-research, autonomous-advisor, bug-pipeline, change-impact-proof, clean-room, dead-code-reaper, decision-evidence-ledger, design-panel, diagnose-loop, gauntlet-loop, guardrail-forge, handoff-recovery, improve-architecture, instrument-observability, loop-engineer, operating-discipline, optimization-loop, plan-prune, rebuild-panel, review-panel, runtime-path-forensics, simplify-loop, skill-forge, spec-driven-change, sprint-ticket-runner, test-backfill-loop, unit-test-quality, verification-evidence-plan."
+      "description": "development-category skills: add-to-jar, arch-drift-watch, auto-research, autonomous-advisor, bug-pipeline, change-impact-proof, clean-room, dead-code-reaper, decision-evidence-ledger, design-panel, diagnose-loop, gauntlet-loop, guardrail-forge, handoff-recovery, improve-architecture, instrument-observability, loop-engineer, operating-discipline, optimization-loop, plan-prune, rebuild-panel, review-panel, runtime-path-forensics, simplify-loop, skill-forge, spec-driven-change, sprint-ticket-runner, subsystem-explanation, test-backfill-loop, unit-test-quality, verification-evidence-plan."
     },
     {
       "name": "skill-jar-systems-design",

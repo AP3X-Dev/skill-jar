@@ -33,6 +33,7 @@
     "./skill-forge",
     "./spec-driven-change",
     "./sprint-ticket-runner",
+    "./subsystem-explanation",
     "./test-backfill-loop",
     "./unit-test-quality",
     "./verification-evidence-plan"
