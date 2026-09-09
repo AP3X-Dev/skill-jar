@@ -279,3 +279,18 @@ schema promotion complied and final acceptance passed, with all six raw response
 hashes recorded in the run package. SF-035 is `forged` at `3/3`. The exact next
 action is human review and approval of a proposed local commit message. Do not
 commit, merge, or push without that approval.
+
+## Current Restart Status -- 2026-09-08 (SF-036)
+
+SF-036 `handoff-recovery` is implemented in the isolated
+`feat/handoff-recovery` worktree and is not committed. RED captured provisional
+branch selection before task binding, placeholder worktree commands, prose-only
+recovery without complete input identity and promotion rules, and unbounded
+sensitive-history inspection. The GREEN skill and integration are present;
+quick validation, 91 tests, the 334-check jar audit, the 11-path allowlist,
+protected-input verification, contamination scan, and diff check passed.
+Three independent current-revision scenario judges returned COMPLY; schema and
+verdict promotion returned COMPLY, and final acceptance passed 16/16. All seven
+raw evaluator-response hashes are recorded in the run package. SF-036 is
+`forged` at `3/3`. The exact next action is human review and approval of the
+exact local commit message. Do not commit, merge, or push without that approval.

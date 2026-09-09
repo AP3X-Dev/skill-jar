@@ -19,6 +19,7 @@
     "./diagnose-loop",
     "./gauntlet-loop",
     "./guardrail-forge",
+    "./handoff-recovery",
     "./improve-architecture",
     "./instrument-observability",
     "./loop-engineer",
