@@ -27,6 +27,7 @@
     "./plan-prune",
     "./rebuild-panel",
     "./review-panel",
+    "./runtime-path-forensics",
     "./simplify-loop",
     "./skill-forge",
     "./spec-driven-change",

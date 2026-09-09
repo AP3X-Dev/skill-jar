@@ -196,6 +196,14 @@
       "maturity": "linted"
     },
     {
+      "name": "runtime-path-forensics",
+      "category": "development",
+      "description": "Use when reconstructing which runtime instance, artifact, route, retry, queue delivery, or worker execution actually handled one bounded request, job, or event; when desired deployment state disagrees with observed behavior; or when logs and timestamps must be correlated without overstating identity, absence, ordering, or causality. Produces an evidence-bound runtime path, attempt tree, partial-order timeline, exact gaps, and the cheapest safe discriminator. NOT for repairing or restarting systems, adding instrumentation, discovering the impact of a code change, replaying traffic, or deciding production readiness.",
+      "path": "development/runtime-path-forensics/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "simplify-loop",
       "category": "development",
       "description": "Autonomous loop that safely collapses LIVE, over-engineered code — one behavior-identity-gated cluster per cycle. A Scout files only structurally-provable single-use over-engineering (forwarding wrappers, single-caller indirection, config read at one constant, a factory with one product and no public/DI/plugin binding); a Collapser writes a characterization test first, then inlines it proving output byte-identical; an independent Validator re-checks the test wasn't loosened and a complexity/LOC ratchet fell. Builds and dry-runs, then OFFERS launch — never auto-collapses. Use when working code has accreted speculative abstraction and needless indirection to reduce continuously and safely. Requires a runnable test suite; ast-grep/FUGAZI sharpen detection. NOT for a deliberate seam or shallow-module reshape (use improve-architecture, human-owned), behavior-CHANGING cleanup or broad hardening (use optimization-loop), unreachable/dead code (use dead-code-reaper), or a defect (use diagnose-loop/bug-pipeline).",

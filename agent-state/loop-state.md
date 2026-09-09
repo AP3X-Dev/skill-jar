@@ -264,3 +264,18 @@ read-only-by-default implementation passed 3/3 independent scenario judges at
 contamination review, 91 unit tests, and the mandatory jar audit at 324/324.
 The exact next action is human review and approval of a proposed local commit
 message; do not push.
+
+## Current Restart Status -- 2026-09-08 (SF-035)
+
+SF-035 `runtime-path-forensics` is implemented in the isolated
+`feat/runtime-path-forensics` worktree and is not committed. The captured RED
+response reached a bounded conclusion but omitted stable record/hop IDs, typed
+edges, interval timeline records, explicit per-record strengths, per-hop
+alternatives, and discriminator owner/access/cost fields. The GREEN skill and
+integration are present; quick validation, 91 tests, the 329-check jar audit,
+the 11-path allowlist, protected-input verification, added-content scan, and
+diff check passed. Three independent current-revision scenario judges complied;
+schema promotion complied and final acceptance passed, with all six raw response
+hashes recorded in the run package. SF-035 is `forged` at `3/3`. The exact next
+action is human review and approval of a proposed local commit message. Do not
+commit, merge, or push without that approval.
