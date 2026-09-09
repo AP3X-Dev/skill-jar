@@ -48,6 +48,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Explore a feature/component design (design-it-twice) | [design-panel](../development/design-panel/SKILL.md) | design-system (whole system) |
 | Adversarial multi-lens review of a diff/branch/PR | [review-panel](../development/review-panel/SKILL.md) | bug-pipeline (continuous) |
 | Trace downstream effects and prove a specific change safe | [change-impact-proof](../development/change-impact-proof/SKILL.md) | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) |
+| Reconcile conflicting or changing claims into a durable provenance ledger | [decision-evidence-ledger](../development/decision-evidence-ledger/SKILL.md) | verification-evidence-plan (future checks), architecture-decision-loop (making an architecture choice) |
 | Turn an exact claim into a runnable evidence plan | [verification-evidence-plan](../development/verification-evidence-plan/SKILL.md) | change-impact-proof (unknown surfaces), unit-test-quality (test implementation), review-panel (broad review), production-readiness (launch gate) |
 | Add observability/telemetry to an app | [instrument-observability](../development/instrument-observability/SKILL.md) | diagnose-loop (it debugs) |
 | Reconcile fragmented/stale planning docs | [plan-prune](../development/plan-prune/SKILL.md) | sprint-ticket-runner (it executes) |
@@ -148,6 +149,13 @@ commands or observations, evidence floors, negative controls, freshness, and
 traceability. Unknown impact surfaces go first to change-impact-proof; test
 implementation, broad review, and launch decisions remain with their owners.
 
+**Evidence → provenance ledger.** [decision-evidence-ledger](../development/decision-evidence-ledger/SKILL.md)
+atomizes conflicting or changing claims into typed, append-only entries with
+exact source binding, authority, contradiction links, consumers, revisit
+triggers, and owned resolving evidence. Future verification planning stays with
+verification-evidence-plan; making an architecture choice stays with
+architecture-decision-loop.
+
 **Cross-cutting.** [instrument-observability](../development/instrument-observability/SKILL.md)
 produces the telemetry/alerts that [production-readiness](../systems-design/production-readiness/SKILL.md)'s
 launch gate consumes (instrument first, then gate). [plan-prune](../development/plan-prune/SKILL.md)
@@ -164,7 +172,7 @@ any irreversible external action (deploys, publishes, emails). See
 
 | Posture | Meaning | Example skills |
 |---|---|---|
-| detection-only | reads + reports, writes no code | change-impact-proof, verification-evidence-plan, arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
+| detection-only | reads + reports, writes no code | change-impact-proof, decision-evidence-ledger (unless an exact ledger write is requested), verification-evidence-plan, arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
 | offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, simplify-loop, optimization-loop, auto-research, test-backfill-loop, loop-engineer, sprint-ticket-runner |
 | fully-autonomous (gated) | runs the whole pipeline, but behind hard phase gates, a 50-cycle cap, maker≠checker, and no irreversible actions | autonomous-advisor |
 
@@ -201,6 +209,7 @@ own or needs none).
 | autonomous-advisor | dev | a PRP (from design-panel/clean-room) | optimization-loop, review-panel | NOT without a PRP; NOT a port (clean-room); NOT a ticket sprint (sprint-ticket-runner) | `autonomous-advisor`, `autonomous-verifier` |
 | bug-pipeline | dev | loop-engineer | diagnose-loop (deep bug) | NOT one bug; NOT metric hardening | `bug-pipeline-hunter`, `-fixer`, `-validator` |
 | change-impact-proof | dev | a concrete proposed or completed change | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) | NOT implementation; NOT broad review; NOT architecture policy/drift; NOT release approval | — |
+| decision-evidence-ledger | dev | bound scope, target, and time window | verification-evidence-plan (next checks), architecture-decision-loop (architecture choice) | NOT architecture choice; NOT task execution; NOT general memory recall; NOT source/config changes; NOT owner contact | — |
 | verification-evidence-plan | dev | an exact claim with known impact surfaces | change-impact-proof (unknown surfaces), unit-test-quality (test implementation), review-panel (broad review), production-readiness (launch gate) | NOT execution or scheduling; NOT impact discovery; NOT test implementation; NOT launch approval | — |
 | clean-room | dev | (an original codebase) | autonomous-advisor (via PRP) | NOT your own code; NOT a literal transpile | `clean-room-analyzer`, `-researcher`, `-gap-checker`, `-improvement-sweeper`, `-contamination-reviewer` |
 | dead-code-reaper | dev | loop-engineer | improve-architecture, diagnose-loop/bug-pipeline | NOT one symbol; NOT live-but-ugly code | `dead-code-reaper-scout`, `-reaper`, `-validator` |
