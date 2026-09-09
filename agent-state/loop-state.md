@@ -42,6 +42,7 @@ Keep the skill jar publish-ready via three loops, one task per cycle each:
 
 | ID | Task | Cycle | Commit | Result |
 |----|------|-------|--------|--------|
+| C-2026-09-08-SF-033-FORGED | Add and forge verification-evidence-plan | verification-evidence-plan | not committed | Original read-only implementation; RED captured; current-revision scenario judges passed 7/7, 6/6, and 6/6; behavioral acceptance passed 11/11; adversarial planning passed 5/5; contamination, quick validation, 91 tests, and the 319-check audit passed. No push performed. |
 | C-2026-09-08-SF-032-FORGED | Add and forge change-impact-proof | change-impact-proof | this commit | Original clean-room implementation; RED captured; 3/3 executable judges COMPLY; 11/11 behavioral acceptance; attribution scan clean; 91 tests and 321-check audit passed. |
 | C-2026-06-12-SF-QUEUE | Forge remaining 17 skills (SF-006..022, SF-021) | skill-forge-queue | this commit | Concurrent RED->GREEN->judge x3 per skill (85 agents, forger != judge); 17/17 forged 3/3; gate 208; run packages written; tracker de-fragmented. Forge queue now 23/23. |
 | C-2026-06-12-SF-005-FORGED | Forge clean-room (SF-005) | skill-forge-batch1 | this commit | 3/3 independent judges COMPLY on the firewall/parity scenario; SF-005 -> forged. |
@@ -242,3 +243,13 @@ implementation passed 3/3 independent executable judges, 11/11 behavioral
 acceptance checks, the no-attribution contamination review, 91 unit tests, and
 the mandatory jar audit at 321/321. The exact next action is human review and
 approval of the proposed local commit message; do not push.
+
+## Current Restart Status -- 2026-09-08 (SF-033)
+
+SF-033 `verification-evidence-plan` is complete in the isolated
+`feat/verification-evidence-plan` worktree and is not committed. Its original
+read-only implementation passed 3/3 independent scenario judges, 11/11
+behavioral acceptance, 5/5 adversarial planning, the 355-line contamination
+gate, 91 unit tests, and the mandatory jar audit at 319/319. The exact next
+action is human review and approval of a proposed local commit message; do not
+push.

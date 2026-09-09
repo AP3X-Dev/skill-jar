@@ -31,6 +31,7 @@
     "./spec-driven-change",
     "./sprint-ticket-runner",
     "./test-backfill-loop",
-    "./unit-test-quality"
+    "./unit-test-quality",
+    "./verification-evidence-plan"
   ]
 }

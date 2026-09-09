@@ -252,6 +252,14 @@
       "maturity": "linted"
     },
     {
+      "name": "verification-evidence-plan",
+      "category": "development",
+      "description": "Use when an exact engineering claim needs an ordered, runnable, falsifiable verification plan before anyone executes checks. Converts claim fragments and risks into traceable assurances, evidence floors, decisive checks, negative controls, stop rules, and exact verdicts while preserving unknowns. NOT for discovering unknown impact surfaces, implementing tests, broad review, launch approval, executing checks, editing code or CI, scheduling work, or mutating any local, hosted, or external system.",
+      "path": "development/verification-evidence-plan/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "api-design",
       "category": "systems-design",
       "description": "Design an API surface that survives production: choose the protocol by consumer shape (HTTP+OpenAPI default for public/partner APIs, gRPC for latency-sensitive internal RPC, GraphQL only for governed graph-shaped client reads, async events when decoupling in time beats a synchronous answer), then pin the contract — safety and idempotency semantics, cursor pagination, deadlines and retry budgets, additive versioning, error schema, auth, rate limits, cacheability — and gate releases on backward compatibility. Use when designing or reviewing an API, choosing REST vs gRPC vs GraphQL vs events, making endpoints safe to retry, or planning schema evolution. NOT for the whole system topology (use design-system), store selection (use data-store-selection), or implementing handlers (just build them).",

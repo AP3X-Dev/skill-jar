@@ -64,3 +64,4 @@ removed or renamed, mark the row `blocked` and record the decision in
 | SF-030 | architecture-decision-loop | systems-design | `systems-design/architecture-decision-loop/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-031 | greenfield-architecture | systems-design | `systems-design/greenfield-architecture/SKILL.md` | pending-red | 0/3 | drop-in skill pressure | - | RED scenario |
 | SF-032 | change-impact-proof | development | `development/change-impact-proof/SKILL.md` | forged | 3/3 | reported-green, first-consumer, dynamic-dispatch, authorization, and cross-language pressure | `agent-state/skill-forge-runs/change-impact-proof.md` | complete |
+| SF-033 | verification-evidence-plan | development | `development/verification-evidence-plan/SKILL.md` | forged | 3/3 | non-runnable checklist, unsafe planning, retry, authorization, and cross-runtime pressure | `agent-state/skill-forge-runs/verification-evidence-plan.md` | complete |

@@ -48,6 +48,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Explore a feature/component design (design-it-twice) | [design-panel](../development/design-panel/SKILL.md) | design-system (whole system) |
 | Adversarial multi-lens review of a diff/branch/PR | [review-panel](../development/review-panel/SKILL.md) | bug-pipeline (continuous) |
 | Trace downstream effects and prove a specific change safe | [change-impact-proof](../development/change-impact-proof/SKILL.md) | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) |
+| Turn an exact claim into a runnable evidence plan | [verification-evidence-plan](../development/verification-evidence-plan/SKILL.md) | change-impact-proof (unknown surfaces), unit-test-quality (test implementation), review-panel (broad review), production-readiness (launch gate) |
 | Add observability/telemetry to an app | [instrument-observability](../development/instrument-observability/SKILL.md) | diagnose-loop (it debugs) |
 | Reconcile fragmented/stale planning docs | [plan-prune](../development/plan-prune/SKILL.md) | sprint-ticket-runner (it executes) |
 | Pin WHAT before code as a living, validated spec | [spec-driven-change](../development/spec-driven-change/SKILL.md) | design-panel/clean-room (design), autonomous-advisor/sprint-ticket-runner (execution), plan-prune (stale prose) |
@@ -141,6 +142,12 @@ with review-panel; root-cause repair stays with diagnose-loop; architecture poli
 and continuing drift stay with guardrail-forge and arch-drift-watch; launch
 approval stays with production-readiness.
 
+**Claim → evidence plan.** [verification-evidence-plan](../development/verification-evidence-plan/SKILL.md)
+turns already-bounded claim fragments into an ordered future run with exact
+commands or observations, evidence floors, negative controls, freshness, and
+traceability. Unknown impact surfaces go first to change-impact-proof; test
+implementation, broad review, and launch decisions remain with their owners.
+
 **Cross-cutting.** [instrument-observability](../development/instrument-observability/SKILL.md)
 produces the telemetry/alerts that [production-readiness](../systems-design/production-readiness/SKILL.md)'s
 launch gate consumes (instrument first, then gate). [plan-prune](../development/plan-prune/SKILL.md)
@@ -157,7 +164,7 @@ any irreversible external action (deploys, publishes, emails). See
 
 | Posture | Meaning | Example skills |
 |---|---|---|
-| detection-only | reads + reports, writes no code | change-impact-proof, arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
+| detection-only | reads + reports, writes no code | change-impact-proof, verification-evidence-plan, arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
 | offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, simplify-loop, optimization-loop, auto-research, test-backfill-loop, loop-engineer, sprint-ticket-runner |
 | fully-autonomous (gated) | runs the whole pipeline, but behind hard phase gates, a 50-cycle cap, maker≠checker, and no irreversible actions | autonomous-advisor |
 
@@ -194,6 +201,7 @@ own or needs none).
 | autonomous-advisor | dev | a PRP (from design-panel/clean-room) | optimization-loop, review-panel | NOT without a PRP; NOT a port (clean-room); NOT a ticket sprint (sprint-ticket-runner) | `autonomous-advisor`, `autonomous-verifier` |
 | bug-pipeline | dev | loop-engineer | diagnose-loop (deep bug) | NOT one bug; NOT metric hardening | `bug-pipeline-hunter`, `-fixer`, `-validator` |
 | change-impact-proof | dev | a concrete proposed or completed change | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) | NOT implementation; NOT broad review; NOT architecture policy/drift; NOT release approval | — |
+| verification-evidence-plan | dev | an exact claim with known impact surfaces | change-impact-proof (unknown surfaces), unit-test-quality (test implementation), review-panel (broad review), production-readiness (launch gate) | NOT execution or scheduling; NOT impact discovery; NOT test implementation; NOT launch approval | — |
 | clean-room | dev | (an original codebase) | autonomous-advisor (via PRP) | NOT your own code; NOT a literal transpile | `clean-room-analyzer`, `-researcher`, `-gap-checker`, `-improvement-sweeper`, `-contamination-reviewer` |
 | dead-code-reaper | dev | loop-engineer | improve-architecture, diagnose-loop/bug-pipeline | NOT one symbol; NOT live-but-ugly code | `dead-code-reaper-scout`, `-reaper`, `-validator` |
 | simplify-loop | dev | loop-engineer; a test suite | improve-architecture (seams), optimization-loop (behavior change) | NOT a seam/reshape; NOT behavior change; NOT dead code | `simplify-loop-scout`, `-collapser`, `-validator` |
