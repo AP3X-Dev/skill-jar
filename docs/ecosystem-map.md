@@ -50,6 +50,7 @@ NOT to use, so overlapping skills stay disambiguated.
 | Recover the exact continuation after interrupted repository work | [handoff-recovery](../development/handoff-recovery/SKILL.md) | plan-prune (fragmented plans), diagnose-loop (incident remediation) |
 | Reconstruct which runtime path handled one bounded operation | [runtime-path-forensics](../development/runtime-path-forensics/SKILL.md) | diagnose-loop (repair), instrument-observability (add telemetry), production-readiness (launch gate) |
 | Explain how one bounded subsystem actually works | [subsystem-explanation](../development/subsystem-explanation/SKILL.md) | runtime-path-forensics (one observed operation), change-impact-proof (change effects), diagnose-loop (root cause), improve-architecture (redesign) |
+| Prove rendered parity against a visual reference | [visual-parity-proof](../development/visual-parity-proof/SKILL.md) | unit-test-quality (test implementation), review-panel (broad review), production-readiness (release gate) |
 | Trace downstream effects and prove a specific change safe | [change-impact-proof](../development/change-impact-proof/SKILL.md) | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) |
 | Reconcile conflicting or changing claims into a durable provenance ledger | [decision-evidence-ledger](../development/decision-evidence-ledger/SKILL.md) | verification-evidence-plan (future checks), architecture-decision-loop (making an architecture choice) |
 | Turn an exact claim into a runnable evidence plan | [verification-evidence-plan](../development/verification-evidence-plan/SKILL.md) | change-impact-proof (unknown surfaces), unit-test-quality (test implementation), review-panel (broad review), production-readiness (launch gate) |
@@ -165,6 +166,12 @@ state and effects while keeping declared, source, wired, test, and supplied
 runtime proof distinct. One observed operation routes to runtime-path-forensics;
 change effects, root-cause repair, and redesign stay with their named owners.
 
+**Reference → visual parity verdict.** [visual-parity-proof](../development/visual-parity-proof/SKILL.md)
+compares identity-bound reference/candidate captures under a frozen responsive
+surface matrix, rules, transforms, masks, and tolerances. It stops at rendered
+evidence; test implementation, broad review, remediation, and release approval
+remain with their named owners.
+
 **Claim → evidence plan.** [verification-evidence-plan](../development/verification-evidence-plan/SKILL.md)
 turns already-bounded claim fragments into an ordered future run with exact
 commands or observations, evidence floors, negative controls, freshness, and
@@ -194,7 +201,7 @@ any irreversible external action (deploys, publishes, emails). See
 
 | Posture | Meaning | Example skills |
 |---|---|---|
-| detection-only | reads + reports, writes no code | handoff-recovery, subsystem-explanation, runtime-path-forensics, change-impact-proof, decision-evidence-ledger (unless an exact ledger write is requested), verification-evidence-plan, arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
+| detection-only | reads + reports, writes no code | handoff-recovery, subsystem-explanation, visual-parity-proof, runtime-path-forensics, change-impact-proof, decision-evidence-ledger (unless an exact ledger write is requested), verification-evidence-plan, arch-drift-watch (L1), improve-architecture (explore), production-readiness, data-store-selection |
 | offers-launch | builds + dry-runs one cycle, then asks before running | bug-pipeline, dead-code-reaper, simplify-loop, optimization-loop, auto-research, test-backfill-loop, loop-engineer, sprint-ticket-runner |
 | fully-autonomous (gated) | runs the whole pipeline, but behind hard phase gates, a 50-cycle cap, maker≠checker, and no irreversible actions | autonomous-advisor |
 
@@ -233,6 +240,7 @@ own or needs none).
 | change-impact-proof | dev | a concrete proposed or completed change | review-panel (broad review), diagnose-loop (root cause), production-readiness (launch gate) | NOT implementation; NOT broad review; NOT architecture policy/drift; NOT release approval | — |
 | handoff-recovery | dev | an interrupted task, resume request, stale handoff, or inherited worktree | the recovered earliest unchecked action; plan-prune (fragmented plans), diagnose-loop (incident remediation) | NOT disaster/data recovery; NOT task execution; NOT plan consolidation; NOT greenfield planning | — |
 | subsystem-explanation | dev | a bounded subsystem question, repository/revision, audience, scope, and evidence boundary | runtime-path-forensics (observed operation), change-impact-proof (change effects), diagnose-loop (root cause), improve-architecture (redesign) | NOT impact analysis; NOT incident diagnosis; NOT runtime forensics; NOT redesign or implementation | — |
+| visual-parity-proof | dev | bound reference/candidate renderings, owner-approved surface matrix, frozen rules, and capture authority | unit-test-quality (test implementation), review-panel (broad review), production-readiness (release gate) | NOT design or fixing; NOT functional/accessibility/performance testing; NOT source-only review; NOT release approval | — |
 | runtime-path-forensics | dev | a bound operation, environment, tenant, time window, and minimum conclusion | diagnose-loop (repair), instrument-observability (missing telemetry), change-impact-proof (unknown consumers), production-readiness (launch gate) | NOT repair/restart; NOT instrumentation; NOT impact discovery; NOT launch approval | — |
 | decision-evidence-ledger | dev | bound scope, target, and time window | verification-evidence-plan (next checks), architecture-decision-loop (architecture choice) | NOT architecture choice; NOT task execution; NOT general memory recall; NOT source/config changes; NOT owner contact | — |
 | verification-evidence-plan | dev | an exact claim with known impact surfaces | change-impact-proof (unknown surfaces), unit-test-quality (test implementation), review-panel (broad review), production-readiness (launch gate) | NOT execution or scheduling; NOT impact discovery; NOT test implementation; NOT launch approval | — |

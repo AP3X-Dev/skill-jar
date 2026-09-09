@@ -292,6 +292,14 @@
       "core": false
     },
     {
+      "name": "visual-parity-proof",
+      "category": "development",
+      "description": "Use when proving whether a bounded candidate rendering matches bound reference pixels across declared pages, states, viewports, images, frames, or PDF pages. Produces a read-only, identity-bound comparison package with frozen rules, typed measurements, regional review, and weakest-surface verdicts. NOT for visual design, implementation or CSS fixes, functional or accessibility testing, aesthetic critique, performance testing, source-only review, reference approval, or release approval.",
+      "path": "development/visual-parity-proof/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "api-design",
       "category": "systems-design",
       "description": "Design an API surface that survives production: choose the protocol by consumer shape (HTTP+OpenAPI default for public/partner APIs, gRPC for latency-sensitive internal RPC, GraphQL only for governed graph-shaped client reads, async events when decoupling in time beats a synchronous answer), then pin the contract — safety and idempotency semantics, cursor pagination, deadlines and retry budgets, additive versioning, error schema, auth, rate limits, cacheability — and gate releases on backward compatibility. Use when designing or reviewing an API, choosing REST vs gRPC vs GraphQL vs events, making endpoints safe to retry, or planning schema evolution. NOT for the whole system topology (use design-system), store selection (use data-store-selection), or implementing handlers (just build them).",

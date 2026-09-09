@@ -308,3 +308,16 @@ eleven-path allowlist, nine protected gate inputs, change-surface contamination
 scan, and diff check passed. The final-state jar audit passed 339/339. The exact
 next action is human approval of the exact local commit message. Do not commit,
 merge, or push without that approval.
+## Current Restart Status -- 2026-09-09 (SF-038)
+
+SF-038 `visual-parity-proof` is complete in the isolated
+`feat/visual-parity-proof` worktree and is not committed. RED captured acceptance
+of an unbound aggregate score and provisional approval despite missing required
+responsive evidence. The original GREEN skill passed three independent
+current-revision scenarios at 6/6 each, schema promotion at 8/8, and final
+acceptance at 18/18 after the mask schema was repaired to preserve simultaneous
+invalidity reasons. Quick validation, 91 tests, the 344-check jar audit, the
+changed-path allowlist, nine protected gate inputs, change-surface scan, and
+diff check passed. SF-038 is `forged` at `3/3`. The exact next action is human
+approval of the exact local commit message. Do not commit, merge, or push
+without that approval.

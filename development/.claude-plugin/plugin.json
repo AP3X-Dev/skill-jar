@@ -36,6 +36,7 @@
     "./subsystem-explanation",
     "./test-backfill-loop",
     "./unit-test-quality",
-    "./verification-evidence-plan"
+    "./verification-evidence-plan",
+    "./visual-parity-proof"
   ]
 }
