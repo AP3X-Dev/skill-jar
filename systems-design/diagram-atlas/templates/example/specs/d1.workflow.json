@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Platform and provider boundaries",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "apps",
+      "label": "Applications"
+    },
+    {
+      "id": "entry",
+      "label": "Platform APIs and policy"
+    },
+    {
+      "id": "core",
+      "label": "Platform Core"
+    },
+    {
+      "id": "adapters",
+      "label": "Provider adapters"
+    },
+    {
+      "id": "providers",
+      "label": "Providers"
+    },
+    {
+      "id": "recon",
+      "label": "Reconciliation"
+    }
+  ],
+  "mainPath": [
+    "apps_ui",
+    "core_api",
+    "domain",
+    "adapter",
+    "fsm",
+    "inbox",
+    "records"
+  ],
+  "nodes": [
+    {
+      "id": "apps_ui",
+      "lane": "apps",
+      "col": 1,
+      "type": "frontend",
+      "label": "Client applications",
+      "sublabel": "Sales, Portal, Admin, CIC Assist",
+      "width": 124
+    },
+    {
+      "id": "agent",
+      "lane": "apps",
+      "col": 3,
+      "type": "backend",
+      "label": "Agent runtime",
+      "width": 92
+    },
+    {
+      "id": "core_api",
+      "lane": "entry",
+      "col": 1,
+      "type": "backend",
+      "label": "Scoped Platform APIs",
+      "width": 130
+    },
+    {
+      "id": "gov",
+      "lane": "entry",
+      "col": 3,
+      "type": "security",
+      "label": "Capability policy",
+      "sublabel": "and approvals",
+      "width": 110
+    },
+    {
+      "id": "domain",
+      "lane": "core",
+      "col": 2,
+      "type": "backend",
+      "label": "Domain commands",
+      "sublabel": "Identity, CRM, work",
+      "width": 130
+    },
+    {
+      "id": "records",
+      "lane": "core",
+      "col": 5,
+      "type": "database",
+      "label": "Canonical records",
+      "sublabel": "audit and outbox",
+      "width": 110
+    },
+    {
+      "id": "adapter",
+      "lane": "adapters",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Provider adapters",
+      "width": 110
+    },
+    {
+      "id": "finance",
+      "lane": "providers",
+      "col": 0,
+      "type": "external",
+      "label": "Payments",
+      "sublabel": "and accounting providers",
+      "width": 96
+    },
+    {
+      "id": "comms",
+      "lane": "providers",
+      "col": 2,
+      "type": "external",
+      "label": "Twilio runtime",
+      "sublabel": "communications",
+      "width": 110
+    },
+    {
+      "id": "fsm",
+      "lane": "providers",
+      "col": 4,
+      "type": "external",
+      "label": "External FSM",
+      "sublabel": "field-service authority",
+      "width": 110
+    },
+    {
+      "id": "inbox",
+      "lane": "recon",
+      "col": 5,
+      "type": "backend",
+      "label": "Verified inbox",
+      "sublabel": "and reconciliation",
+      "width": 110
+    }
+  ],
+  "edges": [
+    {
+      "id": "apps_ui-core_api",
+      "from": "apps_ui",
+      "to": "core_api"
+    },
+    {
+      "id": "core_api-domain",
+      "from": "core_api",
+      "to": "domain"
+    },
+    {
+      "id": "core_api-gov",
+      "from": "core_api",
+      "to": "gov"
+    },
+    {
+      "id": "agent-gov",
+      "from": "agent",
+      "to": "gov"
+    },
+    {
+      "id": "gov-domain",
+      "from": "gov",
+      "to": "domain",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "domain-records",
+      "from": "domain",
+      "to": "records"
+    },
+    {
+      "id": "domain-adapter",
+      "from": "domain",
+      "to": "adapter",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "adapter-comms",
+      "from": "adapter",
+      "to": "comms"
+    },
+    {
+      "id": "adapter-fsm",
+      "from": "adapter",
+      "to": "fsm"
+    },
+    {
+      "id": "adapter-finance",
+      "from": "adapter",
+      "to": "finance"
+    },
+    {
+      "id": "comms-inbox",
+      "from": "comms",
+      "to": "inbox"
+    },
+    {
+      "id": "fsm-inbox",
+      "from": "fsm",
+      "to": "inbox"
+    },
+    {
+      "id": "finance-inbox",
+      "from": "finance",
+      "to": "inbox"
+    },
+    {
+      "id": "inbox-records",
+      "from": "inbox",
+      "to": "records",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Three different things",
+      "items": [
+        "Platform desired state",
+        "Provider runtime facts",
+        "External field-service authority"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Ownership rule",
+      "items": [
+        "A local projection of a provider-owned appointment does not make Operator One its writer"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Return path",
+      "items": [
+        "Provider facts enter through the verified inbox",
+        "Reconciliation writes canonical records"
+      ]
+    }
+  ]
+}

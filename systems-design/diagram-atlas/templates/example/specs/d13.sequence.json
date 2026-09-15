@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "One call, end to end",
+    "viewBox": [1080, 1040],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    { "id": "caller", "type": "external", "label": "Caller" },
+    { "id": "twilio", "type": "messagebus", "label": "Twilio", "sublabel": "client DID" },
+    { "id": "ingress", "type": "backend", "label": "Ingress function" },
+    { "id": "core", "type": "backend", "label": "Core /v1" },
+    { "id": "taskrouter", "type": "messagebus", "label": "TaskRouter" },
+    { "id": "assist", "type": "frontend", "label": "Assist desktop" },
+    { "id": "portal", "type": "database", "label": "Legacy Portal", "sublabel": "tables" }
+  ],
+  "segments": [
+    { "from": 165, "to": 465, "label": "1-7 Identity + Interaction" },
+    { "from": 485, "to": 685, "label": "8-12 Offer + accept" },
+    { "from": 705, "to": 950, "label": "13-17 Outcome + legacy rows" }
+  ],
+  "messages": [
+    { "id": "m01", "from": "caller", "to": "twilio", "y": 190, "label": "1 dials client's number", "variant": "default" },
+    { "id": "m02", "from": "twilio", "to": "ingress", "y": 234, "label": "2 voice webhook (signed)", "variant": "default" },
+    { "id": "m04", "from": "ingress", "to": "core", "y": 290, "label": "4 channel-endpoints?e164= (C3)", "variant": "security", "note": "3 ingress validates X-Twilio-Signature + replay check first" },
+    { "id": "m05", "from": "core", "to": "ingress", "y": 366, "label": "5 organization_id, service_unit_id", "variant": "return" },
+    { "id": "m06", "from": "ingress", "to": "core", "y": 410, "label": "6 create Interaction with provider refs (C4)", "variant": "emphasis" },
+    { "id": "m07", "from": "core", "to": "ingress", "y": 454, "label": "7 interaction_id", "variant": "return" },
+    { "id": "m08", "from": "ingress", "to": "taskrouter", "y": 502, "label": "8 enqueue with canonical attributes", "variant": "default" },
+    { "id": "m09", "from": "taskrouter", "to": "assist", "y": 546, "label": "9 reservation for eligible worker", "variant": "emphasis" },
+    { "id": "m11", "from": "assist", "to": "core", "y": 602, "label": "11 attach by provider ref", "variant": "emphasis", "note": "10 desktop pops, pins guidance release (C1/C2)" },
+    { "id": "m12", "from": "assist", "to": "taskrouter", "y": 678, "label": "12 accept, conference", "variant": "default" },
+    { "id": "m13", "from": "assist", "to": "core", "y": 722, "label": "13 guidance context + probing responses (C6)", "variant": "default", "note": "local WASAPI capture feeds the AI engine" },
+    { "id": "m14", "from": "assist", "to": "core", "y": 766, "label": "14 complete Interaction, outcome v2 (C7)", "variant": "emphasis" },
+    { "id": "m15", "from": "core", "to": "portal", "y": 810, "label": "15 compatibility adapter writes call_submissions", "variant": "dashed" },
+    { "id": "m16", "from": "twilio", "to": "core", "y": 854, "label": "16 recording callback keyed on ConferenceSid (T3)", "variant": "default" },
+    { "id": "m17", "from": "core", "to": "portal", "y": 898, "label": "17 recording_groups + billing review", "variant": "dashed" }
+  ],
+  "activations": [
+    { "participant": "ingress", "from": 229, "to": 508, "type": "backend" },
+    { "participant": "core", "from": 317, "to": 905, "type": "backend" },
+    { "participant": "taskrouter", "from": 497, "to": 684, "type": "messagebus" },
+    { "participant": "assist", "from": 541, "to": 772, "type": "frontend" },
+    { "participant": "portal", "from": 805, "to": 905, "type": "database" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Identity and Interaction",
+      "items": [
+        "Identity is fixed at step 5",
+        "The Interaction exists at step 7, before anyone is offered the call"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Pinned guidance",
+      "items": [
+        "Guidance is pinned at step 10 and never changes for that call",
+        "Local WASAPI capture on the desktop feeds the AI engine"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Legacy compatibility",
+      "items": [
+        "The legacy submission row still appears at step 16 (call_submissions)",
+        "Today's reports and billing keep working"
+      ]
+    }
+  ]
+}

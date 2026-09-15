@@ -1,0 +1,32 @@
+# Who owns which data after M1
+# caption: What it settles. Core is the single writer for identity, guidance, interactions, contracts and configuration. Assist keeps its engine and a pinned cache; the CRM keeps everything that is genuinely sales; Twilio keeps live call facts and nothing about who a client is.
+flowchart LR
+    subgraph Core["Core (Rails Portal, /v1)"]
+        Org["Organization, Service Unit\nlifecycle, verticals"]
+        Ident["Principals, role assignments\nExecutionContext"]
+        Ep["Channel endpoints\nphone ownership"]
+        Guid["Playbook versions, probing config\nguidance releases"]
+        Inter["Interactions, outcomes\nguidance contexts, responses"]
+        Plans["Plans, contracts\nsignature evidence"]
+        Prov["Configurations, provisioning runs\nprovider resources, events"]
+        Bill["Recordings, usage, billing review"]
+    end
+    subgraph Assist["CIC Assist (desktop + engine)"]
+        Eng["Transcription, extraction, SOP match\nchecklist, form review, QA"]
+        Pin["Pinned release cache"]
+        Phone["Softphone, one Twilio adapter"]
+    end
+    subgraph CRM["Sales CRM (Neon)"]
+        Deals["Deals, pipeline, assessments\nquotes, sales tasks"]
+        Mail["Sales mailboxes and threads"]
+        Ingest["Grader ingest, round robin"]
+    end
+    subgraph Twilio["Twilio Flex (one account per env)"]
+        TR["Tasks, reservations, conferences\nrecordings (provider facts)"]
+    end
+    Assist -->|"reads releases, writes evidence"| Core
+    CRM -->|"identity, plans, contracts, lifecycle"| Core
+    Core -->|"desired state, projections"| Twilio
+    Twilio -->|"signed events, recordings"| Core
+    Assist <-->|"SDK, tokens from Core"| Twilio
+  

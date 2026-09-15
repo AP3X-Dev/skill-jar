@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Audio provenance and fallback",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "call",
+      "label": "Call"
+    },
+    {
+      "id": "sources",
+      "label": "Audio sources"
+    },
+    {
+      "id": "select",
+      "label": "Selection"
+    },
+    {
+      "id": "stt",
+      "label": "Transcription"
+    },
+    {
+      "id": "outputs",
+      "label": "Outputs"
+    }
+  ],
+  "mainPath": [
+    "voice",
+    "local",
+    "select",
+    "stt",
+    "assist"
+  ],
+  "nodes": [
+    {
+      "id": "voice",
+      "lane": "call",
+      "col": 1,
+      "type": "external",
+      "label": "Active call",
+      "sublabel": "authorized",
+      "width": 96
+    },
+    {
+      "id": "local",
+      "lane": "sources",
+      "col": 1,
+      "type": "backend",
+      "label": "Local capture",
+      "sublabel": "fallback: WASAPI / CoreAudio",
+      "width": 110
+    },
+    {
+      "id": "stream",
+      "lane": "sources",
+      "col": 4,
+      "type": "cloud",
+      "label": "Provider stream",
+      "sublabel": "certified Media Streams",
+      "width": 100
+    },
+    {
+      "id": "recording",
+      "lane": "sources",
+      "col": 5,
+      "type": "cloud",
+      "label": "Recordings",
+      "sublabel": "provider-side",
+      "width": 80
+    },
+    {
+      "id": "select",
+      "lane": "select",
+      "col": 2,
+      "type": "security",
+      "label": "Source selection",
+      "sublabel": "consent-gated",
+      "width": 104
+    },
+    {
+      "id": "stt",
+      "lane": "stt",
+      "col": 3,
+      "type": "backend",
+      "label": "Track-aware transcription",
+      "width": 170
+    },
+    {
+      "id": "assist",
+      "lane": "outputs",
+      "col": 3,
+      "type": "frontend",
+      "label": "CIC Assist",
+      "sublabel": "live guidance",
+      "width": 92
+    },
+    {
+      "id": "artifacts",
+      "lane": "outputs",
+      "col": 5,
+      "type": "database",
+      "label": "Artifacts",
+      "sublabel": "with source lineage",
+      "width": 90,
+      "tag": "scoped"
+    }
+  ],
+  "edges": [
+    {
+      "id": "voice-local",
+      "from": "voice",
+      "to": "local"
+    },
+    {
+      "id": "voice-stream",
+      "from": "voice",
+      "to": "stream"
+    },
+    {
+      "id": "local-select",
+      "from": "local",
+      "to": "select"
+    },
+    {
+      "id": "stream-select",
+      "from": "stream",
+      "to": "select"
+    },
+    {
+      "id": "select-stt",
+      "from": "select",
+      "to": "stt"
+    },
+    {
+      "id": "stt-assist",
+      "from": "stt",
+      "to": "assist"
+    },
+    {
+      "id": "stt-artifacts",
+      "from": "stt",
+      "to": "artifacts",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [
+        [
+          542,
+          491
+        ],
+        [
+          542,
+          615
+        ]
+      ]
+    },
+    {
+      "id": "voice-recording",
+      "from": "voice",
+      "to": "recording",
+      "variant": "dashed",
+      "role": "async"
+    },
+    {
+      "id": "recording-artifacts",
+      "from": "recording",
+      "to": "artifacts",
+      "variant": "dashed",
+      "role": "async"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Live-assist source today",
+      "items": [
+        "WASAPI and CoreAudio capture stays the live-assist audio source"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Media Streams gate",
+      "items": [
+        "Must be proven for hold, transfer, conference and reconnect",
+        "In the real topology"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Loopback spike 2026-09-08",
+      "items": [
+        "Engine hears the Voice SDK",
+        "Zero engine changes"
+      ]
+    }
+  ]
+}

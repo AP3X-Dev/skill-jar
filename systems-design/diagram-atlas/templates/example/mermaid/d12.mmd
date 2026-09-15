@@ -1,0 +1,20 @@
+# Repositories and runtimes
+# caption: What it settles. The starter is a contracts repository, not a hosted server. Its fake Core runs on a laptop or on Cerebro for development only. The real Core grows inside the Rails Portal. Both consumers point at one base URL and switch from fake to Portal by changing it. main keeps shipping Five9; twilio/main is the product being built.
+flowchart TB
+    subgraph Starter["operator-one-team-starter (contracts repo)"]
+        Models["models.py + operations.py\n(authority)"] --> Gen["generated OpenAPI, JSON Schema, TypeScript"]
+        Fake["fake Core :8080 (SQLite)\ndocker compose up core"]
+        Docs["architecture 00–15, PRPs 12–15"]
+    end
+    Gen -->|"git tag dependency"| AssistRepo["Agent-Assist-CR\nbranch twilio/main"]
+    Gen -->|"git tag dependency"| CRMRepo["crm-main (Next.js on Vercel)"]
+    Gen -->|"implements /v1"| PortalRepo["customer-portal (Rails, Kamal)\nbecomes the real Core"]
+    AssistRepo -->|"fake now, Portal later"| Fake
+    CRMRepo -->|"fake now, Portal later"| Fake
+    AssistRepo -.->|"CIC_CORE_BASE_URL"| PortalRepo
+    CRMRepo -.->|"CORE_BASE_URL"| PortalRepo
+    AssistRepo -->|"Voice + TaskRouter SDK"| TwilioAcct["Twilio Flex account\n(test = demo account, prod = new)"]
+    PortalRepo -->|"token broker, ingress, reconciler"| TwilioAcct
+    MainBranch["Agent-Assist-CR branch main\n(Five9, shipping today)"] -.->|"cherry-pick fixes only"| AssistRepo
+    Cerebro["Cerebro 192.168.0.25\nDocker host"] --- Fake
+  

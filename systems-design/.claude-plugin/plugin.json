@@ -10,6 +10,7 @@
     "./architecture-decision-loop",
     "./data-store-selection",
     "./design-system",
+    "./diagram-atlas",
     "./greenfield-architecture",
     "./production-readiness"
   ]

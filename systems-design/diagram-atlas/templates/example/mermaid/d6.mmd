@@ -1,0 +1,16 @@
+# Governed scheduling and unknown outcomes
+# caption: What it settles. A lost response is unknown, not failed. Read back before any retry. This same rule governs the Twilio reconciler in PRP 13 Phase 5: purchase a number, crash before persisting, rerun, still one number.
+flowchart TB
+    UI["Rep action"] --> Gate["Scope, policy and exact-action approval"]
+    AI["Agent action"] --> Gate
+    Gate --> Bind["Pinned binding and authority epoch"]
+    Bind --> Native["Native atomic reservation and command"]
+    Bind --> External["Provider preflight and command"]
+    External --> Known{"Outcome known?"}
+    Known -->|Yes| Result["Confirmed result and projection"]
+    Known -->|No| Unknown["Unknown outcome"]
+    Unknown --> Reconcile["Read-back and idempotency reconciliation"]
+    Reconcile --> Result
+    Native --> Result
+    Result --> Events["Audit, events and confirmed notifications"]
+  

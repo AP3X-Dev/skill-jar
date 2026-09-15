@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Survey to provisioned routing",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      800
+    ]
+  },
+  "stages": [
+    {
+      "label": "Core tables"
+    },
+    {
+      "label": "Compile"
+    },
+    {
+      "label": "Compiler outputs"
+    },
+    {
+      "label": "Review and publish"
+    },
+    {
+      "label": "Twilio provisioning"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "endpoints",
+      "type": "database",
+      "label": "channel_endpoints",
+      "sublabel": "phone_number_ownerships",
+      "stage": 0,
+      "row": 0,
+      "tag": "staff-entered for M1",
+      "width": 140
+    },
+    {
+      "id": "schedules",
+      "type": "database",
+      "label": "schedule_sets",
+      "sublabel": "windows, exceptions, IVR menu",
+      "stage": 0,
+      "row": 2,
+      "width": 140
+    },
+    {
+      "id": "routing",
+      "type": "database",
+      "label": "transfer_destinations",
+      "sublabel": "routing_profiles",
+      "stage": 0,
+      "row": 4,
+      "tag": "service_unit_verticals",
+      "width": 140
+    },
+    {
+      "id": "compiler",
+      "type": "backend",
+      "label": "Configuration::Compiler",
+      "sublabel": "pure, deterministic",
+      "stage": 1,
+      "row": 2,
+      "tag": "same inputs, same hash",
+      "width": 154
+    },
+    {
+      "id": "report",
+      "type": "security",
+      "label": "Validation report",
+      "sublabel": "errors block, warnings shown",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "diff",
+      "type": "backend",
+      "label": "Diff vs published",
+      "sublabel": "against last published",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "version",
+      "type": "database",
+      "label": "Config version",
+      "sublabel": "contact_center_config_version",
+      "stage": 2,
+      "row": 4,
+      "tag": "content_hash",
+      "width": 140
+    },
+    {
+      "id": "review",
+      "type": "external",
+      "label": "Operations approve",
+      "sublabel": "human review",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "publish",
+      "type": "backend",
+      "label": "publishConfiguration",
+      "sublabel": "immutable",
+      "stage": 3,
+      "row": 2,
+      "width": 136
+    },
+    {
+      "id": "run",
+      "type": "backend",
+      "label": "createProvisioningRun",
+      "sublabel": "T1",
+      "stage": 3,
+      "row": 4,
+      "width": 140
+    },
+    {
+      "id": "reconciler",
+      "type": "messagebus",
+      "label": "Twilio reconciler",
+      "sublabel": "observe, plan, apply, verify",
+      "stage": 4,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "flow",
+      "type": "messagebus",
+      "label": "Studio flow",
+      "sublabel": "TaskQueue per Service Unit",
+      "stage": 4,
+      "row": 0,
+      "tag": "P2 schema",
+      "width": 130
+    },
+    {
+      "id": "workers",
+      "type": "messagebus",
+      "label": "worker projection",
+      "sublabel": "T2 · workflow filter entry",
+      "stage": 4,
+      "row": 4,
+      "tag": "activateServiceUnit",
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "id": "endpoints-in",
+      "from": "endpoints",
+      "to": "compiler",
+      "label": "numbers"
+    },
+    {
+      "id": "schedules-in",
+      "from": "schedules",
+      "to": "compiler",
+      "label": "hours, IVR",
+      "variant": "emphasis",
+      "labelDy": 13
+    },
+    {
+      "id": "routing-in",
+      "from": "routing",
+      "to": "compiler",
+      "label": "targets"
+    },
+    {
+      "id": "to-report",
+      "from": "compiler",
+      "to": "report",
+      "label": "validation",
+      "variant": "security"
+    },
+    {
+      "id": "to-diff",
+      "from": "compiler",
+      "to": "diff",
+      "label": "document",
+      "variant": "emphasis",
+      "labelDy": 13
+    },
+    {
+      "id": "to-version",
+      "from": "compiler",
+      "to": "version",
+      "label": "hash"
+    },
+    {
+      "id": "report-review",
+      "from": "report",
+      "to": "review",
+      "label": "errors block",
+      "variant": "security",
+      "route": "straight"
+    },
+    {
+      "id": "diff-review",
+      "from": "diff",
+      "to": "review",
+      "label": "diff shown"
+    },
+    {
+      "id": "review-publish",
+      "from": "review",
+      "to": "publish",
+      "label": "approval",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "publish-run",
+      "from": "publish",
+      "to": "run",
+      "label": "version",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "run-reconciler",
+      "from": "run",
+      "to": "reconciler",
+      "label": "provision",
+      "variant": "emphasis"
+    },
+    {
+      "id": "reconciler-flow",
+      "from": "reconciler",
+      "to": "flow",
+      "label": "apply",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "route": "straight"
+    },
+    {
+      "id": "reconciler-workers",
+      "from": "reconciler",
+      "to": "workers",
+      "label": "apply",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "labelDy": 24
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Deterministic compile",
+      "items": [
+        "Same inputs compile to the same content_hash; the version row also carries schema_version and input_refs",
+        "The Studio flow is rendered from a validated document, not hand-edited YAML"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Publish gate",
+      "items": [
+        "A transfer target outside its own hours blocks publish with a path",
+        "Errors block, warnings are shown to Operations"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Later inputs",
+      "items": [
+        "Self-service signup feeds the same tables and the same compiler"
+      ]
+    }
+  ]
+}

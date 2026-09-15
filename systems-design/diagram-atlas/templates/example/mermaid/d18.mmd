@@ -1,0 +1,11 @@
+# Contract issues, producer to consumer
+# caption: What it settles. Twenty contract changes, one producer. Each is filed with the starter's template, modeled in Pydantic, regenerated, and only then implemented in Rails and consumed. C5 is a pilot blocker under ADR-059.
+flowchart LR
+    Core["Portal Core produces\n(Georgi)"]
+    Core -->|"C1 guidance release read\nC2 manifest poll\nC6 guidance context + responses\nC7 outcome v2\nC8 End Customer proposal"| Assist["CIC Assist\n(Cody)"]
+    Core -->|"C3 channel endpoint lookup\nC4 provider ingress\nC5 token broker"| Both["Assist + Twilio ingress"]
+    Core -->|"T1 provisioning v2\nT2 worker projection\nT3 recording + usage write\nT4 task attribute schema"| Tw["Twilio reconciler + ingress\n(Cody)"]
+    Core -->|"R1 plans\nR2 organization fields\nR3 contract terms v2\nR4 signature evidence\nR5 contact update\nR6 principal by email"| CRM["Sales CRM\n(Dave)"]
+    Core -->|"P1 survey + configuration v2\nP2 compiled policy schema"| Tw
+    Starter["starter: issue template → models.py → regenerate → compatibility gate"] -.->|"every issue starts here"| Core
+  

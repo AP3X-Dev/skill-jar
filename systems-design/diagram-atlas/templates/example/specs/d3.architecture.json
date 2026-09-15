@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Principal identity and work ownership",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1280,
+      560
+    ]
+  },
+  "components": [
+    {
+      "id": "user",
+      "type": "database",
+      "label": "User",
+      "sublabel": "login identity",
+      "pos": [
+        40,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "principal",
+      "type": "database",
+      "label": "Principal",
+      "sublabel": "human, AI agent, service",
+      "pos": [
+        320,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "database",
+      "label": "Skill",
+      "sublabel": "Principal Skill",
+      "pos": [
+        40,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "assignment",
+      "type": "database",
+      "label": "Assignment",
+      "sublabel": "Service Unit Assignment",
+      "pos": [
+        320,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "service_unit",
+      "type": "database",
+      "label": "Service Unit",
+      "pos": [
+        560,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "interaction_assignment",
+      "type": "database",
+      "label": "Interaction Assignment",
+      "pos": [
+        820,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "interaction",
+      "type": "database",
+      "label": "Interaction",
+      "pos": [
+        1080,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "task",
+      "type": "database",
+      "label": "Task",
+      "pos": [
+        820,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "task_attempt",
+      "type": "database",
+      "label": "Task Attempt",
+      "pos": [
+        1080,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Identity",
+      "wraps": [
+        "user",
+        "principal",
+        "skill",
+        "assignment"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Work",
+      "wraps": [
+        "interaction",
+        "interaction_assignment",
+        "task",
+        "task_attempt"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "principal-user",
+      "from": "principal",
+      "to": "user",
+      "label": "may authenticate as",
+      "variant": "dashed"
+    },
+    {
+      "id": "principal-skill",
+      "from": "principal",
+      "to": "skill",
+      "label": "has"
+    },
+    {
+      "id": "principal-assignment",
+      "from": "principal",
+      "to": "assignment",
+      "label": "eligible for",
+      "labelDy": 24
+    },
+    {
+      "id": "unit-scopes",
+      "from": "service_unit",
+      "to": "assignment",
+      "label": "scopes"
+    },
+    {
+      "id": "principal-handles",
+      "from": "principal",
+      "to": "interaction_assignment",
+      "label": "handles",
+      "variant": "emphasis"
+    },
+    {
+      "id": "interaction-assigns",
+      "from": "interaction",
+      "to": "interaction_assignment",
+      "label": "assigns"
+    },
+    {
+      "id": "principal-claims",
+      "from": "principal",
+      "to": "task",
+      "label": "claims",
+      "variant": "emphasis"
+    },
+    {
+      "id": "task-records",
+      "from": "task",
+      "to": "task_attempt",
+      "label": "records"
+    },
+    {
+      "id": "interaction-results",
+      "from": "interaction",
+      "to": "task_attempt",
+      "label": "results from",
+      "labelDy": 24
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Principal",
+      "items": [
+        "Every actor that can be assigned work or approve a change is a Principal",
+        "Human, AI agent, automation or service"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "No new columns",
+      "items": [
+        "Business records never grow a new assigned_x_id column when a new actor type appears"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Authorization vs routing",
+      "items": [
+        "Authorization is separate from routing eligibility",
+        "Service Unit scopes eligibility; Skill describes capability"
+      ]
+    }
+  ]
+}

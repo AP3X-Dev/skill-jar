@@ -1,0 +1,18 @@
+# Platform and provider boundaries
+# caption: What it settles. Platform desired state, provider runtime facts and external field-service authority are three different things. A local projection of a provider-owned appointment does not make Operator One its writer.
+flowchart TB
+    Apps["Sales, Portal, Admin and CIC Assist"] --> Core["Scoped Platform APIs"]
+    Core --> Domain["Identity, CRM, work and domain commands"]
+    Core --> Gov["Capability policy and approvals"]
+    Agent["Agent runtime"] --> Gov
+    Gov --> Domain
+    Domain --> Records["Canonical records, audit and outbox"]
+    Domain --> Adapter["Provider adapters"]
+    Adapter --> Comms["Twilio communications runtime"]
+    Adapter --> FSM["External FSM authority"]
+    Adapter --> Finance["Payment and accounting providers"]
+    Comms --> Inbox["Verified inbox and reconciliation"]
+    FSM --> Inbox
+    Finance --> Inbox
+    Inbox --> Records
+  

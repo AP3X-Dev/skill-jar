@@ -1,0 +1,26 @@
+# Survey to provisioned routing
+# caption: What it settles. The piece nobody owned until today. Same inputs compile to the same hash; a transfer target outside its own hours blocks publish with a path; the Studio flow is rendered from a validated document, not a hand-edited YAML. Self-service signup later feeds the same tables and the same compiler.
+flowchart LR
+    subgraph Inputs["Core tables (staff-entered for M1, survey later)"]
+        N["channel_endpoints\nphone_number_ownerships"]
+        H["schedule_sets, windows, exceptions"]
+        I["IVR prompts and menu"]
+        X["transfer_destinations"]
+        Rp["routing_profiles"]
+        V["service_unit_verticals"]
+    end
+    Inputs --> Comp["Configuration::Compiler\n(pure, deterministic)"]
+    Comp --> Rep["Validation report\nerrors block, warnings shown"]
+    Comp --> Diff["Diff vs last published"]
+    Comp --> Ver["contact_center_config_version\nschema_version, content_hash, input_refs"]
+    Rep --> Review["Operations approve"]
+    Diff --> Review
+    Review --> Pub["publishConfiguration (immutable)"]
+    Pub --> Run["createProvisioningRun (T1)"]
+    Run --> Recon["Twilio reconciler\nobserve → plan → apply → verify"]
+    Recon --> Flow["Studio flow per Service Unit\n(rendered from P2 schema)"]
+    Recon --> Q["TaskQueue per Service Unit"]
+    Recon --> WF["platform workflow filter entry"]
+    Recon --> W["worker projection (T2)"]
+    Recon --> Act["activateServiceUnit"]
+  

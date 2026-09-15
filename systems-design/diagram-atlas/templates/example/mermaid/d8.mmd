@@ -1,0 +1,13 @@
+# Configuration lifecycle
+# caption: What it settles. Publication, provisioning and activation are three separate states. Keep last-known-good routing during a failed reconciliation. Never delete a number or drop a live call to make a diff disappear.
+flowchart TB
+    Answers["Immutable survey response"] --> Draft["Versioned compiler draft"]
+    Draft --> Checks{"Validation passes?"}
+    Checks -->|No| Draft
+    Checks -->|Yes| Review["Authorized review"]
+    Review --> Published["Immutable published version"]
+    Published --> Reconcile["Observe and reconcile provider state"]
+    Reconcile --> Ready{"Readiness gates pass?"}
+    Ready -->|No| Exception["Resolvable installation exception"]
+    Ready -->|Yes| Activate["Activate scoped version"]
+  

@@ -1,0 +1,20 @@
+# Client resolution, today and target
+# caption: What it settles. The strongest P0 in the repository analysis: a name collision routes a pop or a submission to the wrong client. Once the task carries service_unit_id, the name ladder is never consulted, and it is deleted only after the owner confirms.
+flowchart LR
+    subgraph Today["Today on twilio/main"]
+        T1["Task attrs: cic_client display name"] --> T2["/call-connect"]
+        T2 --> T3["DNIS → Portal slug"]
+        T3 --> T4["slug → fuzzy match to SOP filename"]
+        T4 --> T5["SessionMeta.company_id (string)\nfive9_* keys carry Twilio SIDs"]
+        T5 --> T6["HttpSopSource 'latest' playbook"]
+        T6 --> T7["submission_builder → call_submissions"]
+    end
+    subgraph Target["Target for M1"]
+        G1["Task attrs: organization_id,\nservice_unit_id, interaction_id"] --> G2["/call-connect"]
+        G2 --> G3["service_unit_id already present\nfuzzy ladder skipped"]
+        G3 --> G4["SessionMeta canonical ids\n+ provider_* refs"]
+        G4 --> G5["pinned guidance release\n(new calls adopt, live calls keep)"]
+        G5 --> G6["Interaction complete + evidence (Core)\n+ legacy envelope via adapter"]
+    end
+    T4 -. "removed after Phase 4" .-> G3
+  

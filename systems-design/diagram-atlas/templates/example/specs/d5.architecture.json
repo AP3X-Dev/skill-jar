@@ -1,0 +1,316 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Threads, interactions and field-service work",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1280,
+      740
+    ]
+  },
+  "components": [
+    {
+      "id": "end_customer",
+      "type": "database",
+      "label": "End Customer",
+      "pos": [
+        40,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "service_unit",
+      "type": "database",
+      "label": "Service Unit",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "organization",
+      "type": "database",
+      "label": "Organization",
+      "pos": [
+        300,
+        40
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "thread",
+      "type": "database",
+      "label": "Thread",
+      "sublabel": "Communication Thread",
+      "pos": [
+        560,
+        40
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "message",
+      "type": "database",
+      "label": "Message",
+      "pos": [
+        820,
+        40
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "interaction",
+      "type": "database",
+      "label": "Interaction",
+      "sublabel": "one handling episode",
+      "pos": [
+        560,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "voice_leg",
+      "type": "database",
+      "label": "Voice Leg",
+      "pos": [
+        820,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "link",
+      "type": "database",
+      "label": "Link",
+      "sublabel": "Interaction Field Service Link",
+      "pos": [
+        560,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "service_request",
+      "type": "database",
+      "label": "Service Request",
+      "pos": [
+        300,
+        610
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "job",
+      "type": "database",
+      "label": "Job",
+      "sublabel": "Field Service Job",
+      "pos": [
+        560,
+        610
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "appointment",
+      "type": "database",
+      "label": "Appointment",
+      "sublabel": "Field Service Appointment",
+      "pos": [
+        820,
+        610
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "estimate",
+      "type": "database",
+      "label": "Estimate",
+      "sublabel": "Field Service Estimate",
+      "pos": [
+        1080,
+        610
+      ],
+      "size": [
+        160,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Communication",
+      "wraps": [
+        "organization",
+        "thread",
+        "message",
+        "interaction",
+        "voice_leg"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Field service",
+      "wraps": [
+        "service_request",
+        "job",
+        "appointment",
+        "estimate",
+        "link"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "org-owns-thread",
+      "from": "organization",
+      "to": "thread",
+      "label": "owns"
+    },
+    {
+      "id": "thread-contains-message",
+      "from": "thread",
+      "to": "message",
+      "label": "contains"
+    },
+    {
+      "id": "thread-relates",
+      "from": "thread",
+      "to": "interaction",
+      "label": "relates",
+      "labelDy": 24
+    },
+    {
+      "id": "unit-routes",
+      "from": "service_unit",
+      "to": "interaction",
+      "label": "routes",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "customer-identifies",
+      "from": "end_customer",
+      "to": "interaction",
+      "label": "identifies",
+      "variant": "dashed"
+    },
+    {
+      "id": "interaction-voice",
+      "from": "interaction",
+      "to": "voice_leg",
+      "label": "contains"
+    },
+    {
+      "id": "interaction-references",
+      "from": "interaction",
+      "to": "link",
+      "label": "references",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "request-explains",
+      "from": "service_request",
+      "to": "link",
+      "label": "explains",
+      "fromSide": "top",
+      "toSide": "left"
+    },
+    {
+      "id": "job-discusses",
+      "from": "job",
+      "to": "link",
+      "label": "discusses"
+    },
+    {
+      "id": "appointment-schedules",
+      "from": "appointment",
+      "to": "link",
+      "label": "schedules",
+      "fromSide": "top",
+      "toSide": "right"
+    },
+    {
+      "id": "request-realizes",
+      "from": "service_request",
+      "to": "job",
+      "label": "realizes"
+    },
+    {
+      "id": "job-visits",
+      "from": "job",
+      "to": "appointment",
+      "label": "visits"
+    },
+    {
+      "id": "estimate-visits",
+      "from": "estimate",
+      "to": "appointment",
+      "label": "visits"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Continuity vs episode",
+      "items": [
+        "A thread is continuity",
+        "An Interaction is one handling episode"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Field work",
+      "items": [
+        "Field work hangs off a Service Request",
+        "There is no separate Booking entity; \"booked\" is an outcome, never a competing schedule record"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Assist Job",
+      "items": [
+        "An Assist Job is a per-call work item, not a field-service job"
+      ]
+    }
+  ]
+}

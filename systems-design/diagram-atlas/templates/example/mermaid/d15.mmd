@@ -1,0 +1,19 @@
+# One login for reps
+# caption: What it settles. Disable the Portal user and the rep can neither mint a token nor pass SAML. The desktop's local token mint exists for development only. C5 is a pilot blocker, not an optimization.
+sequenceDiagram
+    participant R as Rep
+    participant A as Assist desktop
+    participant P as Portal (Doorkeeper, PKCE)
+    participant Core as Core token broker /v1/twilio/token
+    participant Tw as Twilio Voice + TaskRouter
+    R->>A: opens Assist
+    A->>P: OAuth sign-in (the only login)
+    P-->>A: bearer, 2h, refresh
+    A->>Core: GET /v1/twilio/token with bearer (C5)
+    Core->>Core: principal from session, worker SID from projection\nrefuse discarded / inactive / non-agent
+    Core-->>A: Flex Access Token, 1h, voice + task_router grants
+    A->>Tw: register softphone with token
+    Note over R,Tw: no Twilio login screen, no Twilio username or password
+    A->>Core: refresh at 80% TTL or on token-expired
+    Note over P: Supervisors reach native Flex UI via the Portal SAML IdP (still a Portal login)
+  

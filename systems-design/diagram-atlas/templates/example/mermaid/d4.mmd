@@ -1,0 +1,20 @@
+# Trusted ingress into central Flex
+# caption: What it settles. The dialed number resolves the client before any IVR chooses a Service Unit. "Ingress" is the webhook on the client's own number, not a second number and not a bridge. Task attributes are routing context, never an authorization boundary. Unknown numbers go to restricted triage.
+sequenceDiagram
+    participant Caller as End Customer
+    participant Edge as Client number in shared account
+    participant Core as Platform ingress
+    participant Flex as Central Flex runtime
+    participant Assist as CIC Assist
+    Caller->>Edge: Call client-specific number
+    Edge->>Core: Verified source account and original DID
+    Core->>Core: Resolve ownership and create Interaction
+    Core-->>Edge: Scoped correlation token and config
+    Edge->>Flex: Native same-account routing
+    Flex->>Core: Verify token and resolve Service Unit
+    Core-->>Flex: Canonical routing context
+    Flex-->>Assist: Authorized task offer
+    Assist->>Core: Fetch scoped context
+    Assist->>Flex: Accept via certified SDK path
+    Flex-->>Core: Account-scoped call and task events
+  

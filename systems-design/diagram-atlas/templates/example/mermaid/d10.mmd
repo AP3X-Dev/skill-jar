@@ -1,0 +1,13 @@
+# Authority migration
+# caption: What it settles. How a system of record moves, whether it is Five9 to Flex or ServiceTitan to a native scheduler. Canonical IDs survive the switch; going back afterwards is a new controlled migration, not a rollback.
+stateDiagram-v2
+    [*] --> ExternalAuthority
+    ExternalAuthority --> ShadowNative: Reconcile and compare
+    ShadowNative --> Drain: Certify selected boundary
+    Drain --> ExternalAuthority: Abort before authority switch
+    Drain --> NativeAuthority: Fence old writer and change epoch
+    NativeAuthority --> Reconciliation: Observe side effects
+    Reconciliation --> NativeAuthority: Consistent
+    Reconciliation --> RecoveryDecision: Drift or unknown command
+    RecoveryDecision --> NativeAuthority: Repair under current authority
+  

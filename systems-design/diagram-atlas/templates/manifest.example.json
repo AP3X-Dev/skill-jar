@@ -1,0 +1,281 @@
+{
+  "title": "Operator One Architecture Atlas",
+  "eyebrow": "Operator One · Architecture Atlas · Planning baseline 0.1.0",
+  "version_label": "v1.0 · 2026-09-14",
+  "pill": "Architecture reference",
+  "headline": "The Operator One platform, drawn once",
+  "lede": "Every diagram in the platform baseline plus eight drawn from the four implementation PRPs. Boundaries first, then the call path, then guidance, then how the program is delivered. Each panel names its source document and what it settles.",
+  "accent": "blue",
+  "facts": [
+    {
+      "label": "Diagrams",
+      "value": "19"
+    },
+    {
+      "label": "Workstreams",
+      "value": "4"
+    },
+    {
+      "label": "Flex accounts per environment",
+      "value": "1",
+      "accent": true
+    },
+    {
+      "label": "Logins for a rep",
+      "value": "1",
+      "accent": true
+    },
+    {
+      "label": "Subaccounts or bridges",
+      "value": "0"
+    },
+    {
+      "label": "Contract issues open",
+      "value": "20"
+    }
+  ],
+  "footer_left": "Internal reference · Operator One team starter · architecture 05 and PRPs 12–15",
+  "footer_right": "Accent from the approved set · signal blue",
+  "groups": [
+    {
+      "title": "Boundaries and identity",
+      "sources": "documents 01, 02, 05",
+      "diagrams": [
+        {
+          "id": "d1",
+          "title": "Platform and provider boundaries",
+          "source": "05 §1",
+          "new": false,
+          "caption": "<b>What it settles.</b> Platform desired state, provider runtime facts and external field-service authority are three different things. A local projection of a provider-owned appointment does not make Operator One its writer.",
+          "mermaid": "example/mermaid/d1.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d1.workflow.json"
+        },
+        {
+          "id": "d2",
+          "title": "Client, End Customer, location and number identity",
+          "source": "05 §2 · 02 §4, §10, 01 §12",
+          "new": false,
+          "caption": "<b>What it settles.</b> A client is an Organization; the thing CIC answers for is a Service Unit (today's Portal Company); the homeowner is an End Customer scoped to the Organization. A phone number belongs to exactly one Organization at a time, across voice, SMS and WhatsApp, with non-overlapping ownership intervals.",
+          "mermaid": "example/mermaid/d2.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d2.architecture.json"
+        },
+        {
+          "id": "d3",
+          "title": "Principal identity and work ownership",
+          "source": "05 §3 · 02 §5, §6",
+          "new": false,
+          "caption": "<b>What it settles.</b> Every actor that can be assigned work or approve a change is a Principal, whether human, AI agent, automation or service. Business records never grow a new <code>assigned_x_id</code> column when a new actor type appears. Authorization is separate from routing eligibility.",
+          "mermaid": "example/mermaid/d3.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d3.architecture.json"
+        },
+        {
+          "id": "d14",
+          "title": "Who owns which data after M1",
+          "source": "from PRPs 12 to 15",
+          "new": true,
+          "caption": "<b>What it settles.</b> Core is the single writer for identity, guidance, interactions, contracts and configuration. Assist keeps its engine and a pinned cache; the CRM keeps everything that is genuinely sales; Twilio keeps live call facts and nothing about who a client is.",
+          "mermaid": "example/mermaid/d14.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d14.architecture.json"
+        }
+      ]
+    },
+    {
+      "title": "The call path",
+      "sources": "documents 01 §6–7, 05 §4, PRPs 12 and 13",
+      "diagrams": [
+        {
+          "id": "d12",
+          "title": "Repositories and runtimes",
+          "source": "repo picture agreed 2026-09-14",
+          "new": true,
+          "caption": "<b>What it settles.</b> The starter is a contracts repository, not a hosted server. Its fake Core runs on a laptop or on Cerebro for development only. The real Core grows inside the Rails Portal. Both consumers point at one base URL and switch from fake to Portal by changing it. <span class=\"tag\">main</span> keeps shipping Five9; <span class=\"tag\">twilio/main</span> is the product being built.",
+          "mermaid": "example/mermaid/d12.mmd",
+          "quality": "standard",
+          "accent_card": false,
+          "spec": "example/specs/d12.architecture.json"
+        },
+        {
+          "id": "d4",
+          "title": "Trusted ingress into central Flex",
+          "source": "05 §4 · 01 §7.1.1",
+          "new": false,
+          "caption": "<b>What it settles.</b> The dialed number resolves the client before any IVR chooses a Service Unit. \"Ingress\" is the webhook on the client's own number, not a second number and not a bridge. Task attributes are routing context, never an authorization boundary. Unknown numbers go to restricted triage.",
+          "mermaid": "example/mermaid/d4.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d4.sequence.json"
+        },
+        {
+          "id": "d13",
+          "title": "One call, end to end",
+          "source": "PRP 13 Phase 1–4, PRP 12 Phase 0–4, PRP 14 Phase 3",
+          "new": true,
+          "caption": "<b>What it settles.</b> The order of operations for the pilot. Identity is fixed at step 5, the Interaction exists at step 7 before anyone is offered the call, guidance is pinned at step 10 and never changes for that call, and the legacy submission row still appears at step 16 so today's reports and billing keep working.",
+          "mermaid": "example/mermaid/d13.mmd",
+          "quality": "showcase",
+          "accent_card": true,
+          "spec": "example/specs/d13.sequence.json"
+        },
+        {
+          "id": "d15",
+          "title": "One login for reps",
+          "source": "ADR-059",
+          "new": true,
+          "caption": "<b>What it settles.</b> Disable the Portal user and the rep can neither mint a token nor pass SAML. The desktop's local token mint exists for development only. C5 is a pilot blocker, not an optimization.",
+          "mermaid": "example/mermaid/d15.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d15.sequence.json"
+        },
+        {
+          "id": "d16",
+          "title": "Client resolution, today and target",
+          "source": "PRP 12 §5, 04 §4",
+          "new": true,
+          "caption": "<b>What it settles.</b> The strongest P0 in the repository analysis: a name collision routes a pop or a submission to the wrong client. Once the task carries <code>service_unit_id</code>, the name ladder is never consulted, and it is deleted only after the owner confirms.",
+          "mermaid": "example/mermaid/d16.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d16.workflow.json"
+        },
+        {
+          "id": "d7",
+          "title": "Audio provenance and fallback",
+          "source": "05 §7 · ADR-013",
+          "new": false,
+          "caption": "<b>What it settles.</b> WASAPI and CoreAudio capture stays the live-assist audio source until Media Streams is proven for hold, transfer, conference and reconnect in the real topology. The loopback spike on 2026-09-08 showed the engine hears the Voice SDK with zero engine changes.",
+          "mermaid": "example/mermaid/d7.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d7.workflow.json"
+        }
+      ]
+    },
+    {
+      "title": "Guidance and work",
+      "sources": "documents 02 §7, §11, 05 §5–6, §12",
+      "diagrams": [
+        {
+          "id": "d5",
+          "title": "Threads, interactions and field-service work",
+          "source": "05 §5 · 01 §6",
+          "new": false,
+          "caption": "<b>What it settles.</b> A thread is continuity; an Interaction is one handling episode; field work hangs off a Service Request. There is no separate Booking entity, and \"booked\" is an outcome, never a competing schedule record. An Assist Job is a per-call work item, not a field-service job.",
+          "mermaid": "example/mermaid/d5.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d5.architecture.json"
+        },
+        {
+          "id": "d11",
+          "title": "Published guidance and per-call evidence",
+          "source": "05 §12 · 02 §11",
+          "new": false,
+          "caption": "<b>What it settles.</b> One immutable release per publish, with a monotonic sequence and a hash. New calls adopt within seconds; a live call and every ticket inside it keep the release they started with. Responses keep their state, N/A and customer-unsure are distinct, and AI output never overwrites a newer rep decision.",
+          "mermaid": "example/mermaid/d11.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d11.workflow.json"
+        },
+        {
+          "id": "d6",
+          "title": "Governed scheduling and unknown outcomes",
+          "source": "05 §6 · ADR-049",
+          "new": false,
+          "caption": "<b>What it settles.</b> A lost response is <em>unknown</em>, not failed. Read back before any retry. This same rule governs the Twilio reconciler in PRP 13 Phase 5: purchase a number, crash before persisting, rerun, still one number.",
+          "mermaid": "example/mermaid/d6.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d6.workflow.json"
+        }
+      ]
+    },
+    {
+      "title": "Configuration and finance",
+      "sources": "documents 05 §8–10, SELF-SERVICE-PROVISIONING, PRP 14 Phase 6",
+      "diagrams": [
+        {
+          "id": "d8",
+          "title": "Configuration lifecycle",
+          "source": "05 §8",
+          "new": false,
+          "caption": "<b>What it settles.</b> Publication, provisioning and activation are three separate states. Keep last-known-good routing during a failed reconciliation. Never delete a number or drop a live call to make a diff disappear.",
+          "mermaid": "example/mermaid/d8.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d8.workflow.json"
+        },
+        {
+          "id": "d17",
+          "title": "Survey to provisioned routing",
+          "source": "PRP 14 Phase 6, PRP 13 Phases 1, 2, 5",
+          "new": true,
+          "caption": "<b>What it settles.</b> The piece nobody owned until today. Same inputs compile to the same hash; a transfer target outside its own hours blocks publish with a path; the Studio flow is rendered from a validated document, not a hand-edited YAML. Self-service signup later feeds the same tables and the same compiler.",
+          "mermaid": "example/mermaid/d17.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d17.dataflow.json"
+        },
+        {
+          "id": "d9",
+          "title": "Separate finance contexts",
+          "source": "05 §9 · 01 §13",
+          "new": false,
+          "caption": "<b>What it settles.</b> What CIC bills a client and what a client bills a homeowner are different ledgers with different payers, even when they share a payment provider. Twilio minutes are a usage measurement that passes through the existing reviewer gate, never a direct invoice line.",
+          "mermaid": "example/mermaid/d9.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d9.dataflow.json"
+        },
+        {
+          "id": "d10",
+          "title": "Authority migration",
+          "source": "05 §10 · ADR-048",
+          "new": false,
+          "caption": "<b>What it settles.</b> How a system of record moves, whether it is Five9 to Flex or ServiceTitan to a native scheduler. Canonical IDs survive the switch; going back afterwards is a new controlled migration, not a rollback.",
+          "mermaid": "example/mermaid/d10.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d10.lifecycle.json"
+        }
+      ]
+    },
+    {
+      "title": "Program",
+      "sources": "document 03, PRPs 12 to 15",
+      "diagrams": [
+        {
+          "id": "d18",
+          "title": "Contract issues, producer to consumer",
+          "source": "PRP 14 §7",
+          "new": true,
+          "caption": "<b>What it settles.</b> Twenty contract changes, one producer. Each is filed with the starter's template, modeled in Pydantic, regenerated, and only then implemented in Rails and consumed. C5 is a pilot blocker under ADR-059.",
+          "mermaid": "example/mermaid/d18.mmd",
+          "quality": "showcase",
+          "accent_card": false,
+          "spec": "example/specs/d18.architecture.json"
+        },
+        {
+          "id": "d19",
+          "title": "Build order across the PRPs",
+          "source": "03 execution map",
+          "new": true,
+          "caption": "<b>What it settles.</b> Portal Phase 0 goes first because every other Phase 0 runs against the fake Core and switches to Rails the moment the seam exists. Assist, Twilio and CRM Phase 0 start the same week. The thick edge is the one dependency that cannot slip: the token broker must exist before the first staffed call. The CRM has no M1 blocker.",
+          "mermaid": "example/mermaid/d19.mmd",
+          "quality": "standard",
+          "accent_card": false,
+          "spec": "example/specs/d19.architecture.json"
+        }
+      ]
+    }
+  ],
+  "_note": "Worked example: the Operator One atlas (2026-09-14). Each diagram names its archify `spec`; build_atlas.py delivers them with the vendored renderer (Node 18+, nothing to install) into --build-dir, then assembles the page. d12 and d19 are inherently non-planar and deliver at standard quality. Run: python scripts/build_atlas.py templates/manifest.example.json --build-dir /tmp/atlas-build --artifact /tmp/atlas.artifact.html --standalone /tmp/atlas.html"
+}

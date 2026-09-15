@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Published guidance and per-call evidence",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "portal",
+      "label": "Portal"
+    },
+    {
+      "id": "release",
+      "label": "Release"
+    },
+    {
+      "id": "call",
+      "label": "Call"
+    },
+    {
+      "id": "engine",
+      "label": "Assist engine"
+    },
+    {
+      "id": "rep",
+      "label": "Rep surface"
+    },
+    {
+      "id": "history",
+      "label": "History and QA"
+    }
+  ],
+  "mainPath": [
+    "author",
+    "version",
+    "cache",
+    "context",
+    "engine",
+    "panel",
+    "responses",
+    "qa"
+  ],
+  "nodes": [
+    {
+      "id": "author",
+      "lane": "portal",
+      "col": 1,
+      "type": "frontend",
+      "label": "Portal authoring",
+      "sublabel": "profile, verticals, questions",
+      "width": 120
+    },
+    {
+      "id": "config",
+      "lane": "portal",
+      "col": 3,
+      "type": "database",
+      "label": "Config version",
+      "sublabel": "canonical",
+      "width": 110
+    },
+    {
+      "id": "version",
+      "lane": "release",
+      "col": 2,
+      "type": "database",
+      "label": "Guidance release",
+      "sublabel": "coherent, sequence + hash",
+      "width": 110
+    },
+    {
+      "id": "cache",
+      "lane": "release",
+      "col": 4,
+      "type": "backend",
+      "label": "latest-ready cache",
+      "sublabel": "background fetch",
+      "width": 118
+    },
+    {
+      "id": "transcript",
+      "lane": "call",
+      "col": 2,
+      "type": "external",
+      "label": "Transcript",
+      "sublabel": "evidence",
+      "width": 92
+    },
+    {
+      "id": "context",
+      "lane": "call",
+      "col": 4,
+      "type": "backend",
+      "label": "Call-pinned context",
+      "sublabel": "inherited by work items",
+      "width": 130
+    },
+    {
+      "id": "engine",
+      "lane": "engine",
+      "col": 4,
+      "type": "backend",
+      "label": "Assist engine",
+      "sublabel": "existing engine",
+      "width": 110
+    },
+    {
+      "id": "panel",
+      "lane": "rep",
+      "col": 4,
+      "type": "frontend",
+      "label": "Rep guidance",
+      "sublabel": "and checklist",
+      "width": 100
+    },
+    {
+      "id": "responses",
+      "lane": "rep",
+      "col": 5,
+      "type": "database",
+      "label": "Responses",
+      "sublabel": "override history",
+      "width": 92
+    },
+    {
+      "id": "qa",
+      "lane": "history",
+      "col": 5,
+      "type": "database",
+      "label": "History and QA",
+      "sublabel": "scoped",
+      "width": 96
+    }
+  ],
+  "edges": [
+    {
+      "id": "author-version",
+      "from": "author",
+      "to": "version"
+    },
+    {
+      "id": "config-version",
+      "from": "config",
+      "to": "version",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "version-cache",
+      "from": "version",
+      "to": "cache"
+    },
+    {
+      "id": "cache-context",
+      "from": "cache",
+      "to": "context"
+    },
+    {
+      "id": "context-engine",
+      "from": "context",
+      "to": "engine"
+    },
+    {
+      "id": "transcript-engine",
+      "from": "transcript",
+      "to": "engine"
+    },
+    {
+      "id": "engine-panel",
+      "from": "engine",
+      "to": "panel"
+    },
+    {
+      "id": "panel-responses",
+      "from": "panel",
+      "to": "responses"
+    },
+    {
+      "id": "engine-responses",
+      "from": "engine",
+      "to": "responses",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "responses-qa",
+      "from": "responses",
+      "to": "qa"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "One release per publish",
+      "items": [
+        "Immutable, monotonic sequence, hash",
+        "New calls adopt within seconds"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Live calls keep their release",
+      "items": [
+        "A live call and every ticket inside it keep the release they started with"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Response rules",
+      "items": [
+        "Responses keep their state",
+        "N/A and customer-unsure are distinct",
+        "AI output never overwrites a newer rep decision"
+      ]
+    }
+  ]
+}

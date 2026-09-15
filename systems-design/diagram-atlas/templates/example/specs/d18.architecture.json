@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Contract issues, producer to consumer",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [1380, 920]
+  },
+  "components": [
+    { "id": "starter", "type": "external", "label": "starter: issue template", "sublabel": "→ models.py → regenerate → compatibility gate", "pos": [20, 392], "size": [280, 76] },
+    { "id": "core", "type": "backend", "label": "Portal Core produces", "sublabel": "Georgi", "pos": [440, 200], "size": [180, 460] },
+    { "id": "assist", "type": "frontend", "label": "CIC Assist", "sublabel": "Cody", "pos": [1100, 40], "size": [240, 68] },
+    { "id": "both", "type": "security", "label": "Assist + Twilio ingress", "sublabel": "shared consumers", "pos": [1100, 260], "size": [240, 68] },
+    { "id": "tw", "type": "messagebus", "label": "Twilio reconciler + ingress", "sublabel": "Cody", "pos": [1100, 480], "size": [240, 68] },
+    { "id": "crm", "type": "frontend", "label": "Sales CRM", "sublabel": "Dave", "pos": [1100, 740], "size": [240, 68] }
+  ],
+  "connections": [
+    { "id": "starter-core", "from": "starter", "to": "core", "label": "every issue starts here", "variant": "dashed", "labelDy": -20 },
+    { "id": "core-assist-1", "from": "core", "to": "assist", "label": "C1 guidance release read", "labelAt": [980, 130] },
+    { "id": "core-assist-2", "from": "core", "to": "assist", "label": "C2 manifest poll", "labelAt": [980, 152] },
+    { "id": "core-assist-3", "from": "core", "to": "assist", "label": "C6 guidance context + responses", "labelAt": [980, 174] },
+    { "id": "core-assist-4", "from": "core", "to": "assist", "label": "C7 outcome v2 · C8 End Customer proposal", "labelAt": [980, 196] },
+    { "id": "core-both-1", "from": "core", "to": "both", "label": "C3 channel endpoint lookup", "variant": "security", "labelAt": [980, 350] },
+    { "id": "core-both-2", "from": "core", "to": "both", "label": "C4 provider ingress", "variant": "security", "labelAt": [980, 372] },
+    { "id": "core-both-3", "from": "core", "to": "both", "label": "C5 token broker (pilot blocker, ADR-059)", "variant": "security", "labelAt": [980, 394] },
+    { "id": "core-tw-1", "from": "core", "to": "tw", "label": "T1 provisioning v2 · T2 worker projection", "labelAt": [980, 580] },
+    { "id": "core-tw-2", "from": "core", "to": "tw", "label": "T3 recording + usage write", "labelAt": [980, 602] },
+    { "id": "core-tw-3", "from": "core", "to": "tw", "label": "T4 task attribute schema", "labelAt": [980, 624] },
+    { "id": "core-tw-4", "from": "core", "to": "tw", "label": "P1 survey + configuration v2", "variant": "emphasis", "labelAt": [980, 646] },
+    { "id": "core-tw-5", "from": "core", "to": "tw", "label": "P2 compiled policy schema", "variant": "emphasis", "labelAt": [980, 668] },
+    { "id": "core-crm-1", "from": "core", "to": "crm", "label": "R1 plans · R2 organization fields", "labelAt": [980, 830] },
+    { "id": "core-crm-2", "from": "core", "to": "crm", "label": "R3 contract terms v2", "labelAt": [980, 852] },
+    { "id": "core-crm-3", "from": "core", "to": "crm", "label": "R4 signature evidence", "labelAt": [980, 874] },
+    { "id": "core-crm-4", "from": "core", "to": "crm", "label": "R5 contact update · R6 principal by email", "labelAt": [980, 896] }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "One producer", "items": ["Twenty contract changes, all produced by Portal Core"] },
+    { "dot": "amber", "title": "Every issue takes the same path", "items": ["Filed with the starter template, modeled in Pydantic, regenerated", "Only then implemented in Rails and consumed"] },
+    { "dot": "rose", "title": "Pilot blocker", "items": ["C5 token broker is a pilot blocker under ADR-059"] }
+  ]
+}

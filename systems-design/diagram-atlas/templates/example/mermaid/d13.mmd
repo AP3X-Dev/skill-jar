@@ -1,0 +1,30 @@
+# One call, end to end
+# caption: What it settles. The order of operations for the pilot. Identity is fixed at step 5, the Interaction exists at step 7 before anyone is offered the call, guidance is pinned at step 10 and never changes for that call, and the legacy submission row still appears at step 16 so today's reports and billing keep working.
+sequenceDiagram
+    autonumber
+    participant C as Caller
+    participant Tw as Twilio (client DID)
+    participant In as Ingress function
+    participant Core as Core /v1
+    participant TR as TaskRouter
+    participant A as Assist desktop
+    participant P as Legacy Portal tables
+    C->>Tw: dials client's number
+    Tw->>In: voice webhook (signed)
+    In->>In: validate X-Twilio-Signature, replay check
+    In->>Core: channel-endpoints?e164= (C3)
+    Core-->>In: organization_id, service_unit_id
+    In->>Core: create Interaction with provider refs (C4)
+    Core-->>In: interaction_id
+    In->>TR: enqueue with canonical attributes
+    TR-->>A: reservation for eligible worker
+    A->>A: pop, pin guidance release (C1/C2)
+    A->>Core: attach by provider ref
+    A->>TR: accept, conference
+    Note over A: local WASAPI capture feeds the AI engine
+    A->>Core: guidance context + probing responses (C6)
+    A->>Core: complete Interaction, outcome v2 (C7)
+    Core->>P: compatibility adapter writes call_submissions
+    Tw->>Core: recording callback keyed on ConferenceSid (T3)
+    Core->>P: recording_groups + billing review
+  

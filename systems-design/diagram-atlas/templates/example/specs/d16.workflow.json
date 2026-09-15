@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Client resolution, today and target",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "attrs",
+      "label": "Task attributes"
+    },
+    {
+      "id": "connect",
+      "label": "/call-connect resolution"
+    },
+    {
+      "id": "match",
+      "label": "Client match"
+    },
+    {
+      "id": "session",
+      "label": "Session identity"
+    },
+    {
+      "id": "guidance",
+      "label": "Guidance"
+    },
+    {
+      "id": "submit",
+      "label": "Submission"
+    }
+  ],
+  "phases": [
+    {
+      "id": "today",
+      "label": "Today on twilio/main",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "target",
+      "label": "Target for M1",
+      "fromCol": 3,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "mainPath": [
+    "g1",
+    "g3",
+    "g4",
+    "g5",
+    "g6"
+  ],
+  "nodes": [
+    {
+      "id": "t1",
+      "lane": "attrs",
+      "col": 1,
+      "type": "external",
+      "label": "Task attrs",
+      "sublabel": "cic_client display name",
+      "width": 180,
+      "tag": "→ /call-connect"
+    },
+    {
+      "id": "g1",
+      "lane": "attrs",
+      "col": 4,
+      "type": "external",
+      "label": "Canonical task attrs",
+      "sublabel": "organization_id, service_unit_id, interaction_id",
+      "width": 210,
+      "tag": "→ /call-connect"
+    },
+    {
+      "id": "t3",
+      "lane": "connect",
+      "col": 1,
+      "type": "backend",
+      "label": "DNIS → Portal slug",
+      "width": 200
+    },
+    {
+      "id": "g3",
+      "lane": "connect",
+      "col": 4,
+      "type": "backend",
+      "label": "Canonical id present",
+      "sublabel": "service_unit_id set, fuzzy ladder skipped",
+      "width": 200
+    },
+    {
+      "id": "t4",
+      "lane": "match",
+      "col": 1,
+      "type": "backend",
+      "label": "slug → SOP filename",
+      "sublabel": "fuzzy name ladder",
+      "width": 200
+    },
+    {
+      "id": "t5",
+      "lane": "session",
+      "col": 1,
+      "type": "backend",
+      "label": "SessionMeta.company_id",
+      "sublabel": "(string) · five9_* keys carry Twilio SIDs",
+      "width": 216
+    },
+    {
+      "id": "g4",
+      "lane": "session",
+      "col": 4,
+      "type": "backend",
+      "label": "SessionMeta ids",
+      "sublabel": "canonical ids + provider_* refs",
+      "width": 200
+    },
+    {
+      "id": "t6",
+      "lane": "guidance",
+      "col": 1,
+      "type": "cloud",
+      "label": "HttpSopSource",
+      "sublabel": "'latest' playbook",
+      "width": 180
+    },
+    {
+      "id": "g5",
+      "lane": "guidance",
+      "col": 4,
+      "type": "cloud",
+      "label": "Pinned release",
+      "sublabel": "guidance: new calls adopt, live calls keep",
+      "width": 190
+    },
+    {
+      "id": "t7",
+      "lane": "submit",
+      "col": 1,
+      "type": "database",
+      "label": "submission_builder",
+      "sublabel": "→ call_submissions",
+      "width": 200
+    },
+    {
+      "id": "g6",
+      "lane": "submit",
+      "col": 4,
+      "type": "database",
+      "label": "Interaction complete",
+      "sublabel": "+ evidence (Core) · legacy envelope via adapter",
+      "width": 210
+    }
+  ],
+  "edges": [
+    {
+      "id": "t1-t3",
+      "from": "t1",
+      "to": "t3"
+    },
+    {
+      "id": "t3-t4",
+      "from": "t3",
+      "to": "t4"
+    },
+    {
+      "id": "t4-t5",
+      "from": "t4",
+      "to": "t5"
+    },
+    {
+      "id": "t5-t6",
+      "from": "t5",
+      "to": "t6"
+    },
+    {
+      "id": "t6-t7",
+      "from": "t6",
+      "to": "t7"
+    },
+    {
+      "id": "g1-g3",
+      "from": "g1",
+      "to": "g3"
+    },
+    {
+      "id": "g3-g4",
+      "from": "g3",
+      "to": "g4"
+    },
+    {
+      "id": "g4-g5",
+      "from": "g4",
+      "to": "g5"
+    },
+    {
+      "id": "g5-g6",
+      "from": "g5",
+      "to": "g6"
+    },
+    {
+      "id": "t4-g3",
+      "from": "t4",
+      "to": "g3",
+      "label": "removed after Phase 4",
+      "variant": "dashed",
+      "role": "branch",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [
+        [
+          360,
+          367
+        ],
+        [
+          360,
+          243
+        ]
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "The strongest P0",
+      "items": [
+        "A name collision routes a pop or a submission to the wrong client"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Target rule",
+      "items": [
+        "Once the task carries service_unit_id, the name ladder is never consulted"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Deletion gate",
+      "items": [
+        "The name ladder is deleted only after the owner confirms"
+      ]
+    }
+  ]
+}

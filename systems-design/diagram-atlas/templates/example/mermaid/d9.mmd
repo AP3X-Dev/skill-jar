@@ -1,0 +1,12 @@
+# Separate finance contexts
+# caption: What it settles. What CIC bills a client and what a client bills a homeowner are different ledgers with different payers, even when they share a payment provider. Twilio minutes are a usage measurement that passes through the existing reviewer gate, never a direct invoice line.
+flowchart TB
+    Usage["Operator One usage and contract"] --> Bill["Client BillingAccount and Invoice"]
+    Job["Client field-service work"] --> Field["End Customer FieldInvoice"]
+    Bill --> Corp["Corporate ledger and merchant context"]
+    Field --> Client["Client ledger and merchant context"]
+    Corp --> Adapter["Scoped payment and accounting adapters"]
+    Client --> Adapter
+    Adapter --> Rail["Payment rail"]
+    Adapter --> Books["Accounting ledger"]
+  

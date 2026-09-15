@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "One login for reps",
+    "viewBox": [1000, 720],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    { "id": "rep", "type": "external", "label": "Rep" },
+    { "id": "assist", "type": "frontend", "label": "Assist desktop" },
+    { "id": "portal", "type": "security", "label": "Portal", "sublabel": "Doorkeeper, PKCE" },
+    { "id": "core", "type": "security", "label": "Core token broker", "sublabel": "/v1/twilio/token" },
+    { "id": "twilio", "type": "messagebus", "label": "Twilio", "sublabel": "Voice + TaskRouter" }
+  ],
+  "segments": [
+    { "from": 165, "to": 290, "label": "Portal login" },
+    { "from": 310, "to": 470, "label": "Token mint (C5)" },
+    { "from": 490, "to": 640, "label": "Register + refresh" }
+  ],
+  "messages": [
+    { "id": "open", "from": "rep", "to": "assist", "y": 190, "label": "opens Assist", "variant": "default" },
+    { "id": "oauth", "from": "assist", "to": "portal", "y": 234, "label": "OAuth sign-in (the only login)", "variant": "security" },
+    { "id": "bearer", "from": "portal", "to": "assist", "y": 278, "label": "bearer, 2h, refresh", "variant": "return" },
+    { "id": "get-token", "from": "assist", "to": "core", "y": 326, "label": "GET /v1/twilio/token with bearer (C5)", "variant": "emphasis" },
+    { "id": "flex-token", "from": "core", "to": "assist", "y": 382, "label": "Flex Access Token, 1h, voice + task_router grants", "variant": "return", "note": "principal from session, worker SID from projection; refuses discarded / inactive / non-agent" },
+    { "id": "register", "from": "assist", "to": "twilio", "y": 462, "label": "register softphone with token", "variant": "default", "note": "no Twilio login screen, no Twilio username or password" },
+    { "id": "refresh", "from": "assist", "to": "core", "y": 510, "label": "refresh at 80% TTL or on token-expired", "variant": "dashed" }
+  ],
+  "activations": [
+    { "participant": "assist", "from": 185, "to": 516, "type": "frontend" },
+    { "participant": "portal", "from": 229, "to": 284, "type": "security" },
+    { "participant": "core", "from": 321, "to": 420, "type": "security" },
+    { "participant": "twilio", "from": 457, "to": 500, "type": "messagebus" }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "One kill switch",
+      "items": [
+        "Disable the Portal user and the rep can neither mint a token nor pass SAML",
+        "Core refuses discarded / inactive / non-agent principals"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "C5 is a pilot blocker",
+      "items": [
+        "C5 (GET /v1/twilio/token) is a pilot blocker, not an optimization",
+        "The desktop's local token mint exists for development only"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "No Twilio credentials",
+      "items": [
+        "No Twilio login screen, no Twilio username or password",
+        "Supervisors reach native Flex UI via the Portal SAML IdP (still a Portal login)"
+      ]
+    }
+  ]
+}

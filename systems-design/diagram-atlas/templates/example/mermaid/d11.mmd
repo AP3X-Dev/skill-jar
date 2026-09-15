@@ -1,0 +1,14 @@
+# Published guidance and per-call evidence
+# caption: What it settles. One immutable release per publish, with a monotonic sequence and a hash. New calls adopt within seconds; a live call and every ticket inside it keep the release they started with. Responses keep their state, N/A and customer-unsure are distinct, and AI output never overwrites a newer rep decision.
+flowchart TB
+    Author["Portal profile, verticals and question authoring"] --> Version["Published coherent guidance release"]
+    Config["Canonical config version"] --> Version
+    Version --> Cache["Background fetch and latest-ready cache"]
+    Cache --> Context["Call-pinned context inherited by work items"]
+    Context --> Engine["Existing Assist engine"]
+    Transcript["Transcript evidence"] --> Engine
+    Engine --> Panel["Rep guidance and checklist"]
+    Panel --> Responses["Responses and override history"]
+    Engine --> Responses
+    Responses --> QA["Scoped history and QA"]
+  

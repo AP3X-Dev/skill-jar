@@ -1,0 +1,17 @@
+# Threads, interactions and field-service work
+# caption: What it settles. A thread is continuity; an Interaction is one handling episode; field work hangs off a Service Request. There is no separate Booking entity, and "booked" is an outcome, never a competing schedule record. An Assist Job is a per-call work item, not a field-service job.
+erDiagram
+    ORGANIZATION ||--o{ COMMUNICATION_THREAD : owns
+    COMMUNICATION_THREAD ||--o{ MESSAGE : contains
+    COMMUNICATION_THREAD o|--o{ INTERACTION : relates
+    SERVICE_UNIT o|--o{ INTERACTION : routes
+    END_CUSTOMER o|--o{ INTERACTION : identifies
+    INTERACTION ||--o{ VOICE_LEG : contains
+    INTERACTION ||--o{ INTERACTION_FIELD_SERVICE_LINK : references
+    SERVICE_REQUEST o|--o{ INTERACTION_FIELD_SERVICE_LINK : explains
+    FIELD_SERVICE_JOB o|--o{ INTERACTION_FIELD_SERVICE_LINK : discusses
+    FIELD_SERVICE_APPOINTMENT o|--o{ INTERACTION_FIELD_SERVICE_LINK : schedules
+    SERVICE_REQUEST o|--o{ FIELD_SERVICE_JOB : realizes
+    FIELD_SERVICE_JOB o|--o{ FIELD_SERVICE_APPOINTMENT : visits
+    FIELD_SERVICE_ESTIMATE o|--o{ FIELD_SERVICE_APPOINTMENT : visits
+  

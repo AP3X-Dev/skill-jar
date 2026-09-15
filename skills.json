@@ -332,6 +332,14 @@
       "core": false
     },
     {
+      "name": "diagram-atlas",
+      "category": "systems-design",
+      "description": "Build one dark, self-contained 'architecture atlas' web page that embeds many diagrams as animated, replayable, expandable panels, each with a source label and a 'what it settles' caption, from Mermaid sources or diagram specs. Standalone: it vendors the MIT archify renderer and its own complete visual system (near-black surfaces, four inks, hairline rules, one accent, Geist and Geist Mono), so it needs only Python 3 and Node 18+, no other skill, brand guide, or npm install. Use when a team wants all of a project's architecture diagrams on one page, an animated version of a Mermaid diagram set, a diagrams page in a restrained dark editorial look, or to regenerate or extend an existing atlas. NOT for a single diagram (render it with the vendored renderer directly) or for light-theme or brand-specific pages.",
+      "path": "systems-design/diagram-atlas/SKILL.md",
+      "tags": [],
+      "core": false
+    },
+    {
       "name": "greenfield-architecture",
       "category": "systems-design",
       "description": "Use when starting a new software product, service, or major subsystem before meaningful implementation exists and the project needs an explicit architecture that coding agents can safely build inside. Starts from requirements plus a domain/data model, separates derived invariants from architecture choices, sizes the system, resolves load-bearing decisions, emits an approved architecture constitution and minimal skeleton, then hands the bootstrap repository to guardrail-forge. NOT for established-repo discovery, ordinary feature design, or refactoring.",

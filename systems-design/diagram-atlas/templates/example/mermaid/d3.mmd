@@ -1,0 +1,13 @@
+# Principal identity and work ownership
+# caption: What it settles. Every actor that can be assigned work or approve a change is a Principal, whether human, AI agent, automation or service. Business records never grow a new assigned_x_id column when a new actor type appears. Authorization is separate from routing eligibility.
+erDiagram
+    PRINCIPAL ||--o| USER : may_authenticate_as
+    PRINCIPAL ||--o{ PRINCIPAL_SKILL : has
+    PRINCIPAL ||--o{ PRINCIPAL_SERVICE_UNIT_ASSIGNMENT : eligible_for
+    SERVICE_UNIT ||--o{ PRINCIPAL_SERVICE_UNIT_ASSIGNMENT : scopes
+    PRINCIPAL ||--o{ INTERACTION_ASSIGNMENT : handles
+    INTERACTION ||--o{ INTERACTION_ASSIGNMENT : assigns
+    PRINCIPAL o|--o{ TASK : claims
+    TASK ||--o{ TASK_ATTEMPT : records
+    INTERACTION o|--o{ TASK_ATTEMPT : results_from
+  

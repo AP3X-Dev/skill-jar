@@ -1,0 +1,13 @@
+# Audio provenance and fallback
+# caption: What it settles. WASAPI and CoreAudio capture stays the live-assist audio source until Media Streams is proven for hold, transfer, conference and reconnect in the real topology. The loopback spike on 2026-09-08 showed the engine hears the Voice SDK with zero engine changes.
+flowchart TB
+    Voice["Active authorized call"] --> Local["Local capture fallback"]
+    Voice --> Stream["Certified provider stream"]
+    Local --> Select["Consent and source selection"]
+    Stream --> Select
+    Select --> STT["Track-aware transcription"]
+    STT --> Assist["CIC Assist guidance"]
+    STT --> Artifacts["Scoped artifacts with source lineage"]
+    Voice --> Recording["Provider recordings"]
+    Recording --> Artifacts
+  

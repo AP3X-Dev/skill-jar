@@ -1,0 +1,15 @@
+# Client, End Customer, location and number identity
+# caption: What it settles. A client is an Organization; the thing CIC answers for is a Service Unit (today's Portal Company); the homeowner is an End Customer scoped to the Organization. A phone number belongs to exactly one Organization at a time, across voice, SMS and WhatsApp, with non-overlapping ownership intervals.
+erDiagram
+    ORGANIZATION ||--o{ SERVICE_UNIT : owns
+    ORGANIZATION ||--o{ ORGANIZATION_CONTACT : has
+    ORGANIZATION ||--o{ END_CUSTOMER : serves
+    ORGANIZATION ||--o{ END_CUSTOMER_LOCATION : scopes
+    END_CUSTOMER ||--o{ LOCATION_RELATIONSHIP : participates
+    END_CUSTOMER_LOCATION ||--o{ LOCATION_RELATIONSHIP : relates_over_time
+    END_CUSTOMER ||--o{ END_CUSTOMER_SERVICE_UNIT : served_through
+    SERVICE_UNIT ||--o{ END_CUSTOMER_SERVICE_UNIT : participates
+    ORGANIZATION ||--o{ PHONE_NUMBER_OWNERSHIP : holds
+    PHONE_NUMBER_OWNERSHIP ||--o{ CHANNEL_ENDPOINT : supports
+    SERVICE_UNIT o|--o{ CHANNEL_ENDPOINT : optionally_routes
+  

@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Authority migration",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      820,
+      566
+    ]
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Authority"
+    },
+    {
+      "id": "events",
+      "label": "Recovery"
+    }
+  ],
+  "states": [
+    {
+      "id": "external_authority",
+      "type": "start",
+      "label": "External Authority",
+      "sublabel": "Five9 / ServiceTitan",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "shadow_native",
+      "type": "active",
+      "label": "Shadow Native",
+      "sublabel": "compare in shadow",
+      "lane": "main",
+      "col": 1,
+      "step": "02"
+    },
+    {
+      "id": "drain",
+      "type": "decision",
+      "label": "Drain",
+      "sublabel": "certified boundary",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "native_authority",
+      "type": "success",
+      "label": "Native Authority",
+      "sublabel": "new epoch",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    },
+    {
+      "id": "reconciliation",
+      "type": "waiting",
+      "label": "Reconciliation",
+      "sublabel": "side effects",
+      "lane": "main",
+      "col": 4,
+      "step": "05"
+    },
+    {
+      "id": "recovery_decision",
+      "type": "failure",
+      "label": "Recovery Decision",
+      "sublabel": "drift found",
+      "lane": "events",
+      "col": 1
+    }
+  ],
+  "transitions": [
+    {
+      "id": "reconcile-compare",
+      "from": "external_authority",
+      "to": "shadow_native",
+      "label": "reconcile + compare",
+      "labelDy": 51
+    },
+    {
+      "id": "certify-boundary",
+      "from": "shadow_native",
+      "to": "drain",
+      "label": "certify boundary",
+      "labelDy": 51
+    },
+    {
+      "id": "fence-epoch",
+      "from": "drain",
+      "to": "native_authority",
+      "label": "fence writer, new epoch",
+      "variant": "emphasis",
+      "labelDy": 51
+    },
+    {
+      "id": "observe-effects",
+      "from": "native_authority",
+      "to": "reconciliation",
+      "label": "observe side effects",
+      "labelDy": 51
+    },
+    {
+      "id": "abort-switch",
+      "from": "drain",
+      "to": "external_authority",
+      "label": "abort before switch",
+      "variant": "dashed",
+      "route": "top-channel"
+    },
+    {
+      "id": "consistent",
+      "from": "reconciliation",
+      "to": "native_authority",
+      "label": "consistent",
+      "variant": "emphasis",
+      "route": "top-channel"
+    },
+    {
+      "id": "drift",
+      "from": "reconciliation",
+      "to": "recovery_decision",
+      "label": "Drift or unknown command",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "labelAt": [
+        710,
+        240
+      ]
+    },
+    {
+      "id": "repair",
+      "from": "recovery_decision",
+      "to": "native_authority",
+      "label": "Repair under current authority",
+      "variant": "emphasis",
+      "fromSide": "top",
+      "toSide": "bottom"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "What it settles",
+      "items": [
+        "How a system of record moves: Five9 to Flex, or ServiceTitan to a native scheduler",
+        "Canonical IDs survive the switch"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Forward path",
+      "items": [
+        "External Authority → Shadow Native: reconcile and compare",
+        "Shadow Native → Drain: certify selected boundary",
+        "Drain → Native Authority: fence old writer and change epoch",
+        "Drain can still abort before the authority switch"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "After the switch",
+      "items": [
+        "Native Authority → Reconciliation: observe side effects; consistent returns to Native Authority",
+        "Drift or an unknown command is repaired under current authority",
+        "Going back afterwards is a new controlled migration, not a rollback"
+      ]
+    }
+  ]
+}

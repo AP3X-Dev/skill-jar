@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Governed scheduling and unknown outcomes",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "actors",
+      "label": "Actors"
+    },
+    {
+      "id": "gov",
+      "label": "Governance"
+    },
+    {
+      "id": "exec",
+      "label": "Execution"
+    },
+    {
+      "id": "exception",
+      "label": "Unknown outcome",
+      "variant": "exception"
+    },
+    {
+      "id": "outcome",
+      "label": "Outcome"
+    },
+    {
+      "id": "audit",
+      "label": "Audit"
+    }
+  ],
+  "mainPath": [
+    "rep",
+    "gate",
+    "bind",
+    "external",
+    "known",
+    "result",
+    "events"
+  ],
+  "nodes": [
+    {
+      "id": "rep",
+      "lane": "actors",
+      "col": 0,
+      "type": "frontend",
+      "label": "Rep action",
+      "width": 92
+    },
+    {
+      "id": "agent",
+      "lane": "actors",
+      "col": 1,
+      "type": "backend",
+      "label": "Agent action",
+      "width": 92
+    },
+    {
+      "id": "gate",
+      "lane": "gov",
+      "col": 1,
+      "type": "security",
+      "label": "Approval gate",
+      "sublabel": "scope, policy, exact action",
+      "width": 120
+    },
+    {
+      "id": "bind",
+      "lane": "gov",
+      "col": 3,
+      "type": "security",
+      "label": "Pinned binding",
+      "sublabel": "authority epoch",
+      "width": 110
+    },
+    {
+      "id": "native",
+      "lane": "exec",
+      "col": 1,
+      "type": "database",
+      "label": "Native reservation",
+      "sublabel": "atomic command",
+      "width": 120
+    },
+    {
+      "id": "external",
+      "lane": "exec",
+      "col": 3,
+      "type": "external",
+      "label": "Provider command",
+      "sublabel": "preflight + command",
+      "width": 110
+    },
+    {
+      "id": "known",
+      "lane": "exec",
+      "col": 5,
+      "type": "backend",
+      "label": "Outcome known?",
+      "width": 96
+    },
+    {
+      "id": "unknown",
+      "lane": "exception",
+      "col": 4,
+      "type": "backend",
+      "label": "Unknown outcome",
+      "sublabel": "lost response",
+      "width": 96
+    },
+    {
+      "id": "reconcile",
+      "lane": "exception",
+      "col": 2,
+      "type": "backend",
+      "label": "Reconciliation",
+      "sublabel": "read-back + idempotency",
+      "width": 110
+    },
+    {
+      "id": "result",
+      "lane": "outcome",
+      "col": 5,
+      "type": "backend",
+      "label": "Confirmed result",
+      "sublabel": "and projection",
+      "width": 110
+    },
+    {
+      "id": "events",
+      "lane": "audit",
+      "col": 5,
+      "type": "messagebus",
+      "label": "Audit and events",
+      "sublabel": "confirmed notifications",
+      "width": 110
+    }
+  ],
+  "edges": [
+    {
+      "id": "rep-gate",
+      "from": "rep",
+      "to": "gate"
+    },
+    {
+      "id": "agent-gate",
+      "from": "agent",
+      "to": "gate"
+    },
+    {
+      "id": "gate-bind",
+      "from": "gate",
+      "to": "bind"
+    },
+    {
+      "id": "bind-native",
+      "from": "bind",
+      "to": "native",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "bind-external",
+      "from": "bind",
+      "to": "external",
+      "route": "straight"
+    },
+    {
+      "id": "external-known",
+      "from": "external",
+      "to": "known",
+      "route": "straight"
+    },
+    {
+      "id": "known-result",
+      "from": "known",
+      "to": "result",
+      "label": "Yes"
+    },
+    {
+      "id": "known-unknown",
+      "from": "known",
+      "to": "unknown",
+      "label": "No",
+      "role": "error",
+      "variant": "security",
+      "fromSide": "left",
+      "toSide": "top"
+    },
+    {
+      "id": "unknown-reconcile",
+      "from": "unknown",
+      "to": "reconcile"
+    },
+    {
+      "id": "reconcile-result",
+      "from": "reconcile",
+      "to": "result",
+      "role": "return",
+      "variant": "dashed"
+    },
+    {
+      "id": "native-result",
+      "from": "native",
+      "to": "result"
+    },
+    {
+      "id": "result-events",
+      "from": "result",
+      "to": "events"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Unknown is not failed",
+      "items": [
+        "A lost response is unknown, not failed",
+        "Read back before any retry"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Same rule, Twilio reconciler",
+      "items": [
+        "PRP 13 Phase 5",
+        "Purchase a number, crash before persisting, rerun: still one number"
+      ]
+    }
+  ]
+}

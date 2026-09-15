@@ -1,0 +1,45 @@
+# Build order across the PRPs
+# caption: What it settles. Portal Phase 0 goes first because every other Phase 0 runs against the fake Core and switches to Rails the moment the seam exists. Assist, Twilio and CRM Phase 0 start the same week. The thick edge is the one dependency that cannot slip: the token broker must exist before the first staffed call. The CRM has no M1 blocker.
+flowchart TB
+    subgraph M0["M0 · evidence and pilot authorization (5 working days)"]
+        P14_0["14 P0 Rails seam: 4 ops in a week"]
+        P13_0["13 P0 account cleanup + evidence"]
+        P12_0["12 P0 contracts + fake Core (the demo)"]
+        P15_0["15 P0 CRM + fake Core + CI"]
+    end
+    subgraph M1["M1 · one client's voice on Flex (30–50 days, re-estimate in M0)"]
+        P14_1["14 P1 identity, public ids"] --> P14_2["14 P2 endpoints + guidance releases (C1–C3)"]
+        P14_2 --> P14_3["14 P3 interactions + compat adapter (C4, C6, C7)"]
+        P14_3 --> P14_4["14 P4 token broker + recordings (C5, T3)"]
+        P14_4 --> P14_5["14 P5 config, provisioning, events (T1, T2, T4)"]
+        P12_1["12 P1 pin guidance releases"] --> P12_2["12 P2 one Twilio adapter"]
+        P12_2 --> P12_3["12 P3 real ingress + certification"]
+        P12_3 --> P12_4["12 P4 outcomes, retire envelope"]
+        P13_1["13 P1 signed ingress"] --> P13_2["13 P2 routing by projection"]
+        P13_2 --> P13_3["13 P3 token broker + permission matrix"]
+        P13_3 --> P13_4["13 P4 recording, events, usage"]
+        P13_4 --> P13_5["13 P5 reconciler"]
+        P13_5 --> P13_6["13 P6 pilot cutover"]
+        P15_1["15 P1 org id + lifecycle"] --> P15_2["15 P2 plans + contracts (R1, R3)"]
+        P15_2 --> P15_3["15 P3 signing (R4)"]
+    end
+    subgraph M2["M2 and later"]
+        P14_6["14 P6 configuration compiler (P1, P2)"] --> P14_7["14 P7 self-service"]
+        P15_4["15 P4 lifecycle events"]
+    end
+    P14_0 --> P14_1
+    P14_0 -. "switch consumers from fake to Rails" .-> P12_1
+    P14_0 -. "same" .-> P15_1
+    P14_2 --> P12_1
+    P14_2 --> P13_1
+    P14_3 --> P13_1
+    P14_4 ==>|"pilot blocker (ADR-059)"| P13_3
+    P14_4 --> P12_3
+    P14_3 --> P12_4
+    P14_5 --> P13_5
+    P13_5 --> P14_6
+    P14_2 --> P15_2
+    P14_3 --> P15_3
+    style P14_4 stroke:#F06000,stroke-width:2px
+    style P13_3 stroke:#F06000,stroke-width:2px
+  

@@ -1,0 +1,389 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Repositories and runtimes",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1380,
+      780
+    ]
+  },
+  "components": [
+    {
+      "id": "models",
+      "type": "backend",
+      "label": "models.py + operations.py",
+      "sublabel": "authority",
+      "pos": [
+        625,
+        40
+      ],
+      "size": [
+        180,
+        68
+      ]
+    },
+    {
+      "id": "docs",
+      "type": "external",
+      "label": "architecture 00–15",
+      "sublabel": "PRPs 12–15",
+      "pos": [
+        40,
+        170
+      ],
+      "size": [
+        170,
+        68
+      ]
+    },
+    {
+      "id": "gen",
+      "type": "backend",
+      "label": "Generated contracts",
+      "sublabel": "OpenAPI, JSON Schema, TypeScript",
+      "pos": [
+        610,
+        170
+      ],
+      "size": [
+        210,
+        68
+      ]
+    },
+    {
+      "id": "fake",
+      "type": "database",
+      "label": "fake Core :8080 (SQLite)",
+      "sublabel": "docker compose up core",
+      "pos": [
+        935,
+        170
+      ],
+      "size": [
+        170,
+        68
+      ]
+    },
+    {
+      "id": "cerebro",
+      "type": "cloud",
+      "label": "Cerebro 192.168.0.25",
+      "sublabel": "Docker host",
+      "pos": [
+        1200,
+        170
+      ],
+      "size": [
+        150,
+        68
+      ]
+    },
+    {
+      "id": "mainbranch",
+      "type": "external",
+      "label": "Agent-Assist-CR main",
+      "sublabel": "Five9, shipping today",
+      "pos": [
+        40,
+        380
+      ],
+      "size": [
+        170,
+        68
+      ]
+    },
+    {
+      "id": "assist",
+      "type": "frontend",
+      "label": "Agent-Assist-CR",
+      "sublabel": "branch twilio/main",
+      "pos": [
+        330,
+        380
+      ],
+      "size": [
+        170,
+        68
+      ]
+    },
+    {
+      "id": "portal",
+      "type": "backend",
+      "label": "customer-portal (Rails, Kamal)",
+      "sublabel": "becomes the real Core",
+      "pos": [
+        610,
+        380
+      ],
+      "size": [
+        210,
+        68
+      ]
+    },
+    {
+      "id": "crm",
+      "type": "frontend",
+      "label": "crm-main",
+      "sublabel": "Next.js on Vercel",
+      "brand": "next-js",
+      "pos": [
+        940,
+        380
+      ],
+      "size": [
+        160,
+        68
+      ]
+    },
+    {
+      "id": "twilio",
+      "type": "messagebus",
+      "label": "Twilio Flex account",
+      "sublabel": "test = demo account, prod = new",
+      "pos": [
+        610,
+        620
+      ],
+      "size": [
+        210,
+        68
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "operator-one-team-starter (contracts repo)",
+      "wraps": [
+        "models",
+        "docs",
+        "gen",
+        "fake"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Cerebro",
+      "wraps": [
+        "cerebro"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Application repos",
+      "wraps": [
+        "mainbranch",
+        "assist",
+        "portal",
+        "crm"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Twilio account",
+      "wraps": [
+        "twilio"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "models-gen",
+      "from": "models",
+      "to": "gen",
+      "label": "generate",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "labelAt": [
+        715,
+        139
+      ]
+    },
+    {
+      "id": "cerebro-fake",
+      "from": "cerebro",
+      "to": "fake",
+      "label": "dev host",
+      "variant": "dashed",
+      "route": "straight"
+    },
+    {
+      "id": "gen-assist",
+      "from": "gen",
+      "to": "assist",
+      "label": "git tag dependency",
+      "fromSide": "left",
+      "toSide": "top",
+      "via": [
+        [
+          415,
+          204
+        ]
+      ],
+      "labelAt": [
+        415,
+        250
+      ]
+    },
+    {
+      "id": "gen-portal",
+      "from": "gen",
+      "to": "portal",
+      "label": "implements /v1",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "labelAt": [
+        715,
+        330
+      ]
+    },
+    {
+      "id": "gen-crm",
+      "from": "gen",
+      "to": "crm",
+      "label": "git tag dependency",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "via": [
+        [
+          840,
+          204
+        ],
+        [
+          840,
+          520
+        ],
+        [
+          1020,
+          520
+        ]
+      ],
+      "labelAt": [
+        870,
+        470
+      ]
+    },
+    {
+      "id": "assist-fake",
+      "from": "assist",
+      "to": "fake",
+      "label": "fake now, Portal later",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [
+        [
+          415,
+          300
+        ],
+        [
+          890,
+          300
+        ],
+        [
+          890,
+          140
+        ],
+        [
+          1020,
+          140
+        ]
+      ],
+      "labelSegment": 1
+    },
+    {
+      "id": "crm-fake",
+      "from": "crm",
+      "to": "fake",
+      "label": "fake now, Portal later",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "route": "straight"
+    },
+    {
+      "id": "assist-portal",
+      "from": "assist",
+      "to": "portal",
+      "label": "CIC_CORE_BASE_URL",
+      "variant": "dashed",
+      "route": "straight"
+    },
+    {
+      "id": "crm-portal",
+      "from": "crm",
+      "to": "portal",
+      "label": "CORE_BASE_URL",
+      "variant": "dashed",
+      "route": "straight",
+      "labelDx": 14
+    },
+    {
+      "id": "assist-twilio",
+      "from": "assist",
+      "to": "twilio",
+      "label": "Voice + TaskRouter SDK",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "via": [
+        [
+          415,
+          654
+        ]
+      ],
+      "labelSegment": 1
+    },
+    {
+      "id": "portal-twilio",
+      "from": "portal",
+      "to": "twilio",
+      "label": "token broker, ingress, reconciler",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "labelAt": [
+        715,
+        530
+      ]
+    },
+    {
+      "id": "main-assist",
+      "from": "mainbranch",
+      "to": "assist",
+      "label": "cherry-pick fixes only",
+      "variant": "dashed",
+      "route": "straight",
+      "labelDy": -20
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Starter is contracts, not a server",
+      "items": [
+        "The fake Core runs on a laptop or on Cerebro for development only",
+        "The real Core grows inside the Rails Portal"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "One base URL",
+      "items": [
+        "Both consumers switch from fake to Portal by changing CIC_CORE_BASE_URL / CORE_BASE_URL"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Branches",
+      "items": [
+        "main keeps shipping Five9",
+        "twilio/main is the product being built"
+      ]
+    }
+  ]
+}

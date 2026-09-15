@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Who owns which data after M1",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1380,
+      800
+    ]
+  },
+  "components": [
+    {
+      "id": "deals",
+      "type": "database",
+      "label": "Deals, pipeline, assessments",
+      "sublabel": "quotes, sales tasks",
+      "pos": [
+        380,
+        40
+      ],
+      "size": [
+        220,
+        68
+      ]
+    },
+    {
+      "id": "mail",
+      "type": "database",
+      "label": "Sales mailboxes and threads",
+      "sublabel": "grader ingest, round robin",
+      "pos": [
+        640,
+        40
+      ],
+      "size": [
+        270,
+        68
+      ]
+    },
+    {
+      "id": "plans",
+      "type": "backend",
+      "label": "Plans, contracts",
+      "sublabel": "signature evidence",
+      "pos": [
+        380,
+        240
+      ],
+      "size": [
+        220,
+        68
+      ]
+    },
+    {
+      "id": "orgident",
+      "type": "backend",
+      "label": "Organization, Service Unit, Principals",
+      "sublabel": "verticals, roles, ExecutionContext",
+      "pos": [
+        640,
+        240
+      ],
+      "size": [
+        270,
+        76
+      ]
+    },
+    {
+      "id": "guid",
+      "type": "backend",
+      "label": "Playbook versions, probing config",
+      "sublabel": "guidance releases",
+      "pos": [
+        380,
+        380
+      ],
+      "size": [
+        220,
+        68
+      ]
+    },
+    {
+      "id": "epprov",
+      "type": "backend",
+      "label": "Channel endpoints, configurations",
+      "sublabel": "phone ownership, provisioning runs, events",
+      "pos": [
+        640,
+        380
+      ],
+      "size": [
+        270,
+        76
+      ]
+    },
+    {
+      "id": "inter",
+      "type": "backend",
+      "label": "Interactions, outcomes",
+      "sublabel": "guidance contexts, responses",
+      "pos": [
+        380,
+        520
+      ],
+      "size": [
+        220,
+        76
+      ]
+    },
+    {
+      "id": "bill",
+      "type": "backend",
+      "label": "Recordings, usage, billing review",
+      "pos": [
+        640,
+        520
+      ],
+      "size": [
+        270,
+        68
+      ]
+    },
+    {
+      "id": "pin",
+      "type": "database",
+      "label": "Pinned release cache",
+      "pos": [
+        40,
+        380
+      ],
+      "size": [
+        240,
+        68
+      ]
+    },
+    {
+      "id": "eng",
+      "type": "frontend",
+      "label": "Engine",
+      "sublabel": "transcription, extraction, SOP match",
+      "tag": "checklist, form review, QA",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        240,
+        76
+      ]
+    },
+    {
+      "id": "phone",
+      "type": "frontend",
+      "label": "Softphone",
+      "sublabel": "one Twilio adapter",
+      "pos": [
+        40,
+        660
+      ],
+      "size": [
+        240,
+        68
+      ]
+    },
+    {
+      "id": "tr",
+      "type": "messagebus",
+      "label": "Tasks, reservations, conferences",
+      "sublabel": "recordings (provider facts)",
+      "pos": [
+        1060,
+        380
+      ],
+      "size": [
+        230,
+        76
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Sales CRM (Neon)",
+      "wraps": [
+        "deals",
+        "mail"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Core (Rails Portal, /v1) — single writer",
+      "wraps": [
+        "plans",
+        "orgident",
+        "guid",
+        "epprov",
+        "inter",
+        "bill"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "CIC Assist (desktop + engine)",
+      "wraps": [
+        "pin",
+        "eng",
+        "phone"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Twilio Flex (one account per env)",
+      "wraps": [
+        "tr"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "deals-plans",
+      "from": "deals",
+      "to": "plans",
+      "label": "identity, plans, contracts, lifecycle",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "labelDy": 24
+    },
+    {
+      "id": "pin-guid",
+      "from": "pin",
+      "to": "guid",
+      "label": "reads releases",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "eng-inter",
+      "from": "eng",
+      "to": "inter",
+      "label": "writes evidence",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "epprov-tr",
+      "from": "epprov",
+      "to": "tr",
+      "label": "desired state, projections",
+      "route": "straight"
+    },
+    {
+      "id": "tr-bill",
+      "from": "tr",
+      "to": "bill",
+      "label": "signed events, recordings",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "via": [
+        [
+          1175,
+          554
+        ]
+      ]
+    },
+    {
+      "id": "phone-tr",
+      "from": "phone",
+      "to": "tr",
+      "label": "SDK, tokens from Core",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "right",
+      "via": [
+        [
+          1340,
+          694
+        ],
+        [
+          1340,
+          418
+        ]
+      ],
+      "labelSegment": 0
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Core is the single writer",
+      "items": [
+        "Identity, guidance, interactions, contracts and configuration are written only by Core"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Consumers keep their own",
+      "items": [
+        "Assist keeps its engine and a pinned cache",
+        "The CRM keeps everything that is genuinely sales"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Twilio knows calls, not clients",
+      "items": [
+        "Twilio keeps live call facts and nothing about who a client is"
+      ]
+    }
+  ]
+}

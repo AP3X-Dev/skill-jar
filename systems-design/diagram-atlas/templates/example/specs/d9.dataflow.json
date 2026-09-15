@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Separate finance contexts",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [1080, 640]
+  },
+  "stages": [
+    { "label": "Source of charge" },
+    { "label": "Invoice" },
+    { "label": "Ledger context" },
+    { "label": "Adapters" },
+    { "label": "Providers" }
+  ],
+  "nodes": [
+    { "id": "usage", "type": "backend", "label": "Operator One usage", "sublabel": "usage and contract", "stage": 0, "row": 0, "tag": "CIC bills client", "width": 130 },
+    { "id": "job", "type": "external", "label": "Client field work", "sublabel": "field-service jobs", "stage": 0, "row": 2, "tag": "client bills homeowner", "width": 130 },
+    { "id": "bill", "type": "database", "label": "Client BillingAccount", "sublabel": "and Invoice", "stage": 1, "row": 0, "width": 140 },
+    { "id": "field", "type": "database", "label": "FieldInvoice", "sublabel": "End Customer, per job", "stage": 1, "row": 2, "width": 130 },
+    { "id": "corp", "type": "database", "label": "Corporate ledger", "sublabel": "CIC merchant context", "stage": 2, "row": 0, "tag": "payer: client", "width": 130 },
+    { "id": "client", "type": "database", "label": "Client ledger", "sublabel": "client merchant context", "stage": 2, "row": 2, "tag": "payer: homeowner", "width": 130 },
+    { "id": "adapter", "type": "backend", "label": "Scoped adapters", "sublabel": "payment + accounting", "stage": 3, "row": 1, "tag": "scoped per ledger", "width": 130 },
+    { "id": "rail", "type": "external", "label": "Payment rail", "sublabel": "shared provider", "stage": 4, "row": 0, "width": 130 },
+    { "id": "books", "type": "external", "label": "Accounting ledger", "sublabel": "books of record", "stage": 4, "row": 2, "width": 130 }
+  ],
+  "flows": [
+    { "id": "usage-to-bill", "from": "usage", "to": "bill", "label": "usage", "classification": "reviewed", "variant": "emphasis" },
+    { "id": "job-to-field", "from": "job", "to": "field", "label": "work done", "classification": "field service" },
+    { "id": "bill-to-corp", "from": "bill", "to": "corp", "label": "invoice", "variant": "emphasis" },
+    { "id": "field-to-client", "from": "field", "to": "client", "label": "invoice" },
+    { "id": "corp-to-adapter", "from": "corp", "to": "adapter", "label": "CIC scope", "variant": "emphasis" },
+    { "id": "client-to-adapter", "from": "client", "to": "adapter", "label": "client scope" },
+    { "id": "adapter-to-rail", "from": "adapter", "to": "rail", "label": "charges", "variant": "emphasis" },
+    { "id": "adapter-to-books", "from": "adapter", "to": "books", "label": "entries" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Two ledgers, two payers", "items": ["What CIC bills a client and what a client bills a homeowner are different ledgers", "They stay separate even when they share a payment provider"] },
+    { "dot": "amber", "title": "Twilio minutes", "items": ["Minutes are a usage measurement, not an invoice line", "They pass through the existing reviewer gate first"] },
+    { "dot": "violet", "title": "Adapters are scoped", "items": ["Each ledger reaches the payment rail and the accounting ledger through its own merchant context"] }
+  ]
+}

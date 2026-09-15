@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Client, End Customer, location and number identity",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1020,
+      620
+    ]
+  },
+  "components": [
+    {
+      "id": "org_contact",
+      "type": "database",
+      "label": "Organization Contact",
+      "pos": [
+        40,
+        90
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "organization",
+      "type": "database",
+      "label": "Organization",
+      "sublabel": "the client",
+      "pos": [
+        300,
+        90
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "service_unit",
+      "type": "database",
+      "label": "Service Unit",
+      "sublabel": "today's Portal Company",
+      "pos": [
+        560,
+        90
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "end_customer_location",
+      "type": "database",
+      "label": "End Customer Location",
+      "pos": [
+        40,
+        280
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "end_customer",
+      "type": "database",
+      "label": "End Customer",
+      "sublabel": "the homeowner",
+      "pos": [
+        300,
+        280
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "end_customer_service_unit",
+      "type": "database",
+      "label": "End Customer Service Unit",
+      "pos": [
+        560,
+        280
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "phone_number_ownership",
+      "type": "database",
+      "label": "Phone Number Ownership",
+      "sublabel": "non-overlapping intervals",
+      "pos": [
+        820,
+        280
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "channel_endpoint",
+      "type": "database",
+      "label": "Channel Endpoint",
+      "sublabel": "voice, SMS, WhatsApp",
+      "pos": [
+        820,
+        470
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "location_relationship",
+      "type": "database",
+      "label": "Location Relationship",
+      "pos": [
+        170,
+        470
+      ],
+      "size": [
+        160,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Client hierarchy",
+      "wraps": [
+        "org_contact",
+        "organization",
+        "service_unit"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "End Customer and numbers",
+      "wraps": [
+        "end_customer_location",
+        "end_customer",
+        "end_customer_service_unit",
+        "phone_number_ownership",
+        "channel_endpoint",
+        "location_relationship"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "org-owns-unit",
+      "from": "organization",
+      "to": "service_unit",
+      "label": "owns"
+    },
+    {
+      "id": "org-has-contact",
+      "from": "organization",
+      "to": "org_contact",
+      "label": "has"
+    },
+    {
+      "id": "org-serves-customer",
+      "from": "organization",
+      "to": "end_customer",
+      "label": "serves",
+      "labelDy": 24,
+      "labelDx": -24
+    },
+    {
+      "id": "org-scopes-location",
+      "from": "organization",
+      "to": "end_customer_location",
+      "label": "scopes"
+    },
+    {
+      "id": "org-holds-number",
+      "from": "organization",
+      "to": "phone_number_ownership",
+      "label": "holds",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [
+        [
+          380,
+          30
+        ],
+        [
+          900,
+          30
+        ]
+      ]
+    },
+    {
+      "id": "customer-participates",
+      "from": "end_customer",
+      "to": "location_relationship",
+      "label": "participates",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "location-relates",
+      "from": "end_customer_location",
+      "to": "location_relationship",
+      "label": "relates over time",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "customer-served-through",
+      "from": "end_customer",
+      "to": "end_customer_service_unit",
+      "label": "served through"
+    },
+    {
+      "id": "unit-participates",
+      "from": "service_unit",
+      "to": "end_customer_service_unit",
+      "label": "participates",
+      "labelDy": 24
+    },
+    {
+      "id": "ownership-supports",
+      "from": "phone_number_ownership",
+      "to": "channel_endpoint",
+      "label": "supports",
+      "labelDy": 24
+    },
+    {
+      "id": "unit-routes",
+      "from": "service_unit",
+      "to": "channel_endpoint",
+      "label": "optionally routes",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Client hierarchy",
+      "items": [
+        "A client is an Organization",
+        "The thing CIC answers for is a Service Unit (today's Portal Company)"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "End Customer",
+      "items": [
+        "The homeowner is an End Customer scoped to the Organization",
+        "Locations relate to End Customers over time"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Numbers",
+      "items": [
+        "A phone number belongs to exactly one Organization at a time",
+        "Ownership intervals never overlap, across voice, SMS and WhatsApp"
+      ]
+    }
+  ]
+}
